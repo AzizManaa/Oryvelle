@@ -544,7 +544,7 @@ function drawPageSky(
   const DRIFT_PERIOD = 60;
   const DRIFT_H = width * 0.10;
   const DRIFT_V = height * 0.06;
-  const NEBULA_RADIUS = Math.min(width, height) * 0.45;
+  const NEBULA_RADIUS = Math.min(width, height) * 0.36;
 
   const nebulas: Array<{ baseX: number; baseY: number; phase: number; color: string; alpha: number }> = [
     { baseX: 0.30, baseY: 0.35, phase: 0.0, color: palette.nebulaPrimary, alpha: palette.nebulaPrimaryAlpha },
@@ -563,7 +563,7 @@ function drawPageSky(
       NEBULA_RADIUS,
       NEBULA_RADIUS,
       color,
-      alpha * 0.40,
+      alpha * 0.20,
     );
   });
   context.restore();
