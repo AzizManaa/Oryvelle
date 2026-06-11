@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 type OryvelleOrbCanvasProps = {
   primaryColor?: string;
   secondaryColor?: string;
+  glowStrength?: number;
   className?: string;
   reducedMotion?: boolean;
 };
@@ -131,15 +132,16 @@ const DEBRIS_SPECS: DebrisSpec[] = [
 export function OryvelleOrbCanvas({
   primaryColor = "#00E0C7",
   secondaryColor = "#B89AFF",
+  glowStrength = 1,
   className,
   reducedMotion = false,
 }: OryvelleOrbCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const colorsRef = useRef({ primaryColor, secondaryColor, reducedMotion });
+  const colorsRef = useRef({ primaryColor, secondaryColor, glowStrength, reducedMotion });
 
   useEffect(() => {
-    colorsRef.current = { primaryColor, secondaryColor, reducedMotion };
-  }, [primaryColor, secondaryColor, reducedMotion]);
+    colorsRef.current = { primaryColor, secondaryColor, glowStrength, reducedMotion };
+  }, [primaryColor, secondaryColor, glowStrength, reducedMotion]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -169,7 +171,7 @@ export function OryvelleOrbCanvas({
     };
 
     const drawFrame = (time: number) => {
-      const { primaryColor: primary, secondaryColor: secondary, reducedMotion: isReduced } =
+      const { primaryColor: primary, secondaryColor: secondary, glowStrength: externalGlowStrength, reducedMotion: isReduced } =
         colorsRef.current;
       const elapsed = isReduced ? 0 : time;
       const diskProgress = wrapLoopProgress(0.28 + elapsed / 26000);
@@ -177,7 +179,7 @@ export function OryvelleOrbCanvas({
       const pulseProgress = wrapLoopProgress(0.14 + elapsed / 8500);
       const glowWave = 0.5 + 0.5 * loopSin(pulseProgress, 1);
       const turbulenceWave = 0.5 + 0.5 * loopSin(flowProgress, 2, 0.4);
-      const glowStrength = 0.72 * (0.92 + glowWave * 0.12);
+      const glowStrength = externalGlowStrength * (0.72 * (0.92 + glowWave * 0.12));
       const jetStrength = 0.055 * (0.92 + turbulenceWave * 0.08);
       const palette = blackHolePalette(primary, secondary);
       const center = { x: width / 2, y: height / 2 };
