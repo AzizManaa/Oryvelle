@@ -1,0 +1,1420 @@
+"use client";
+
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
+import { OryvelleOrbCanvas } from "./oryvelle-orb-canvas";
+
+export type ParallaxMoment = {
+  id: "arrival" | "constellations" | "mix" | "fade" | "final";
+  label: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  accent: string;
+  secondary: string;
+  cue: string;
+  panelBody: string;
+};
+
+type ParallaxLandingExperienceProps = {
+  moments: ParallaxMoment[];
+};
+
+type SkyStar = {
+  x: number;
+  y: number;
+  coreRadiusFactor: number;
+  glowScale: number;
+  coreAlpha: number;
+  glowAlpha: number;
+  phase: number;
+  paletteIndex: number;
+  spikeStrength: number;
+};
+
+type CanvasPoint = {
+  x: number;
+  y: number;
+};
+
+type SoundStar = {
+  label: string;
+  x: number;
+  y: number;
+  companions: Array<{ x: number; y: number; size: number }>;
+};
+
+type PathPoint = {
+  x: number;
+  y: number;
+};
+
+type OrbAnnotation = {
+  label: string;
+  value: string;
+  detail: string;
+  x: number;
+  y: number;
+  align?: "left" | "right";
+};
+
+const SOUND_STARS: SoundStar[] = [
+  {
+    label: "Rain",
+    x: 30,
+    y: 39,
+    companions: [
+      { x: -5.2, y: -4.2, size: 0.42 },
+      { x: -8.4, y: 2.6, size: 0.28 },
+      { x: 4.4, y: 4.8, size: 0.34 },
+    ],
+  },
+  {
+    label: "Cabin",
+    x: 48,
+    y: 25,
+    companions: [
+      { x: -4.2, y: 5.2, size: 0.36 },
+      { x: 4.8, y: -5.4, size: 0.28 },
+      { x: 7.6, y: 1.8, size: 0.24 },
+    ],
+  },
+  {
+    label: "Forest",
+    x: 70,
+    y: 38,
+    companions: [
+      { x: -4.8, y: 4.4, size: 0.3 },
+      { x: 5.6, y: -4.8, size: 0.4 },
+      { x: 8.2, y: 2.4, size: 0.26 },
+    ],
+  },
+  {
+    label: "Noise",
+    x: 58,
+    y: 65,
+    companions: [
+      { x: -5, y: -4.4, size: 0.26 },
+      { x: 4.8, y: 4.8, size: 0.32 },
+      { x: 8, y: -1.8, size: 0.22 },
+    ],
+  },
+];
+
+const TIMER_PATH: PathPoint[] = [
+  { x: 32, y: 58 },
+  { x: 42, y: 44 },
+  { x: 56, y: 40 },
+  { x: 70, y: 47 },
+  { x: 78, y: 62 },
+];
+
+const ORB_ANNOTATIONS: Record<ParallaxMoment["id"], OrbAnnotation[]> = {
+  arrival: [
+    { label: "field", value: "forming", detail: "quiet entry", x: 18, y: 22 },
+    { label: "pressure", value: "none", detail: "no dashboard", x: 75, y: 35, align: "right" },
+    { label: "note", value: "morning", detail: "one soft line", x: 28, y: 74 },
+  ],
+  constellations: [
+    { label: "rain", value: "82", detail: "front layer", x: 14, y: 28 },
+    { label: "cabin", value: "64", detail: "warm air", x: 74, y: 25, align: "right" },
+    { label: "forest", value: "72", detail: "hush field", x: 82, y: 65, align: "right" },
+    { label: "noise", value: "48", detail: "soft floor", x: 24, y: 70 },
+  ],
+  mix: [
+    { label: "mix", value: "live", detail: "4 layers", x: 18, y: 26 },
+    { label: "balance", value: "80", detail: "held softly", x: 80, y: 46, align: "right" },
+    { label: "orbit", value: "slow", detail: "never crowded", x: 32, y: 78 },
+  ],
+  fade: [
+    { label: "timer", value: "45", detail: "min fade", x: 20, y: 28 },
+    { label: "audio", value: "bg", detail: "keeps playing", x: 78, y: 42, align: "right" },
+    { label: "close", value: "soft", detail: "no hard stop", x: 30, y: 76 },
+  ],
+  final: [
+    { label: "status", value: "soon", detail: "first night", x: 22, y: 32 },
+    { label: "privacy", value: "quiet", detail: "by design", x: 78, y: 48, align: "right" },
+    { label: "return", value: "when ready", detail: "no hard sell", x: 34, y: 76 },
+  ],
+};
+
+const PAGE_SKY_STARS = createPageSkyStars(128);
+
+export function ParallaxLandingExperience({
+  moments,
+}: ParallaxLandingExperienceProps) {
+  const trackRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const progressRef = useRef(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const activeMoment = moments[activeIndex];
+  const activeMomentRef = useRef(activeMoment);
+  const style = {
+    "--scene-accent": activeMoment.accent,
+    "--scene-secondary": activeMoment.secondary,
+  } as CSSProperties;
+
+  useEffect(() => {
+    activeMomentRef.current = activeMoment;
+  }, [activeMoment]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleMotionChange = () => setReducedMotion(mediaQuery.matches);
+
+    handleMotionChange();
+    mediaQuery.addEventListener("change", handleMotionChange);
+
+    return () => mediaQuery.removeEventListener("change", handleMotionChange);
+  }, []);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    const stage = stageRef.current;
+
+    if (!track || !stage || reducedMotion) {
+      return;
+    }
+
+    let frame = 0;
+    let lastIndex = -1;
+
+    const update = () => {
+      frame = 0;
+
+      const rect = track.getBoundingClientRect();
+      const scrollable = Math.max(1, rect.height - window.innerHeight);
+      const progress = clamp(-rect.top / scrollable, 0, 1);
+      const sceneIndex = Math.min(
+        moments.length - 1,
+        Math.round(progress * (moments.length - 1)),
+      );
+      const orbX = 58 + progress * 14;
+      const orbY = 52 - progress * 8;
+      const orbScale = 0.72 + progress * 0.42;
+      const textY = (progress * (moments.length - 1) - sceneIndex) * -34;
+
+      progressRef.current = progress;
+      stage.style.setProperty("--orb-x", `${orbX}%`);
+      stage.style.setProperty("--orb-y", `${orbY}%`);
+      stage.style.setProperty("--orb-scale", orbScale.toFixed(4));
+      stage.style.setProperty("--constellation-y", `${progress * -44}vh`);
+      stage.style.setProperty("--text-y", `${textY}px`);
+
+      if (sceneIndex !== lastIndex) {
+        lastIndex = sceneIndex;
+        setActiveIndex(sceneIndex);
+      }
+    };
+
+    const requestUpdate = () => {
+      if (frame) {
+        return;
+      }
+
+      frame = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+    };
+  }, [moments.length, reducedMotion]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    const context = canvas.getContext("2d", { alpha: true });
+
+    if (!context) {
+      return;
+    }
+
+    let frame = 0;
+    let width = 0;
+    let height = 0;
+    let pixelRatio = 1;
+
+    const resize = () => {
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = Math.floor(width * pixelRatio);
+      canvas.height = Math.floor(height * pixelRatio);
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    };
+
+    const draw = (time = 0) => {
+      const progress = reducedMotion ? 0.42 : progressRef.current;
+
+      context.clearRect(0, 0, width, height);
+      drawPageSky(context, width, height, progress, time, reducedMotion);
+      drawCanvasConstellation(
+        context,
+        width,
+        height,
+        progress,
+        activeMomentRef.current,
+        reducedMotion,
+      );
+
+      if (!reducedMotion) {
+        frame = window.requestAnimationFrame(draw);
+      }
+    };
+
+    resize();
+    draw();
+    window.addEventListener("resize", resize);
+
+    if (!reducedMotion) {
+      frame = window.requestAnimationFrame(draw);
+    }
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", resize);
+    };
+  }, [reducedMotion]);
+
+  if (reducedMotion) {
+    return <ReducedMotionLanding moments={moments} />;
+  }
+
+  return (
+    <section
+      ref={trackRef}
+      aria-label="Oryvelle cinematic scroll story"
+      className="relative min-h-[500svh] bg-background text-foreground"
+    >
+      <div
+        ref={stageRef}
+        className="sticky top-0 h-[100svh] overflow-hidden"
+        style={style}
+      >
+        <canvas
+          ref={canvasRef}
+          aria-hidden="true"
+          className="absolute inset-0 z-0 h-full w-full"
+        />
+
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_70%_38%,color-mix(in_srgb,var(--scene-accent)_12%,transparent),transparent_42%),linear-gradient(180deg,rgba(8,5,16,0),rgba(8,5,16,0.24)_92%)]"
+        />
+
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-[1] opacity-80"
+          style={{
+            transform: "translate3d(0, var(--constellation-y, 0), 0)",
+          }}
+        >
+          <ConstellationMap activeIndex={activeIndex} />
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-[2]"
+          style={{
+            transform:
+              "translate3d(calc(var(--orb-x, 62%) - 50%), calc(var(--orb-y, 50%) - 50%), 0) scale(var(--orb-scale, 0.82))",
+          }}
+        >
+          <div className="absolute left-1/2 top-1/2 h-[min(110vw,104vh)] w-[min(110vw,104vh)] -translate-x-1/2 -translate-y-1/2">
+            <div className="absolute inset-[5%] rounded-full border border-white/[0.035]" />
+            <div className="absolute inset-[14%] rounded-full border border-[var(--scene-accent)]/10" />
+            <OryvelleOrbCanvas
+              primaryColor={activeMoment.accent}
+              secondaryColor={activeMoment.secondary}
+              className="h-full w-full opacity-95"
+            />
+          </div>
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-[3] bg-[radial-gradient(circle_at_68%_44%,transparent_0%,rgba(8,5,16,0.02)_36%,rgba(8,5,16,0.48)_86%),linear-gradient(90deg,rgba(8,5,16,0.84)_0%,rgba(8,5,16,0.56)_34%,rgba(8,5,16,0.02)_100%)]"
+        />
+
+        <div className="relative z-10 mx-auto grid h-full w-full max-w-7xl grid-rows-[1fr_auto] px-5 pt-24 pb-5 sm:px-8 lg:pt-28">
+          <div className="grid min-h-0 items-center gap-8 lg:grid-cols-[minmax(0,0.82fr)_minmax(420px,1.18fr)]">
+            <div
+              className="relative z-20 max-w-[42rem]"
+              style={{
+                transform: "translate3d(0, var(--text-y, 0), 0)",
+              }}
+            >
+              <p className="mb-5 flex items-center gap-3 text-[0.68rem] font-medium tracking-[0.34em] text-[var(--scene-accent)] uppercase">
+                <span className="h-px w-10 bg-[var(--scene-accent)]/55" />
+                {activeMoment.eyebrow}
+              </p>
+
+              <h1
+                key={activeMoment.id}
+                className="animate-[sceneText_680ms_ease_both] text-balance text-4xl leading-[1.02] font-semibold tracking-normal text-[#F7F3FF] drop-shadow-[0_12px_60px_rgba(0,0,0,0.42)] sm:text-5xl lg:text-6xl"
+              >
+                {activeMoment.title}
+              </h1>
+
+              <p
+                key={`${activeMoment.id}-body`}
+                className="mt-6 max-w-xl animate-[sceneText_760ms_ease_70ms_both] text-base leading-8 text-[#B8B5C7] sm:text-lg"
+              >
+                {activeMoment.body}
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  disabled
+                  className="rounded-full border border-[var(--scene-accent)]/35 bg-[var(--scene-accent)]/12 px-5 py-3 text-sm font-medium text-[#F7F3FF] shadow-[0_0_30px_color-mix(in_srgb,var(--scene-accent)_16%,transparent)]"
+                >
+                  Coming soon
+                </button>
+                <span className="text-sm text-[#7C8094]">
+                  Private by design. Quiet by default.
+                </span>
+              </div>
+
+              <MobileNightNote moment={activeMoment} activeIndex={activeIndex} />
+            </div>
+
+            <div className="relative hidden min-h-[70vh] lg:block">
+              <OrbAnnotations moment={activeMoment} activeIndex={activeIndex} />
+            </div>
+          </div>
+
+          <ProgressRail moments={moments} activeIndex={activeIndex} />
+        </div>
+
+        <ol className="sr-only">
+          {moments.map((moment) => (
+            <li key={moment.id}>
+              {moment.label}: {moment.title}. {moment.body}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+function createPageSkyStars(count: number): SkyStar[] {
+  let seed = 92841;
+  const random = () => {
+    seed = (seed * 1664525 + 1013904223) % 4294967296;
+    return seed / 4294967296;
+  };
+
+  return Array.from({ length: count }, () => {
+    return {
+      x: random(),
+      y: random() * 0.92,
+      coreRadiusFactor: 0.001 + random() * 0.0017,
+      glowScale: 7 + random() * 8,
+      coreAlpha: 0.34 + random() * 0.5,
+      glowAlpha: 0.035 + random() * 0.11,
+      phase: random(),
+      paletteIndex: Math.floor(random() * 3),
+      spikeStrength: random(),
+    };
+  });
+}
+
+function drawPageSky(
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  progress: number,
+  time: number,
+  reducedMotion: boolean,
+) {
+  const minSize = Math.min(width, height);
+  const maxSize = Math.max(width, height);
+  const seconds = reducedMotion ? 0 : time * 0.001;
+  const orbCenter = {
+    x: width * (0.58 + progress * 0.14),
+    y: height * (0.52 - progress * 0.08),
+  };
+  const orbRadius = minSize * (0.34 + progress * 0.08);
+  const background = context.createLinearGradient(0, 0, 0, height);
+
+  background.addColorStop(0, "#080510");
+  background.addColorStop(0.44, "#0B0920");
+  background.addColorStop(1, "#0A0822");
+
+  context.fillStyle = background;
+  context.fillRect(0, 0, width, height);
+
+  context.save();
+  context.globalCompositeOperation = "lighter";
+
+  drawNebulaBlob(
+    context,
+    width * 0.28 + Math.cos(seconds * 0.08) * width * 0.025,
+    height * 0.34 + Math.sin(seconds * 0.07) * height * 0.018,
+    maxSize * 0.34,
+    maxSize * 0.22,
+    "#00E0C7",
+    0.22,
+  );
+  drawNebulaBlob(
+    context,
+    width * 0.72 + Math.cos(seconds * 0.06 + 2.1) * width * 0.028,
+    height * 0.56 + Math.sin(seconds * 0.09 + 1.4) * height * 0.02,
+    maxSize * 0.39,
+    maxSize * 0.25,
+    "#B89AFF",
+    0.2,
+  );
+  drawNebulaBlob(
+    context,
+    width * 0.5 + Math.cos(seconds * 0.05 + 4.2) * width * 0.018,
+    height * 0.2 + Math.sin(seconds * 0.08 + 3.1) * height * 0.016,
+    maxSize * 0.28,
+    maxSize * 0.18,
+    "#FFB87A",
+    0.11,
+  );
+  drawAmbientGravityHaze(context, orbCenter, orbRadius, seconds);
+  drawGravityLensingField(context, orbCenter, orbRadius, seconds, progress);
+
+  PAGE_SKY_STARS.forEach((star) => {
+    const basePoint = {
+      x: star.x * width,
+      y: star.y * height,
+    };
+    const sample = sampleAmbientGravityField(
+      basePoint,
+      orbCenter,
+      {
+        influenceRadius: orbRadius * 1.75,
+        eventHorizonRadius: orbRadius * 0.46,
+        maxPullPx: orbRadius * 0.12,
+        maxSwirlPx: orbRadius * 0.2,
+      },
+      seconds,
+    );
+    const flicker = reducedMotion
+      ? 0.78
+      : 0.68 + Math.sin(seconds * 1.6 + star.phase * Math.PI * 2) * 0.22;
+    const tint = starTint(star.paletteIndex);
+    const coreRadius = Math.max(minSize * star.coreRadiusFactor, 0.8);
+    const glowRadius = coreRadius * star.glowScale * (1 + sample.strength * 0.34);
+    const coreAlpha = star.coreAlpha * flicker * (1 + sample.strength * 0.38);
+    const glowAlpha = star.glowAlpha * flicker * (1 + sample.strength * 1.1);
+    const compressedCore = Math.max(coreRadius * (1 - sample.strength * 0.22), 0.65);
+
+    drawSoftStar(
+      context,
+      sample.warpedPoint.x,
+      sample.warpedPoint.y,
+      compressedCore,
+      glowRadius,
+      tint,
+      coreAlpha,
+      glowAlpha,
+      star.spikeStrength + sample.strength * 0.18,
+    );
+
+    if (sample.strength > 0.34) {
+      const streakBoost = clamp((sample.strength - 0.34) / 0.66, 0, 1);
+      const streakLength = coreRadius * (2.8 + sample.strength * 5.5);
+
+      context.save();
+      context.strokeStyle = withAlpha("#FFFFFF", coreAlpha * streakBoost * 0.16);
+      context.lineWidth = compressedCore * (0.32 + streakBoost * 0.42);
+      context.lineCap = "round";
+      context.beginPath();
+      context.moveTo(
+        sample.warpedPoint.x - sample.tangent.x * streakLength,
+        sample.warpedPoint.y - sample.tangent.y * streakLength,
+      );
+      context.lineTo(
+        sample.warpedPoint.x + sample.tangent.x * streakLength,
+        sample.warpedPoint.y + sample.tangent.y * streakLength,
+      );
+      context.stroke();
+      context.restore();
+    }
+  });
+
+  if (!reducedMotion) {
+    drawPageShootingStar(context, width, height, seconds);
+  }
+
+  context.restore();
+}
+
+function drawGravityLensingField(
+  context: CanvasRenderingContext2D,
+  center: CanvasPoint,
+  orbRadius: number,
+  seconds: number,
+  progress: number,
+) {
+  const pulse = 0.86 + Math.sin(seconds * 0.7) * 0.08;
+  const tilt = -0.16 + Math.sin(seconds * 0.12) * 0.035;
+  const fieldAlpha = 0.14 + progress * 0.05;
+
+  context.save();
+  context.globalCompositeOperation = "lighter";
+  context.translate(center.x, center.y);
+  context.rotate(tilt);
+  context.scale(1.42, 0.56);
+  context.translate(-center.x, -center.y);
+
+  for (let index = 0; index < 5; index += 1) {
+    const radius = orbRadius * (0.78 + index * 0.22) * pulse;
+    const start = seconds * (0.08 + index * 0.012) + index * 0.62;
+    const sweep = Math.PI * (0.82 + index * 0.08);
+    const gradient = context.createLinearGradient(
+      center.x - radius,
+      center.y,
+      center.x + radius,
+      center.y,
+    );
+
+    gradient.addColorStop(0, "rgba(255,255,255,0)");
+    gradient.addColorStop(0.22, withAlpha(index % 2 === 0 ? "#B89AFF" : "#00E0C7", fieldAlpha * 0.22));
+    gradient.addColorStop(0.52, withAlpha("#FFFFFF", fieldAlpha * (0.36 - index * 0.035)));
+    gradient.addColorStop(0.82, withAlpha("#FFB87A", fieldAlpha * 0.16));
+    gradient.addColorStop(1, "rgba(255,255,255,0)");
+
+    context.strokeStyle = gradient;
+    context.lineWidth = Math.max(0.7, orbRadius * (0.0028 + index * 0.0006));
+    context.lineCap = "round";
+    context.beginPath();
+    context.arc(center.x, center.y, radius, start, start + sweep);
+    context.stroke();
+
+    context.beginPath();
+    context.arc(center.x, center.y, radius * 1.015, start + Math.PI, start + Math.PI + sweep * 0.58);
+    context.globalAlpha = 0.58;
+    context.stroke();
+    context.globalAlpha = 1;
+  }
+
+  context.restore();
+
+  drawInfallFilaments(context, center, orbRadius, seconds);
+}
+
+function drawInfallFilaments(
+  context: CanvasRenderingContext2D,
+  center: CanvasPoint,
+  orbRadius: number,
+  seconds: number,
+) {
+  const strands = [
+    { angle: 32, tint: "#FFB87A", phase: 0.1 },
+    { angle: 205, tint: "#67D7FF", phase: 2.1 },
+    { angle: 286, tint: "#00E0C7", phase: 3.4 },
+  ];
+
+  context.save();
+  context.globalCompositeOperation = "lighter";
+  context.lineCap = "round";
+
+  strands.forEach((strand, strandIndex) => {
+    const startAngle = ((strand.angle + Math.sin(seconds * 0.22 + strand.phase) * 12) / 180) * Math.PI;
+    const points: CanvasPoint[] = [];
+
+    for (let index = 0; index < 34; index += 1) {
+      const t = index / 33;
+      const radius = orbRadius * (1.9 + (0.58 - 1.9) * t ** 0.72);
+      const wind = (1.4 + strandIndex * 0.18) * t;
+      const angle = startAngle + wind + Math.sin(seconds * 0.45 + t * 5 + strand.phase) * 0.08 * (1 - t);
+
+      points.push({
+        x: center.x + Math.cos(angle) * radius,
+        y: center.y + Math.sin(angle) * radius,
+      });
+    }
+
+    const gradient = context.createLinearGradient(
+      points[0].x,
+      points[0].y,
+      points[points.length - 1].x,
+      points[points.length - 1].y,
+    );
+
+    gradient.addColorStop(0, "rgba(255,255,255,0)");
+    gradient.addColorStop(0.55, withAlpha(strand.tint, 0.032));
+    gradient.addColorStop(0.86, withAlpha("#FFFFFF", 0.09));
+    gradient.addColorStop(1, "rgba(255,255,255,0)");
+
+    context.strokeStyle = gradient;
+    context.lineWidth = Math.max(0.45, orbRadius * 0.0018);
+    context.beginPath();
+    points.forEach((point, index) => {
+      if (index === 0) {
+        context.moveTo(point.x, point.y);
+        return;
+      }
+
+      const previous = points[index - 1];
+      context.quadraticCurveTo(previous.x, previous.y, (previous.x + point.x) / 2, (previous.y + point.y) / 2);
+    });
+    context.stroke();
+  });
+
+  context.restore();
+}
+
+function drawAmbientGravityHaze(
+  context: CanvasRenderingContext2D,
+  center: CanvasPoint,
+  orbRadius: number,
+  seconds: number,
+) {
+  const blobs = [
+    { angle: 24, distance: 0.06, radius: 0.64, alpha: 0.12, stretchX: 1.34, stretchY: 0.86, tint: "#00E0C7", phase: 0.1 },
+    { angle: 124, distance: 0.24, radius: 0.58, alpha: 0.11, stretchX: 1.3, stretchY: 0.82, tint: "#B89AFF", phase: 1.6 },
+    { angle: 244, distance: 0.22, radius: 0.54, alpha: 0.1, stretchX: 1.28, stretchY: 0.78, tint: "#8F82E8", phase: 3.1 },
+  ];
+
+  blobs.forEach((blob) => {
+    const angle = (blob.angle / 180) * Math.PI;
+    const spin = Math.sin(seconds * 0.18 + blob.phase) * 7;
+    const point = {
+      x: center.x + Math.cos(angle) * orbRadius * blob.distance,
+      y: center.y + Math.sin(angle) * orbRadius * blob.distance,
+    };
+
+    context.save();
+    context.translate(point.x, point.y);
+    context.rotate((spin / 180) * Math.PI);
+    context.scale(blob.stretchX, blob.stretchY);
+    context.translate(-point.x, -point.y);
+    drawNebulaBlob(
+      context,
+      point.x,
+      point.y,
+      orbRadius * blob.radius,
+      orbRadius * blob.radius,
+      blob.tint,
+      blob.alpha,
+    );
+    context.restore();
+  });
+}
+
+function drawSoftStar(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  coreRadius: number,
+  glowRadius: number,
+  color: string,
+  coreAlpha: number,
+  glowAlpha: number,
+  spikeStrength: number,
+) {
+  const glow = context.createRadialGradient(x, y, 0, x, y, glowRadius);
+  const hotCoreRadius = Math.max(coreRadius * 0.48, 0.45);
+  const spikeAlpha = clamp((spikeStrength - 0.34) / 0.66, 0, 1) * coreAlpha;
+  const spikeLength = glowRadius * (1.35 + spikeStrength * 1.85);
+  const shortSpikeLength = spikeLength * 0.46;
+
+  glow.addColorStop(0, withAlpha("#FFFFFF", glowAlpha * 1.35));
+  glow.addColorStop(0.12, withAlpha(color, glowAlpha));
+  glow.addColorStop(0.45, withAlpha(color, glowAlpha * 0.3));
+  glow.addColorStop(1, "rgba(0,0,0,0)");
+
+  context.fillStyle = glow;
+  context.beginPath();
+  context.arc(x, y, glowRadius, 0, Math.PI * 2);
+  context.fill();
+
+  if (spikeAlpha > 0.03) {
+    drawStarSpike(context, x, y, spikeLength, 0, "#FFFFFF", spikeAlpha * 0.34, 0.72);
+    drawStarSpike(context, x, y, spikeLength * 0.82, Math.PI / 2, "#FFFFFF", spikeAlpha * 0.28, 0.62);
+    drawStarSpike(context, x, y, shortSpikeLength, Math.PI / 4, color, spikeAlpha * 0.16, 0.5);
+    drawStarSpike(context, x, y, shortSpikeLength, -Math.PI / 4, color, spikeAlpha * 0.16, 0.5);
+  }
+
+  const rim = context.createRadialGradient(x, y, 0, x, y, coreRadius * 2.8);
+  rim.addColorStop(0, withAlpha("#FFFFFF", clamp(coreAlpha * 1.25, 0, 1)));
+  rim.addColorStop(0.38, withAlpha("#FFF7D6", clamp(coreAlpha * 0.45, 0, 1)));
+  rim.addColorStop(1, withAlpha(color, 0));
+
+  context.fillStyle = rim;
+  context.beginPath();
+  context.arc(x, y, coreRadius * 2.8, 0, Math.PI * 2);
+  context.fill();
+
+  context.fillStyle = withAlpha("#FFFFFF", clamp(coreAlpha * 1.45, 0, 1));
+  context.beginPath();
+  context.arc(x, y, hotCoreRadius, 0, Math.PI * 2);
+  context.fill();
+}
+
+function drawStarSpike(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  length: number,
+  angle: number,
+  color: string,
+  alpha: number,
+  width: number,
+) {
+  const dx = Math.cos(angle) * length;
+  const dy = Math.sin(angle) * length;
+  const gradient = context.createLinearGradient(x - dx, y - dy, x + dx, y + dy);
+
+  gradient.addColorStop(0, "rgba(255,255,255,0)");
+  gradient.addColorStop(0.45, withAlpha(color, alpha * 0.18));
+  gradient.addColorStop(0.5, withAlpha("#FFFFFF", alpha));
+  gradient.addColorStop(0.55, withAlpha(color, alpha * 0.18));
+  gradient.addColorStop(1, "rgba(255,255,255,0)");
+
+  context.save();
+  context.strokeStyle = gradient;
+  context.lineWidth = width;
+  context.lineCap = "round";
+  context.beginPath();
+  context.moveTo(x - dx, y - dy);
+  context.lineTo(x + dx, y + dy);
+  context.stroke();
+  context.restore();
+}
+
+function sampleAmbientGravityField(
+  point: CanvasPoint,
+  center: CanvasPoint,
+  config: {
+    influenceRadius: number;
+    eventHorizonRadius: number;
+    maxPullPx: number;
+    maxSwirlPx: number;
+  },
+  seconds: number,
+) {
+  const vector = { x: point.x - center.x, y: point.y - center.y };
+  const pointDistance = Math.hypot(vector.x, vector.y);
+
+  if (pointDistance <= 0.001 || pointDistance >= config.influenceRadius) {
+    return {
+      warpedPoint: point,
+      strength: 0,
+      tangent: { x: 0, y: 0 },
+    };
+  }
+
+  const outward = { x: vector.x / pointDistance, y: vector.y / pointDistance };
+  const inward = { x: -outward.x, y: -outward.y };
+  const tangent = { x: -outward.y, y: outward.x };
+  const usableRadius = Math.max(config.influenceRadius - config.eventHorizonRadius, 1);
+  const normalizedDistance = clamp(
+    (pointDistance - config.eventHorizonRadius) / usableRadius,
+    0,
+    1,
+  );
+  const proximity = 1 - normalizedDistance;
+  const strength = proximity ** 2.35;
+  const phaseOffset = (outward.x * 1.7 + outward.y * 0.9) * Math.PI;
+  const swirlPulse = 0.74 + 0.26 * Math.sin(seconds * 0.32 + phaseOffset);
+  const pull = config.maxPullPx * strength * (0.4 + 0.8 * strength);
+  const swirl = config.maxSwirlPx * strength * swirlPulse * (0.32 + 0.78 * strength);
+
+  return {
+    warpedPoint: {
+      x: point.x + inward.x * pull + tangent.x * swirl,
+      y: point.y + inward.y * pull + tangent.y * swirl,
+    },
+    strength,
+    tangent,
+  };
+}
+
+function starTint(paletteIndex: number) {
+  if (paletteIndex % 3 === 1) {
+    return "#00E0C7";
+  }
+
+  if (paletteIndex % 3 === 2) {
+    return "#B89AFF";
+  }
+
+  return "#EDEAF5";
+}
+
+function drawNebulaBlob(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  radiusX: number,
+  radiusY: number,
+  color: string,
+  alpha: number,
+) {
+  const gradient = context.createRadialGradient(x, y, 0, x, y, Math.max(radiusX, radiusY));
+
+  gradient.addColorStop(0, withAlpha(color, alpha));
+  gradient.addColorStop(0.48, withAlpha(color, alpha * 0.28));
+  gradient.addColorStop(1, "rgba(0,0,0,0)");
+
+  context.save();
+  context.translate(x, y);
+  context.scale(1, radiusY / radiusX);
+  context.translate(-x, -y);
+  context.fillStyle = gradient;
+  context.beginPath();
+  context.arc(x, y, radiusX, 0, Math.PI * 2);
+  context.fill();
+  context.restore();
+}
+
+function drawPageShootingStar(
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  seconds: number,
+) {
+  const cycle = 15;
+  const local = (seconds + 3.2) % cycle;
+
+  if (local > 1.2) {
+    return;
+  }
+
+  const travel = local / 1.2;
+  const alpha = Math.pow(1 - travel, 0.7) * 0.22;
+  const startX = width * 0.82;
+  const startY = height * 0.18;
+  const length = width * 0.18;
+  const angle = Math.PI * 1.18;
+  const headX = startX + Math.cos(angle) * travel * length;
+  const headY = startY + Math.sin(angle) * travel * length;
+  const tailLength = Math.min(length * 0.52, travel * length);
+  const tailX = headX - Math.cos(angle) * tailLength;
+  const tailY = headY - Math.sin(angle) * tailLength;
+
+  context.save();
+  context.lineCap = "round";
+  context.strokeStyle = withAlpha("#00E0C7", alpha * 0.42);
+  context.lineWidth = 3;
+  context.beginPath();
+  context.moveTo(tailX, tailY);
+  context.lineTo(headX, headY);
+  context.stroke();
+
+  context.strokeStyle = withAlpha("#F7F3FF", alpha);
+  context.lineWidth = 1.1;
+  context.beginPath();
+  context.moveTo(tailX, tailY);
+  context.lineTo(headX, headY);
+  context.stroke();
+  context.restore();
+}
+
+function drawCanvasConstellation(
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  progress: number,
+  moment: ParallaxMoment,
+  reducedMotion: boolean,
+) {
+  const points = TIMER_PATH.map((point, index) => {
+    const curve = reducedMotion ? 0 : Math.sin(progress * 7 + index) * 9;
+
+    return {
+      x: (point.x / 100) * width,
+      y: (point.y / 100) * height - progress * height * 0.18 + curve,
+    };
+  });
+  const reveal = clamp((progress - 0.12) / 0.55, 0, 1);
+  const timerBias = clamp((progress - 0.58) / 0.24, 0, 1);
+
+  context.save();
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.strokeStyle = timerBias > 0.2 ? moment.accent : moment.secondary;
+  context.globalAlpha = 0.12 + reveal * 0.24;
+  context.lineWidth = 0.85;
+  context.beginPath();
+
+  points.forEach((point, index) => {
+    if (index === 0) {
+      context.moveTo(point.x, point.y);
+      return;
+    }
+
+    const previous = points[index - 1];
+    const controlX = (previous.x + point.x) / 2;
+    const controlY = (previous.y + point.y) / 2 - height * (0.02 + timerBias * 0.05);
+
+    context.quadraticCurveTo(controlX, controlY, point.x, point.y);
+  });
+  context.stroke();
+
+  points.forEach((point, index) => {
+    const active = Math.round(progress * 4) === index;
+    const radius = active ? 2.1 : 1.35;
+    const glowRadius = active ? 18 : 10;
+
+    drawGlowingCanvasStar(
+      context,
+      point.x,
+      point.y,
+      radius,
+      glowRadius,
+      active ? moment.accent : "#EDEAF5",
+      active ? 0.95 : 0.48 + reveal * 0.18,
+    );
+  });
+
+  context.restore();
+}
+
+function ConstellationMap({ activeIndex }: { activeIndex: number }) {
+  const opacity = activeIndex === 0 ? 0.18 : activeIndex === 4 ? 0.32 : 0.72;
+
+  return (
+    <svg
+      className="h-full w-full"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <defs>
+        <filter id="star-soft-glow">
+          <feGaussianBlur stdDeviation="0.45" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <path
+        d={soundStarPath(SOUND_STARS)}
+        fill="none"
+        stroke="var(--scene-accent)"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeOpacity={opacity * 0.52}
+        strokeWidth="0.08"
+        vectorEffect="non-scaling-stroke"
+      />
+      <path
+        d={soundStarPath(SOUND_STARS)}
+        fill="none"
+        stroke="#EDEAF5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeOpacity="0.12"
+        strokeWidth="0.035"
+        vectorEffect="non-scaling-stroke"
+      />
+      {SOUND_STARS.map((star) => (
+        <g key={star.label} opacity={activeIndex === 0 ? 0.45 : 0.92}>
+          {star.companions.map((point) => (
+            <g key={`${star.label}-${point.x}-${point.y}`}>
+              <circle
+                cx={star.x + point.x}
+                cy={star.y + point.y}
+                r={point.size * 6.4}
+                fill="#EDEAF5"
+                opacity="0.026"
+              />
+              <circle
+                cx={star.x + point.x}
+                cy={star.y + point.y}
+                r={point.size * 0.38}
+                fill="#FFFFFF"
+                opacity="0.94"
+              />
+              <circle
+                cx={star.x + point.x}
+                cy={star.y + point.y}
+                r={point.size * 0.9}
+                fill="#EDEAF5"
+                opacity="0.18"
+                filter="url(#star-soft-glow)"
+              />
+              <path
+                d={starSparkPath(star.x + point.x, star.y + point.y, point.size * 5.2)}
+                stroke="#EDEAF5"
+                strokeLinecap="round"
+                strokeOpacity="0.46"
+                strokeWidth="0.045"
+                vectorEffect="non-scaling-stroke"
+              />
+            </g>
+          ))}
+          <circle
+            cx={star.x}
+            cy={star.y}
+            r="7.2"
+            fill="var(--scene-accent)"
+            opacity="0.035"
+          />
+          <circle
+            cx={star.x}
+            cy={star.y}
+            r="1.35"
+            fill="var(--scene-accent)"
+            opacity="0.26"
+            filter="url(#star-soft-glow)"
+          />
+          <circle
+            cx={star.x}
+            cy={star.y}
+            r="0.34"
+            fill="#FFFFFF"
+            opacity="0.96"
+          />
+          <path
+            d={starSparkPath(star.x, star.y, 6.4)}
+            stroke="#F7F3FF"
+            strokeLinecap="round"
+            strokeOpacity="0.62"
+            strokeWidth="0.06"
+            vectorEffect="non-scaling-stroke"
+          />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function OrbAnnotations({
+  moment,
+  activeIndex,
+}: {
+  moment: ParallaxMoment;
+  activeIndex: number;
+}) {
+  const annotations = ORB_ANNOTATIONS[moment.id];
+
+  return (
+    <div key={moment.id} className="pointer-events-none absolute inset-0 hidden lg:block">
+      <div className="absolute left-1/2 top-1/2 h-[68vh] max-h-[44rem] min-h-[30rem] w-[68vh] min-w-[30rem] max-w-[44rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.035]" />
+      <div className="absolute left-1/2 top-1/2 h-[48vh] max-h-[32rem] min-h-[22rem] w-[48vh] min-w-[22rem] max-w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--scene-accent)]/10" />
+
+      <div
+        className="absolute left-1/2 top-[14%] flex -translate-x-1/2 items-center gap-3 text-[0.66rem] font-medium tracking-[0.26em] text-[var(--scene-accent)] uppercase opacity-90"
+        aria-hidden="true"
+      >
+        <span className="h-px w-10 bg-[var(--scene-accent)]/40" />
+        {moment.cue}
+        <span className="h-px w-10 bg-[var(--scene-accent)]/40" />
+      </div>
+
+      {annotations.map((annotation, index) => (
+        <div
+          key={`${moment.id}-${annotation.label}`}
+          className={[
+            "absolute flex w-48 animate-[sceneText_620ms_ease_both] items-center gap-3",
+            annotation.align === "right" ? "-translate-x-full text-right" : "",
+          ].join(" ")}
+          style={{
+            left: `${annotation.x}%`,
+            top: `${annotation.y}%`,
+            animationDelay: `${index * 90}ms`,
+          }}
+        >
+          {annotation.align === "right" ? (
+            <>
+              <AnnotationText annotation={annotation} />
+              <AnnotationStar />
+            </>
+          ) : (
+            <>
+              <AnnotationStar />
+              <AnnotationText annotation={annotation} />
+            </>
+          )}
+        </div>
+      ))}
+
+      <div className="absolute bottom-[12%] right-[5%] w-56 animate-[sceneText_720ms_ease_180ms_both] border-t border-[var(--scene-accent)]/20 pt-4 text-right">
+        <p className="text-[0.66rem] font-medium tracking-[0.28em] text-[#D8D4E8]/55 uppercase">
+          scene 0{activeIndex + 1}
+        </p>
+        <p className="mt-1 text-sm leading-6 text-[#F7F3FF]/78">
+          {moment.panelBody}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function AnnotationStar() {
+  return (
+    <span className="relative grid h-7 w-7 shrink-0 place-items-center">
+      <span className="absolute h-px w-7 bg-[#F7F3FF]/35" />
+      <span className="absolute h-7 w-px bg-[#F7F3FF]/25" />
+      <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_16px_rgba(255,255,255,0.85),0_0_28px_var(--scene-accent)]" />
+    </span>
+  );
+}
+
+function AnnotationText({ annotation }: { annotation: OrbAnnotation }) {
+  return (
+    <span className="min-w-0">
+      <span className="block text-[0.62rem] font-medium tracking-[0.24em] text-[var(--scene-accent)] uppercase">
+        {annotation.label}
+      </span>
+      <span className="mt-1 block text-xl leading-none font-semibold text-[#F7F3FF]">
+        {annotation.value}
+      </span>
+      <span className="mt-1 block text-xs tracking-[0.08em] text-[#B8B5C7]/70 uppercase">
+        {annotation.detail}
+      </span>
+    </span>
+  );
+}
+
+function MobileNightNote({
+  moment,
+  activeIndex,
+}: {
+  moment: ParallaxMoment;
+  activeIndex: number;
+}) {
+  const annotations = ORB_ANNOTATIONS[moment.id].slice(0, 2);
+
+  return (
+    <aside
+      key={moment.id}
+      className="mt-8 animate-[sceneText_680ms_ease_120ms_both] border-l border-[var(--scene-accent)]/35 pl-4 lg:hidden"
+      aria-label={`${moment.label} night note`}
+    >
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-[0.66rem] font-medium tracking-[0.28em] text-[var(--scene-accent)] uppercase">
+          Night note 0{activeIndex + 1}
+        </p>
+        <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_16px_var(--scene-accent)]" />
+      </div>
+      <p className="mt-3 max-w-sm text-sm leading-6 text-[#F7F3FF]/78">
+        {moment.panelBody}
+      </p>
+      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+        {annotations.map((annotation) => (
+          <span key={annotation.label} className="text-xs tracking-[0.14em] text-[#B8B5C7]/70 uppercase">
+            <span className="text-[#F7F3FF]/90">{annotation.value}</span>{" "}
+            {annotation.label}
+          </span>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
+function ProgressRail({
+  moments,
+  activeIndex,
+}: {
+  moments: ParallaxMoment[];
+  activeIndex: number;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className="relative z-30 mx-auto mb-1 flex w-full max-w-sm items-center justify-center gap-3 rounded-full border border-white/[0.08] bg-[#080510]/44 p-2 backdrop-blur-xl"
+    >
+      {moments.map((moment, index) => (
+        <span
+          key={moment.id}
+          className={[
+            "h-1.5 rounded-full transition-all duration-500",
+            activeIndex === index
+              ? "w-10 bg-[var(--scene-accent)] shadow-[0_0_18px_var(--scene-accent)]"
+              : "w-4 bg-white/18",
+          ].join(" ")}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ReducedMotionLanding({ moments }: { moments: ParallaxMoment[] }) {
+  return (
+    <section className="relative bg-background px-5 pt-28 pb-12 text-foreground sm:px-8">
+      <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <p className="mb-4 text-xs font-medium tracking-[0.34em] text-[#00E0C7] uppercase">
+            Obsidian Sleep
+          </p>
+          <h1 className="text-balance text-5xl leading-[0.94] font-semibold text-[#F7F3FF] sm:text-7xl">
+            Build a softer path into sleep.
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-8 text-[#B8B5C7] sm:text-lg">
+            Oryvelle keeps the ritual quiet: sound constellations, a gentle
+            fade, and a small morning note without dashboard pressure.
+          </p>
+          <button
+            type="button"
+            disabled
+            className="mt-8 rounded-full border border-[#00E0C7]/35 bg-[#00E0C7]/12 px-5 py-3 text-sm font-medium text-[#F7F3FF]"
+          >
+            Coming soon
+          </button>
+        </div>
+        <div className="relative min-h-[22rem] overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[#101421]/58">
+          <OryvelleOrbCanvas
+            primaryColor="#00E0C7"
+            secondaryColor="#B89AFF"
+            reducedMotion
+            className="absolute inset-0 h-full w-full"
+          />
+        </div>
+      </div>
+      <div className="mx-auto mt-12 grid w-full max-w-7xl gap-4 md:grid-cols-2">
+        {moments.slice(1).map((moment) => (
+          <article
+            key={moment.id}
+            className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.035] p-5"
+          >
+            <p className="mb-2 text-xs font-medium tracking-[0.24em] text-[#7C8094] uppercase">
+              {moment.label}
+            </p>
+            <h2 className="text-2xl font-semibold text-[#F7F3FF]">
+              {moment.title}
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-[#B8B5C7]">
+              {moment.body}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function soundStarPath(stars: SoundStar[]) {
+  return stars
+    .map((star, index) => (index === 0 ? `M ${star.x} ${star.y}` : `L ${star.x} ${star.y}`))
+    .join(" ");
+}
+
+function starSparkPath(x: number, y: number, radius: number) {
+  return [
+    `M ${x - radius} ${y} L ${x + radius} ${y}`,
+    `M ${x} ${y - radius} L ${x} ${y + radius}`,
+    `M ${x - radius * 0.58} ${y - radius * 0.58} L ${x + radius * 0.58} ${y + radius * 0.58}`,
+    `M ${x + radius * 0.58} ${y - radius * 0.58} L ${x - radius * 0.58} ${y + radius * 0.58}`,
+  ].join(" ");
+}
+
+function drawGlowingCanvasStar(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  radius: number,
+  glowRadius: number,
+  color: string,
+  alpha: number,
+) {
+  const glow = context.createRadialGradient(x, y, 0, x, y, glowRadius);
+
+  glow.addColorStop(0, withAlpha("#FFFFFF", alpha * 0.32));
+  glow.addColorStop(0.2, withAlpha(color, alpha * 0.22));
+  glow.addColorStop(0.55, withAlpha(color, alpha * 0.06));
+  glow.addColorStop(1, "rgba(0,0,0,0)");
+
+  context.globalAlpha = 1;
+  context.fillStyle = glow;
+  context.beginPath();
+  context.arc(x, y, glowRadius, 0, Math.PI * 2);
+  context.fill();
+
+  drawStarSpike(context, x, y, glowRadius * 1.15, 0, "#FFFFFF", alpha * 0.2, 0.62);
+  drawStarSpike(context, x, y, glowRadius * 0.88, Math.PI / 2, "#FFFFFF", alpha * 0.16, 0.52);
+
+  context.fillStyle = withAlpha(color, alpha * 0.28);
+  context.beginPath();
+  context.arc(x, y, radius * 1.8, 0, Math.PI * 2);
+  context.fill();
+
+  context.fillStyle = withAlpha("#FFFFFF", alpha);
+  context.beginPath();
+  context.arc(x, y, Math.max(radius * 0.34, 0.42), 0, Math.PI * 2);
+  context.fill();
+}
+
+function withAlpha(hex: string, alpha: number) {
+  if (!hex.startsWith("#") || hex.length !== 7) {
+    return hex;
+  }
+
+  const red = Number.parseInt(hex.slice(1, 3), 16);
+  const green = Number.parseInt(hex.slice(3, 5), 16);
+  const blue = Number.parseInt(hex.slice(5, 7), 16);
+
+  return `rgba(${red},${green},${blue},${alpha})`;
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+type SceneState = {
+  activeScene: number;
+  nextScene: number;
+  sceneBlend: number;
+  outBlend: number;
+  inBlend: number;
+  crossfading: boolean;
+};
+
+function smoothstepBlend(t: number): number {
+  const x = Math.max(0, Math.min(1, t));
+  return x * x * (3 - 2 * x);
+}
+
+function computeSceneState(progress: number, sceneCount: number): SceneState {
+  const CROSSFADE = 0.15;
+  const segment = 1 / sceneCount;
+  const rawIndex = progress / segment;
+  const activeScene = Math.min(sceneCount - 1, Math.floor(rawIndex));
+  const segmentProgress = Math.max(0, Math.min(1, rawIndex - activeScene));
+  const sceneBlend = smoothstepBlend(segmentProgress);
+  const crossfadeProgress =
+    segmentProgress > 1 - CROSSFADE
+      ? (segmentProgress - (1 - CROSSFADE)) / CROSSFADE
+      : 0;
+  const crossfading = crossfadeProgress > 0;
+  const outBlend = crossfading ? 1 - smoothstepBlend(crossfadeProgress) : 1;
+  const inBlend = crossfading ? smoothstepBlend(crossfadeProgress) : 0;
+  const nextScene = Math.min(sceneCount - 1, activeScene + 1);
+  return { activeScene, nextScene, sceneBlend, outBlend, inBlend, crossfading };
+}
+
+function hexLerp(from: string, to: string, t: number): string {
+  if (!from.startsWith("#") || from.length !== 7 || !to.startsWith("#") || to.length !== 7) {
+    return from;
+  }
+  const fr = Number.parseInt(from.slice(1, 3), 16);
+  const fg = Number.parseInt(from.slice(3, 5), 16);
+  const fb = Number.parseInt(from.slice(5, 7), 16);
+  const tr = Number.parseInt(to.slice(1, 3), 16);
+  const tg = Number.parseInt(to.slice(3, 5), 16);
+  const tb = Number.parseInt(to.slice(5, 7), 16);
+  const r = Math.round(fr + (tr - fr) * t);
+  const g = Math.round(fg + (tg - fg) * t);
+  const b = Math.round(fb + (tb - fb) * t);
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+}
