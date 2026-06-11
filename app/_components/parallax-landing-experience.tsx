@@ -142,6 +142,21 @@ const ORB_ANNOTATIONS: Record<ParallaxMoment["id"], OrbAnnotation[]> = {
   ],
 };
 
+const SCENE_GLOW: Record<ParallaxMoment["id"], number> = {
+  arrival: 0.55,
+  constellations: 0.65,
+  mix: 1.0,
+  fade: 0.72,
+  final: 0.45,
+};
+
+const SATELLITE_ORBIT_SPEEDS = [0.12, 0.142, 0.164, 0.186] as const;
+const SATELLITE_ORBIT_RADII = [0.82, 0.91, 1.0, 1.09] as const;
+const SATELLITE_BASE_ANGLES = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2] as const;
+const ORBIT_SCALE_X = 1.0;
+const ORBIT_SCALE_Y = 0.74;
+const ORBIT_TILT = (-12 * Math.PI) / 180;
+
 const PAGE_SKY_STARS = createPageSkyStars(128);
 
 export function ParallaxLandingExperience({
@@ -267,12 +282,15 @@ export function ParallaxLandingExperience({
 
       context.clearRect(0, 0, width, height);
       drawPageSky(context, width, height, progress, time, reducedMotion, activeMomentRef.current.accent);
-      drawCanvasConstellation(
+      const sceneState = computeSceneState(progress, moments.length);
+      drawSceneCanvas(
         context,
         width,
         height,
         progress,
+        sceneState,
         activeMomentRef.current,
+        time,
         reducedMotion,
       );
 
@@ -345,6 +363,7 @@ export function ParallaxLandingExperience({
             <OryvelleOrbCanvas
               primaryColor={activeMoment.accent}
               secondaryColor={activeMoment.secondary}
+              glowStrength={SCENE_GLOW[activeMoment.id]}
               className="h-full w-full opacity-95"
             />
           </div>
@@ -930,64 +949,123 @@ function drawPageShootingStar(
   context.restore();
 }
 
-function drawCanvasConstellation(
+function drawArrivalCanvas(
+  _context: CanvasRenderingContext2D,
+  _width: number,
+  _height: number,
+  _sceneBlend: number,
+  _moment: ParallaxMoment,
+  _seconds: number,
+) {}
+
+function drawConstellationsCanvas(
+  _context: CanvasRenderingContext2D,
+  _width: number,
+  _height: number,
+  _sceneBlend: number,
+  _moment: ParallaxMoment,
+  _seconds: number,
+) {}
+
+function drawMixCanvas(
+  _context: CanvasRenderingContext2D,
+  _width: number,
+  _height: number,
+  _sceneBlend: number,
+  _moment: ParallaxMoment,
+  _seconds: number,
+  _orbCenter: CanvasPoint,
+  _orbRadius: number,
+) {}
+
+function drawFadeCanvas(
+  _context: CanvasRenderingContext2D,
+  _width: number,
+  _height: number,
+  _sceneBlend: number,
+  _moment: ParallaxMoment,
+  _seconds: number,
+  _orbCenter: CanvasPoint,
+  _orbRadius: number,
+) {}
+
+function drawFinalCanvas(
+  _context: CanvasRenderingContext2D,
+  _width: number,
+  _height: number,
+  _sceneBlend: number,
+  _moment: ParallaxMoment,
+  _seconds: number,
+  _orbCenter: CanvasPoint,
+  _orbRadius: number,
+) {}
+
+function drawSceneForIndex(
   context: CanvasRenderingContext2D,
   width: number,
   height: number,
   progress: number,
+  sceneIndex: number,
+  sceneBlend: number,
+  displayAlpha: number,
   moment: ParallaxMoment,
+  seconds: number,
+  orbCenter: CanvasPoint,
+  orbRadius: number,
+) {
+  context.save();
+  context.globalAlpha = displayAlpha;
+  switch (sceneIndex) {
+    case 0:
+      drawArrivalCanvas(context, width, height, sceneBlend, moment, seconds);
+      break;
+    case 1:
+      drawConstellationsCanvas(context, width, height, sceneBlend, moment, seconds);
+      break;
+    case 2:
+      drawMixCanvas(context, width, height, sceneBlend, moment, seconds, orbCenter, orbRadius);
+      break;
+    case 3:
+      drawFadeCanvas(context, width, height, sceneBlend, moment, seconds, orbCenter, orbRadius);
+      break;
+    case 4:
+      drawFinalCanvas(context, width, height, sceneBlend, moment, seconds, orbCenter, orbRadius);
+      break;
+  }
+  context.restore();
+}
+
+function drawSceneCanvas(
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  progress: number,
+  state: SceneState,
+  moment: ParallaxMoment,
+  time: number,
   reducedMotion: boolean,
 ) {
-  const points = TIMER_PATH.map((point, index) => {
-    const curve = reducedMotion ? 0 : Math.sin(progress * 7 + index) * 9;
+  const seconds = reducedMotion ? 0 : time * 0.001;
+  const orbCenter: CanvasPoint = {
+    x: width * (0.58 + progress * 0.14),
+    y: height * (0.52 - progress * 0.08),
+  };
+  const minSize = Math.min(width, height);
+  const orbRadius = minSize * (0.34 + progress * 0.08);
 
-    return {
-      x: (point.x / 100) * width,
-      y: (point.y / 100) * height - progress * height * 0.18 + curve,
-    };
-  });
-  const reveal = clamp((progress - 0.12) / 0.55, 0, 1);
-  const timerBias = clamp((progress - 0.58) / 0.24, 0, 1);
+  drawSceneForIndex(
+    context, width, height, progress,
+    state.activeScene, state.sceneBlend, state.outBlend,
+    moment, seconds, orbCenter, orbRadius,
+  );
 
-  context.save();
-  context.lineCap = "round";
-  context.lineJoin = "round";
-  context.strokeStyle = timerBias > 0.2 ? moment.accent : moment.secondary;
-  context.globalAlpha = 0.12 + reveal * 0.24;
-  context.lineWidth = 0.85;
-  context.beginPath();
-
-  points.forEach((point, index) => {
-    if (index === 0) {
-      context.moveTo(point.x, point.y);
-      return;
-    }
-
-    const previous = points[index - 1];
-    const controlX = (previous.x + point.x) / 2;
-    const controlY = (previous.y + point.y) / 2 - height * (0.02 + timerBias * 0.05);
-
-    context.quadraticCurveTo(controlX, controlY, point.x, point.y);
-  });
-  context.stroke();
-
-  points.forEach((point, index) => {
-    const active = Math.round(progress * 4) === index;
-    const radius = active ? 2.1 : 1.35;
-    const glowRadius = active ? 18 : 10;
-
-    drawGlowingCanvasStar(
-      context,
-      point.x,
-      point.y,
-      radius,
-      glowRadius,
-      active ? moment.accent : "#EDEAF5",
-      active ? 0.95 : 0.48 + reveal * 0.18,
+  if (state.crossfading) {
+    drawSceneForIndex(
+      context, width, height, progress,
+      state.nextScene, 0, state.inBlend,
+      moment, seconds, orbCenter, orbRadius,
     );
-  });
-
-  context.restore();
+  }
 }
 
 function ConstellationMap({ activeIndex }: { activeIndex: number }) {
