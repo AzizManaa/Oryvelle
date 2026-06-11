@@ -1,8 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #080510;
+  --foreground: #edeaf5;
+  --oryvelle-depth: #0d0a18;
+  --oryvelle-panel: #130f1e;
+  --oryvelle-muted: #b8b5c7;
+  --oryvelle-subtle: #7c8094;
+  --oryvelle-teal: #00e0c7;
+  --oryvelle-violet: #8f82e8;
+  --oryvelle-lavender: #b89aff;
+  --oryvelle-amber: #ffb87a;
+  --oryvelle-rose: #ff6b9d;
 }
 
 @theme inline {
@@ -12,15 +21,73 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--background);
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  min-width: 320px;
+  text-rendering: geometricPrecision;
+  overscroll-behavior: none;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--oryvelle-teal) 30%, transparent);
+  color: var(--foreground);
+}
+
+button,
+[aria-disabled="true"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes sceneText {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scenePreview {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes satelliteIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
