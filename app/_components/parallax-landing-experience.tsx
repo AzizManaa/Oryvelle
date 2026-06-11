@@ -950,55 +950,285 @@ function drawPageShootingStar(
 }
 
 function drawArrivalCanvas(
-  _context: CanvasRenderingContext2D,
-  _width: number,
-  _height: number,
-  _sceneBlend: number,
-  _moment: ParallaxMoment,
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  sceneBlend: number,
+  moment: ParallaxMoment,
   _seconds: number,
-) {}
+) {
+  const points = TIMER_PATH.map((point) => ({
+    x: (point.x / 100) * width,
+    y: (point.y / 100) * height,
+  }));
+  const pathAlpha = 0.04 + sceneBlend * 0.04;
+
+  context.save();
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.strokeStyle = withAlpha(moment.secondary, pathAlpha);
+  context.lineWidth = 0.6;
+  context.beginPath();
+  points.forEach((point, index) => {
+    if (index === 0) {
+      context.moveTo(point.x, point.y);
+      return;
+    }
+    const previous = points[index - 1];
+    const controlX = (previous.x + point.x) / 2;
+    const controlY = (previous.y + point.y) / 2 - height * 0.02;
+    context.quadraticCurveTo(controlX, controlY, point.x, point.y);
+  });
+  context.stroke();
+
+  points.forEach((point) => {
+    drawGlowingCanvasStar(context, point.x, point.y, 0.8, 6, moment.secondary, pathAlpha * 0.7);
+  });
+  context.restore();
+}
 
 function drawConstellationsCanvas(
-  _context: CanvasRenderingContext2D,
-  _width: number,
-  _height: number,
-  _sceneBlend: number,
-  _moment: ParallaxMoment,
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  sceneBlend: number,
+  moment: ParallaxMoment,
   _seconds: number,
-) {}
+) {
+  const starPixels = SOUND_STARS.map((s) => ({
+    x: (s.x / 100) * width,
+    y: (s.y / 100) * height,
+    label: s.label,
+  }));
+
+  context.save();
+  context.lineCap = "round";
+  context.lineJoin = "round";
+
+  starPixels.forEach((star, index) => {
+    if (index === 0) return;
+    const prev = starPixels[index - 1];
+    const pathReveal = clamp((sceneBlend - index * 0.18) / 0.22, 0, 1);
+    if (pathReveal <= 0) return;
+
+    const ctrlX = (prev.x + star.x) / 2;
+    const ctrlY = (prev.y + star.y) / 2 - height * 0.04;
+    const SEGMENTS = 20;
+    const drawCount = Math.round(SEGMENTS * pathReveal);
+
+    context.strokeStyle = withAlpha(moment.secondary, 0.18 * sceneBlend);
+    context.lineWidth = 0.8;
+    context.beginPath();
+    for (let step = 0; step <= drawCount; step += 1) {
+      const t = step / SEGMENTS;
+      const mt = 1 - t;
+      const x = mt * mt * prev.x + 2 * mt * t * ctrlX + t * t * star.x;
+      const y = mt * mt * prev.y + 2 * mt * t * ctrlY + t * t * star.y;
+      if (step === 0) context.moveTo(x, y);
+      else context.lineTo(x, y);
+    }
+    context.stroke();
+  });
+
+  starPixels.forEach((star, index) => {
+    const nodeReveal = clamp((sceneBlend - index * 0.18) / 0.22, 0, 1);
+    if (nodeReveal <= 0) return;
+    drawGlowingCanvasStar(context, star.x, star.y, 2.2, 20, moment.accent, 0.72 * nodeReveal);
+  });
+
+  context.restore();
+}
+
+function orbitPoint(
+  center: CanvasPoint,
+  orbitRadius: number,
+  angle: number,
+): CanvasPoint {
+  const rawX = Math.cos(angle) * orbitRadius * ORBIT_SCALE_X;
+  const rawY = Math.sin(angle) * orbitRadius * ORBIT_SCALE_Y;
+  return {
+    x: center.x + rawX * Math.cos(ORBIT_TILT) - rawY * Math.sin(ORBIT_TILT),
+    y: center.y + rawX * Math.sin(ORBIT_TILT) + rawY * Math.cos(ORBIT_TILT),
+  };
+}
 
 function drawMixCanvas(
-  _context: CanvasRenderingContext2D,
-  _width: number,
-  _height: number,
-  _sceneBlend: number,
-  _moment: ParallaxMoment,
-  _seconds: number,
-  _orbCenter: CanvasPoint,
-  _orbRadius: number,
-) {}
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  sceneBlend: number,
+  moment: ParallaxMoment,
+  seconds: number,
+  orbCenter: CanvasPoint,
+  orbRadius: number,
+) {
+  const satellitePresence = clamp(sceneBlend / 0.4, 0, 1);
+  const TRAIL_SWEEP = 0.4;
+  const TRAIL_STEPS = 18;
+
+  context.save();
+
+  SOUND_STARS.forEach((star, index) => {
+    const speed = SATELLITE_ORBIT_SPEEDS[index];
+    const radius = orbRadius * SATELLITE_ORBIT_RADII[index];
+    const currentAngle = SATELLITE_BASE_ANGLES[index] + seconds * speed;
+
+    for (let step = 0; step < TRAIL_STEPS; step += 1) {
+      const t = step / (TRAIL_STEPS - 1);
+      const angleA = currentAngle - TRAIL_SWEEP * (1 - t);
+      const angleB = currentAngle - TRAIL_SWEEP * (1 - (step + 1) / (TRAIL_STEPS - 1));
+      const pointA = orbitPoint(orbCenter, radius, angleA);
+      const pointB = orbitPoint(orbCenter, radius, Math.min(currentAngle, angleB));
+      context.strokeStyle = withAlpha(moment.accent, 0.35 * satellitePresence * t);
+      context.lineWidth = 0.7;
+      context.lineCap = "round";
+      context.beginPath();
+      context.moveTo(pointA.x, pointA.y);
+      context.lineTo(pointB.x, pointB.y);
+      context.stroke();
+    }
+
+    const pos = orbitPoint(orbCenter, radius, currentAngle);
+    drawGlowingCanvasStar(context, pos.x, pos.y, 2.4, 18, moment.accent, 0.88 * satellitePresence);
+
+    const dx = pos.x - orbCenter.x;
+    const dy = pos.y - orbCenter.y;
+    const len = Math.max(Math.hypot(dx, dy), 1);
+    context.font = "7px system-ui, sans-serif";
+    context.fillStyle = withAlpha("#EDEAF5", 0.45 * satellitePresence);
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(star.label, pos.x + (dx / len) * 14, pos.y + (dy / len) * 14);
+  });
+
+  context.restore();
+}
 
 function drawFadeCanvas(
-  _context: CanvasRenderingContext2D,
+  context: CanvasRenderingContext2D,
   _width: number,
   _height: number,
-  _sceneBlend: number,
-  _moment: ParallaxMoment,
-  _seconds: number,
-  _orbCenter: CanvasPoint,
-  _orbRadius: number,
-) {}
+  sceneBlend: number,
+  moment: ParallaxMoment,
+  seconds: number,
+  orbCenter: CanvasPoint,
+  orbRadius: number,
+) {
+  const arcRadius = orbRadius * 1.18;
+  const arcStart = -Math.PI / 2;
+  const arcSweep = Math.PI * 2 * 0.75 * sceneBlend;
+
+  context.save();
+  context.lineCap = "round";
+
+  context.strokeStyle = withAlpha("#FFB87A", 0.52 * sceneBlend);
+  context.lineWidth = Math.max(1.2, orbRadius * 0.004);
+  context.beginPath();
+  context.arc(orbCenter.x, orbCenter.y, arcRadius, arcStart, arcStart + arcSweep);
+  context.stroke();
+
+  context.strokeStyle = withAlpha("#FFFFFF", 0.12 * sceneBlend);
+  context.lineWidth = Math.max(0.6, orbRadius * 0.002);
+  context.beginPath();
+  context.arc(orbCenter.x, orbCenter.y, orbRadius * 1.22, arcStart, arcStart + arcSweep);
+  context.stroke();
+
+  const satellitePresence = Math.max(0.28, 1 - (sceneBlend / 0.6) * (1 - 0.28));
+  const speedMultiplier = 1 - sceneBlend * 0.7;
+  const trailSweep = 0.4 * (1 - sceneBlend);
+  const TRAIL_STEPS = 12;
+
+  SOUND_STARS.forEach((_, index) => {
+    const speed = SATELLITE_ORBIT_SPEEDS[index] * speedMultiplier;
+    const radius = orbRadius * SATELLITE_ORBIT_RADII[index];
+    const currentAngle = SATELLITE_BASE_ANGLES[index] + seconds * speed;
+
+    if (trailSweep > 0.01) {
+      for (let step = 0; step < TRAIL_STEPS; step += 1) {
+        const t = step / (TRAIL_STEPS - 1);
+        const angleA = currentAngle - trailSweep * (1 - t);
+        const angleB = currentAngle - trailSweep * (1 - (step + 1) / (TRAIL_STEPS - 1));
+        const pointA = orbitPoint(orbCenter, radius, angleA);
+        const pointB = orbitPoint(orbCenter, radius, Math.min(currentAngle, angleB));
+        context.strokeStyle = withAlpha(moment.accent, 0.35 * satellitePresence * (1 - sceneBlend) * t);
+        context.lineWidth = 0.7;
+        context.beginPath();
+        context.moveTo(pointA.x, pointA.y);
+        context.lineTo(pointB.x, pointB.y);
+        context.stroke();
+      }
+    }
+
+    const pos = orbitPoint(orbCenter, radius, currentAngle);
+    drawGlowingCanvasStar(context, pos.x, pos.y, 2.4, 18, moment.accent, 0.88 * satellitePresence);
+  });
+
+  context.restore();
+}
 
 function drawFinalCanvas(
-  _context: CanvasRenderingContext2D,
-  _width: number,
-  _height: number,
-  _sceneBlend: number,
-  _moment: ParallaxMoment,
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  sceneBlend: number,
+  moment: ParallaxMoment,
   _seconds: number,
-  _orbCenter: CanvasPoint,
-  _orbRadius: number,
-) {}
+  orbCenter: CanvasPoint,
+  orbRadius: number,
+) {
+  context.save();
+  context.lineCap = "round";
+
+  SATELLITE_ORBIT_RADII.forEach((radiusMultiplier) => {
+    const radius = orbRadius * radiusMultiplier;
+    const STEPS = 60;
+    context.strokeStyle = withAlpha(moment.accent, 0.06);
+    context.lineWidth = 0.5;
+    context.beginPath();
+    for (let step = 0; step <= STEPS; step += 1) {
+      const angle = (step / STEPS) * Math.PI * 2;
+      const p = orbitPoint(orbCenter, radius, angle);
+      if (step === 0) context.moveTo(p.x, p.y);
+      else context.lineTo(p.x, p.y);
+    }
+    context.closePath();
+    context.stroke();
+  });
+
+  context.strokeStyle = withAlpha("#FFB87A", 0.08 * sceneBlend);
+  context.lineWidth = Math.max(0.8, orbRadius * 0.003);
+  context.beginPath();
+  context.arc(orbCenter.x, orbCenter.y, orbRadius * 1.18, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * 0.75);
+  context.stroke();
+
+  const starPixels = SOUND_STARS.map((s) => ({
+    x: (s.x / 100) * width,
+    y: (s.y / 100) * height,
+  }));
+  starPixels.forEach((p) => {
+    drawGlowingCanvasStar(context, p.x, p.y, 1.4, 12, moment.accent, 0.28);
+  });
+
+  context.strokeStyle = withAlpha(moment.secondary, 0.08);
+  context.lineWidth = 0.6;
+  context.beginPath();
+  starPixels.forEach((p, index) => {
+    if (index === 0) {
+      context.moveTo(p.x, p.y);
+      return;
+    }
+    const prev = starPixels[index - 1];
+    context.quadraticCurveTo(
+      (prev.x + p.x) / 2,
+      (prev.y + p.y) / 2 - height * 0.04,
+      p.x,
+      p.y,
+    );
+  });
+  context.stroke();
+
+  context.restore();
+}
 
 function drawSceneForIndex(
   context: CanvasRenderingContext2D,
