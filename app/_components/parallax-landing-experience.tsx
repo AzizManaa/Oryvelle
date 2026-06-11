@@ -560,126 +560,76 @@ function drawPageSky(
   context: CanvasRenderingContext2D,
   width: number,
   height: number,
-  progress: number,
+  _progress: number,
   time: number,
   reducedMotion: boolean,
   nebulaAccent = "#00E0C7",
 ) {
-  const minSize = Math.min(width, height);
-  const maxSize = Math.max(width, height);
+  const palette = computeSkyPalette(Date.now());
   const seconds = reducedMotion ? 0 : time * 0.001;
-  const orbCenter = {
-    x: width * (0.58 + progress * 0.14),
-    y: height * (0.52 - progress * 0.08),
-  };
-  const orbRadius = minSize * (0.34 + progress * 0.08);
-  const background = context.createLinearGradient(0, 0, 0, height);
 
-  background.addColorStop(0, "#080510");
-  background.addColorStop(0.44, "#0B0920");
-  background.addColorStop(1, "#0A0822");
-
-  context.fillStyle = background;
+  // Layer 0: Deep field gradient
+  const bg = context.createLinearGradient(0, 0, 0, height);
+  bg.addColorStop(0, palette.deepFieldTop);
+  bg.addColorStop(1, palette.deepFieldBottom);
+  context.fillStyle = bg;
   context.fillRect(0, 0, width, height);
+
+  // Layer 1: Nebula orbs — additive blend (Android BlendMode.Plus)
+  const DRIFT_PERIOD = 60;
+  const DRIFT_H = width * 0.10;
+  const DRIFT_V = height * 0.06;
+  const NEBULA_RADIUS = Math.min(width, height) * 0.45;
+
+  const nebulas: Array<{ baseX: number; baseY: number; phase: number; color: string; alpha: number }> = [
+    { baseX: 0.30, baseY: 0.35, phase: 0.0, color: palette.nebulaPrimary, alpha: palette.nebulaPrimaryAlpha },
+    { baseX: 0.70, baseY: 0.55, phase: 0.33, color: nebulaAccent, alpha: 0.40 },
+    { baseX: 0.50, baseY: 0.20, phase: 0.66, color: palette.nebulaSecondary, alpha: palette.nebulaSecondaryAlpha },
+  ];
 
   context.save();
   context.globalCompositeOperation = "lighter";
-
-  drawNebulaBlob(
-    context,
-    width * 0.28 + Math.cos(seconds * 0.08) * width * 0.025,
-    height * 0.34 + Math.sin(seconds * 0.07) * height * 0.018,
-    maxSize * 0.34,
-    maxSize * 0.22,
-    hexLerp("#00E0C7", nebulaAccent, 0.4),
-    0.22,
-  );
-  drawNebulaBlob(
-    context,
-    width * 0.72 + Math.cos(seconds * 0.06 + 2.1) * width * 0.028,
-    height * 0.56 + Math.sin(seconds * 0.09 + 1.4) * height * 0.02,
-    maxSize * 0.39,
-    maxSize * 0.25,
-    "#B89AFF",
-    0.2,
-  );
-  drawNebulaBlob(
-    context,
-    width * 0.5 + Math.cos(seconds * 0.05 + 4.2) * width * 0.018,
-    height * 0.2 + Math.sin(seconds * 0.08 + 3.1) * height * 0.016,
-    maxSize * 0.28,
-    maxSize * 0.18,
-    "#FFB87A",
-    0.11,
-  );
-  drawAmbientGravityHaze(context, orbCenter, orbRadius, seconds);
-  drawGravityLensingField(context, orbCenter, orbRadius, seconds, progress);
-
-  PAGE_SKY_STARS.forEach((star) => {
-    const basePoint = {
-      x: star.x * width,
-      y: star.y * height,
-    };
-    const sample = sampleAmbientGravityField(
-      basePoint,
-      orbCenter,
-      {
-        influenceRadius: orbRadius * 1.75,
-        eventHorizonRadius: orbRadius * 0.46,
-        maxPullPx: orbRadius * 0.12,
-        maxSwirlPx: orbRadius * 0.2,
-      },
-      seconds,
+  nebulas.forEach(({ baseX, baseY, phase, color, alpha }) => {
+    const angle = (((seconds / DRIFT_PERIOD) + phase) % 1) * Math.PI * 2;
+    drawNebulaBlob(
+      context,
+      width * baseX + Math.cos(angle) * DRIFT_H,
+      height * baseY + Math.sin(angle) * DRIFT_V,
+      NEBULA_RADIUS,
+      NEBULA_RADIUS,
+      color,
+      alpha * 0.40,
     );
+  });
+  context.restore();
+
+  // Layer 2: Starfield — simple white circles (no spikes, no gravity)
+  const twinkleT = (time % 4000) / 4000;
+  const sizeRef = Math.min(width, height) / 900;
+
+  ANDROID_STARS.forEach((star) => {
     const flicker = reducedMotion
       ? 0.78
-      : 0.68 + Math.sin(seconds * 1.6 + star.phase * Math.PI * 2) * 0.22;
-    const tint = starTint(star.paletteIndex);
-    const coreRadius = Math.max(minSize * star.coreRadiusFactor, 0.8);
-    const glowRadius = coreRadius * star.glowScale * (1 + sample.strength * 0.34);
-    const coreAlpha = star.coreAlpha * flicker * (1 + sample.strength * 0.38);
-    const glowAlpha = star.glowAlpha * flicker * (1 + sample.strength * 1.1);
-    const compressedCore = Math.max(coreRadius * (1 - sample.strength * 0.22), 0.65);
+      : 0.5 + 0.5 * Math.sin((twinkleT + star.phase) * Math.PI * 2);
+    const finalAlpha = star.baseAlpha * palette.starVisibility * flicker;
+    if (finalAlpha < 0.05) return;
 
-    drawSoftStar(
-      context,
-      sample.warpedPoint.x,
-      sample.warpedPoint.y,
-      compressedCore,
-      glowRadius,
-      tint,
-      coreAlpha,
-      glowAlpha,
-      star.spikeStrength + sample.strength * 0.18,
+    context.fillStyle = withAlpha("#FFFFFF", finalAlpha);
+    context.beginPath();
+    context.arc(
+      star.x * width,
+      star.y * height,
+      Math.max(0.5, star.radius * sizeRef),
+      0,
+      Math.PI * 2,
     );
-
-    if (sample.strength > 0.34) {
-      const streakBoost = clamp((sample.strength - 0.34) / 0.66, 0, 1);
-      const streakLength = coreRadius * (2.8 + sample.strength * 5.5);
-
-      context.save();
-      context.strokeStyle = withAlpha("#FFFFFF", coreAlpha * streakBoost * 0.16);
-      context.lineWidth = compressedCore * (0.32 + streakBoost * 0.42);
-      context.lineCap = "round";
-      context.beginPath();
-      context.moveTo(
-        sample.warpedPoint.x - sample.tangent.x * streakLength,
-        sample.warpedPoint.y - sample.tangent.y * streakLength,
-      );
-      context.lineTo(
-        sample.warpedPoint.x + sample.tangent.x * streakLength,
-        sample.warpedPoint.y + sample.tangent.y * streakLength,
-      );
-      context.stroke();
-      context.restore();
-    }
+    context.fill();
   });
 
+  // Layer 3: Shooting star
   if (!reducedMotion) {
-    drawPageShootingStar(context, width, height, seconds);
+    drawAndroidShootingStar(context, width, height, time);
   }
-
-  context.restore();
 }
 
 function drawGravityLensingField(
