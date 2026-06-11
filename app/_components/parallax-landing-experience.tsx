@@ -157,6 +157,103 @@ const ORBIT_SCALE_X = 1.0;
 const ORBIT_SCALE_Y = 0.74;
 const ORBIT_TILT = (-12 * Math.PI) / 180;
 
+type AndroidStar = {
+  x: number;
+  y: number;
+  baseAlpha: number;
+  radius: number;
+  phase: number;
+};
+
+type SkyPalette = {
+  deepFieldTop: string;
+  deepFieldBottom: string;
+  nebulaPrimary: string;
+  nebulaPrimaryAlpha: number;
+  nebulaSecondary: string;
+  nebulaSecondaryAlpha: number;
+  starVisibility: number;
+};
+
+const SKY_BANDS: Array<{ startHour: number; palette: SkyPalette }> = [
+  {
+    startHour: 0,
+    palette: { deepFieldTop: "#080510", deepFieldBottom: "#0A0822", nebulaPrimary: "#00E0C7", nebulaPrimaryAlpha: 0.60, nebulaSecondary: "#B89AFF", nebulaSecondaryAlpha: 0.50, starVisibility: 1.00 },
+  },
+  {
+    startHour: 5,
+    palette: { deepFieldTop: "#0F1B36", deepFieldBottom: "#6F5751", nebulaPrimary: "#67D7FF", nebulaPrimaryAlpha: 1.0, nebulaSecondary: "#FFB87A", nebulaSecondaryAlpha: 1.0, starVisibility: 0.40 },
+  },
+  {
+    startHour: 8,
+    palette: { deepFieldTop: "#152544", deepFieldBottom: "#44315E", nebulaPrimary: "#B89AFF", nebulaPrimaryAlpha: 0.70, nebulaSecondary: "#67D7FF", nebulaSecondaryAlpha: 0.60, starVisibility: 0.05 },
+  },
+  {
+    startHour: 17,
+    palette: { deepFieldTop: "#1A2B3F", deepFieldBottom: "#3F1F44", nebulaPrimary: "#00E0C7", nebulaPrimaryAlpha: 1.0, nebulaSecondary: "#FF6B9D", nebulaSecondaryAlpha: 1.0, starVisibility: 0.30 },
+  },
+  {
+    startHour: 20,
+    palette: { deepFieldTop: "#0D0820", deepFieldBottom: "#2A1855", nebulaPrimary: "#B89AFF", nebulaPrimaryAlpha: 1.0, nebulaSecondary: "#FFB87A", nebulaSecondaryAlpha: 1.0, starVisibility: 0.70 },
+  },
+  {
+    startHour: 23,
+    palette: { deepFieldTop: "#080510", deepFieldBottom: "#0A0822", nebulaPrimary: "#00E0C7", nebulaPrimaryAlpha: 0.60, nebulaSecondary: "#B89AFF", nebulaSecondaryAlpha: 0.50, starVisibility: 1.00 },
+  },
+];
+
+function computeSkyPalette(nowMs: number): SkyPalette {
+  const d = new Date(nowMs);
+  const fracHour = d.getHours() + d.getMinutes() / 60;
+
+  let bandIndex = SKY_BANDS.length - 1;
+  for (let i = 0; i < SKY_BANDS.length; i += 1) {
+    if (fracHour < SKY_BANDS[i].startHour) {
+      bandIndex = i - 1;
+      break;
+    }
+  }
+  if (bandIndex < 0) bandIndex = SKY_BANDS.length - 1;
+
+  const current = SKY_BANDS[bandIndex].palette;
+  const nextIndex = (bandIndex + 1) % SKY_BANDS.length;
+  const next = SKY_BANDS[nextIndex].palette;
+
+  let nextHour = SKY_BANDS[nextIndex].startHour;
+  if (nextHour <= SKY_BANDS[bandIndex].startHour) nextHour += 24;
+  const hoursRemaining = nextHour - fracHour;
+  const blendT = hoursRemaining < 0.5 ? 1 - hoursRemaining / 0.5 : 0;
+
+  if (blendT <= 0) return current;
+
+  return {
+    deepFieldTop: hexLerp(current.deepFieldTop, next.deepFieldTop, blendT),
+    deepFieldBottom: hexLerp(current.deepFieldBottom, next.deepFieldBottom, blendT),
+    nebulaPrimary: hexLerp(current.nebulaPrimary, next.nebulaPrimary, blendT),
+    nebulaPrimaryAlpha: current.nebulaPrimaryAlpha + (next.nebulaPrimaryAlpha - current.nebulaPrimaryAlpha) * blendT,
+    nebulaSecondary: hexLerp(current.nebulaSecondary, next.nebulaSecondary, blendT),
+    nebulaSecondaryAlpha: current.nebulaSecondaryAlpha + (next.nebulaSecondaryAlpha - current.nebulaSecondaryAlpha) * blendT,
+    starVisibility: current.starVisibility + (next.starVisibility - current.starVisibility) * blendT,
+  };
+}
+
+function createAndroidStars(count: number): AndroidStar[] {
+  let seed = 42;
+  const random = () => {
+    seed = (seed * 1664525 + 1013904223) % 4294967296;
+    return seed / 4294967296;
+  };
+  return Array.from({ length: count }, () => ({
+    x: random(),
+    y: random() * 0.85,
+    baseAlpha: 0.4 + random() * 0.5,
+    radius: 0.5 + random() * 1.5,
+    phase: random(),
+  }));
+}
+
+const ANDROID_STARS = createAndroidStars(80);
+
 const PAGE_SKY_STARS = createPageSkyStars(128);
 
 export function ParallaxLandingExperience({
