@@ -1003,6 +1003,59 @@ function drawNebulaBlob(
   context.restore();
 }
 
+function drawAndroidShootingStar(
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  time: number,
+) {
+  const INTERVAL_MS = 12000;
+  const DURATION_MS = 400;
+  const ANGLE = 225 * (Math.PI / 180);
+  const LENGTH = width * 0.10;
+
+  const intervalIndex = Math.floor(time / INTERVAL_MS);
+  const elapsed = time % INTERVAL_MS;
+  if (elapsed > DURATION_MS) return;
+
+  let seed = ((intervalIndex * 1664525 + 1013904223) >>> 0);
+  const random = () => {
+    seed = ((seed * 1664525 + 1013904223) >>> 0);
+    return seed / 4294967296;
+  };
+
+  const startX = 0.20 + random() * 0.70;
+  const startY = 0.05 + random() * 0.45;
+  const progress = elapsed / DURATION_MS;
+  const alpha = Math.pow(1 - progress, 0.7);
+  const travelPx = progress * LENGTH;
+  const tailPx = Math.min(LENGTH * 0.55, travelPx);
+
+  const headX = startX * width + Math.cos(ANGLE) * travelPx;
+  const headY = startY * height + Math.sin(ANGLE) * travelPx;
+  const tailX = headX - Math.cos(ANGLE) * tailPx;
+  const tailY = headY - Math.sin(ANGLE) * tailPx;
+
+  context.save();
+  context.lineCap = "round";
+
+  context.strokeStyle = withAlpha("#FFFFFF", alpha * 0.25);
+  context.lineWidth = 3;
+  context.beginPath();
+  context.moveTo(tailX, tailY);
+  context.lineTo(headX, headY);
+  context.stroke();
+
+  context.strokeStyle = withAlpha("#FFFFFF", alpha * 0.85);
+  context.lineWidth = 1.2;
+  context.beginPath();
+  context.moveTo(tailX, tailY);
+  context.lineTo(headX, headY);
+  context.stroke();
+
+  context.restore();
+}
+
 function drawPageShootingStar(
   context: CanvasRenderingContext2D,
   width: number,
