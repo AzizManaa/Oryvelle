@@ -3,15 +3,7 @@
 :root {
   --background: #080510;
   --foreground: #edeaf5;
-  --oryvelle-depth: #0d0a18;
-  --oryvelle-panel: #130f1e;
-  --oryvelle-muted: #b8b5c7;
-  --oryvelle-subtle: #7c8094;
   --oryvelle-teal: #00e0c7;
-  --oryvelle-violet: #8f82e8;
-  --oryvelle-lavender: #b89aff;
-  --oryvelle-amber: #ffb87a;
-  --oryvelle-rose: #ff6b9d;
 }
 
 @theme inline {
@@ -23,7 +15,6 @@
 
 html {
   background: var(--background);
-  scroll-behavior: smooth;
 }
 
 body {
@@ -32,7 +23,6 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   min-width: 320px;
   text-rendering: geometricPrecision;
-  overscroll-behavior: none;
 }
 
 ::selection {
@@ -54,30 +44,6 @@ button,
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes scenePreview {
-  from {
-    opacity: 0;
-    transform: translateY(22px) scale(0.97);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes satelliteIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.8);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
   }
 }
 

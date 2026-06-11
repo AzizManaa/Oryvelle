@@ -1,13 +1,13 @@
 import {
-  RitualExperience,
-  type RitualScene,
-} from "./_components/ritual-experience";
+  ParallaxLandingExperience,
+  type ParallaxMoment,
+} from "./_components/parallax-landing-experience";
 
 const trustItems = ["Privacy", "Support", "Terms"] as const;
 
-const scenes: RitualScene[] = [
+const moments: ParallaxMoment[] = [
   {
-    id: "arrive",
+    id: "arrival",
     label: "Arrival",
     eyebrow: "Obsidian Sleep",
     title: "Build a softer path into sleep.",
@@ -15,58 +15,69 @@ const scenes: RitualScene[] = [
     accent: "#00E0C7",
     secondary: "#B89AFF",
     cue: "Enter the night",
-    satellites: ["Rain", "Cabin", "Forest"],
+    panelBody: "The first layer is atmosphere: dark space, a living orb, and a ritual that does not rush you.",
   },
   {
-    id: "sounds",
-    label: "Gather",
+    id: "constellations",
+    label: "Constellations",
     eyebrow: "Layer the night",
-    title: "Sounds gather without asking for attention.",
-    body: "A mix can start as one sound, then become a small constellation: rain, cabin air, forest hush, soft noise.",
+    title: "Sound becomes a small constellation.",
+    body: "Rain, cabin air, forest hush, and soft noise connect into a sky you can shape without opening another control panel.",
     accent: "#67D7FF",
     secondary: "#8F82E8",
-    cue: "Active mix forming",
-    satellites: ["Rain", "Cabin", "Forest", "Noise"],
+    cue: "Stars align",
+    panelBody: "Each sound is treated like a point in the night, close enough to guide you and quiet enough to disappear.",
   },
   {
-    id: "timer",
-    label: "Fade",
+    id: "mix",
+    label: "Active Mix",
+    eyebrow: "Mix without friction",
+    title: "The ritual gathers around the orb.",
+    body: "A living mix sits in reach while the rest of the page keeps its distance: visible, calm, and never crowded.",
+    accent: "#00E0C7",
+    secondary: "#67D7FF",
+    cue: "Active mix",
+    panelBody: "A soft glass preview comes forward only when it matters, then lets the night stay spacious.",
+  },
+  {
+    id: "fade",
+    label: "Fade Timer",
     eyebrow: "Fade without fuss",
     title: "Let the night close itself.",
     body: "Set a timer, let the mix fade, and leave the phone alone. The ritual keeps moving softly in the background.",
     accent: "#FFB87A",
     secondary: "#00E0C7",
     cue: "45 min fade",
-    satellites: ["Rain", "Cabin", "Forest"],
+    panelBody: "The constellation bends into time, then loosens its grip as the soundscape settles.",
   },
   {
-    id: "notes",
-    label: "Morning",
-    eyebrow: "Wake softly",
-    title: "Leave only what feels useful.",
-    body: "A rating, a few tags, or one quiet note. No pressure, no dashboard noise, no demand to measure the whole night.",
+    id: "final",
+    label: "Invite",
+    eyebrow: "First night soon",
+    title: "Start with one softer night.",
+    body: "Oryvelle is still arriving. The landing page should leave the same feeling as the app: quiet, curious, and close enough to return to.",
     accent: "#FF6B9D",
     secondary: "#B89AFF",
-    cue: "Small note saved",
-    satellites: ["Mood", "Tags", "Note"],
+    cue: "Coming soon",
+    panelBody: "No hard sell. Just a doorway into a calmer night ritual when the app is ready.",
   },
 ];
 
 export default function Home() {
   return (
-    <main className="relative min-h-[100svh] overflow-hidden bg-background text-foreground">
-      <header className="fixed inset-x-0 top-0 z-30 border-b border-white/[0.06] bg-[#080510]/70 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
-          <div className="flex items-center gap-3">
+    <main className="relative min-h-[100svh] bg-background text-foreground">
+      <header className="fixed inset-x-0 top-0 z-30">
+        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-5 sm:px-8">
+          <div className="flex min-w-0 items-center gap-3">
             <span className="h-2.5 w-2.5 rounded-full bg-[#00E0C7] shadow-[0_0_18px_rgba(0,224,199,0.8)]" />
-            <span className="text-sm font-medium tracking-[0.18em] text-[#EDEAF5] uppercase">
+            <span className="text-sm font-medium tracking-[0.18em] text-[#EDEAF5] uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
               Oryvelle
             </span>
           </div>
 
           <nav
             aria-label="Planned trust pages"
-            className="hidden items-center gap-6 text-sm text-[#7C8094] sm:flex"
+            className="hidden items-center gap-6 text-sm text-[#9A9CAF] drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:flex"
           >
             {trustItems.map((item) => (
               <span
@@ -79,21 +90,26 @@ export default function Home() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
+            <span
+              aria-disabled="true"
+              className="cursor-not-allowed select-none text-xs font-medium text-[#9A9CAF] drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:hidden"
+            >
+              Privacy
+            </span>
             <button
               type="button"
               disabled
-              className="hidden h-9 rounded-full border border-[#00E0C7]/30 bg-[#00E0C7]/10 px-4 text-xs font-medium text-[#EDEAF5] shadow-[0_0_24px_rgba(0,224,199,0.1)] sm:block"
+              className="h-9 rounded-full border border-[#00E0C7]/30 bg-[#00E0C7]/10 px-3 text-xs font-medium text-[#EDEAF5] shadow-[0_0_24px_rgba(0,224,199,0.1)] sm:px-4"
             >
-              Coming soon
+              <span className="hidden sm:inline">Coming soon</span>
+              <span className="sm:hidden">Soon</span>
             </button>
-
-            <span className="text-xs text-[#7C8094] sm:hidden">Soon</span>
           </div>
         </div>
       </header>
 
-      <RitualExperience scenes={scenes} />
+      <ParallaxLandingExperience moments={moments} />
     </main>
   );
 }
