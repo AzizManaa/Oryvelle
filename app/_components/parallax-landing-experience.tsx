@@ -266,7 +266,7 @@ export function ParallaxLandingExperience({
       const progress = reducedMotion ? 0.42 : progressRef.current;
 
       context.clearRect(0, 0, width, height);
-      drawPageSky(context, width, height, progress, time, reducedMotion);
+      drawPageSky(context, width, height, progress, time, reducedMotion, activeMomentRef.current.accent);
       drawCanvasConstellation(
         context,
         width,
@@ -447,6 +447,7 @@ function drawPageSky(
   progress: number,
   time: number,
   reducedMotion: boolean,
+  nebulaAccent = "#00E0C7",
 ) {
   const minSize = Math.min(width, height);
   const maxSize = Math.max(width, height);
@@ -474,7 +475,7 @@ function drawPageSky(
     height * 0.34 + Math.sin(seconds * 0.07) * height * 0.018,
     maxSize * 0.34,
     maxSize * 0.22,
-    "#00E0C7",
+    hexLerp("#00E0C7", nebulaAccent, 0.4),
     0.22,
   );
   drawNebulaBlob(
