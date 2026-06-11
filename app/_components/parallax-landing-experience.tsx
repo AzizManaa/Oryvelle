@@ -24,17 +24,6 @@ type ParallaxLandingExperienceProps = {
   moments: ParallaxMoment[];
 };
 
-type SkyStar = {
-  x: number;
-  y: number;
-  coreRadiusFactor: number;
-  glowScale: number;
-  coreAlpha: number;
-  glowAlpha: number;
-  phase: number;
-  paletteIndex: number;
-  spikeStrength: number;
-};
 
 type CanvasPoint = {
   x: number;
@@ -253,8 +242,6 @@ function createAndroidStars(count: number): AndroidStar[] {
 }
 
 const ANDROID_STARS = createAndroidStars(80);
-
-const PAGE_SKY_STARS = createPageSkyStars(128);
 
 export function ParallaxLandingExperience({
   moments,
@@ -534,28 +521,6 @@ export function ParallaxLandingExperience({
   );
 }
 
-function createPageSkyStars(count: number): SkyStar[] {
-  let seed = 92841;
-  const random = () => {
-    seed = (seed * 1664525 + 1013904223) % 4294967296;
-    return seed / 4294967296;
-  };
-
-  return Array.from({ length: count }, () => {
-    return {
-      x: random(),
-      y: random() * 0.92,
-      coreRadiusFactor: 0.001 + random() * 0.0017,
-      glowScale: 7 + random() * 8,
-      coreAlpha: 0.34 + random() * 0.5,
-      glowAlpha: 0.035 + random() * 0.11,
-      phase: random(),
-      paletteIndex: Math.floor(random() * 3),
-      spikeStrength: random(),
-    };
-  });
-}
-
 function drawPageSky(
   context: CanvasRenderingContext2D,
   width: number,
@@ -632,210 +597,6 @@ function drawPageSky(
   }
 }
 
-function drawGravityLensingField(
-  context: CanvasRenderingContext2D,
-  center: CanvasPoint,
-  orbRadius: number,
-  seconds: number,
-  progress: number,
-) {
-  const pulse = 0.86 + Math.sin(seconds * 0.7) * 0.08;
-  const tilt = -0.16 + Math.sin(seconds * 0.12) * 0.035;
-  const fieldAlpha = 0.14 + progress * 0.05;
-
-  context.save();
-  context.globalCompositeOperation = "lighter";
-  context.translate(center.x, center.y);
-  context.rotate(tilt);
-  context.scale(1.42, 0.56);
-  context.translate(-center.x, -center.y);
-
-  for (let index = 0; index < 5; index += 1) {
-    const radius = orbRadius * (0.78 + index * 0.22) * pulse;
-    const start = seconds * (0.08 + index * 0.012) + index * 0.62;
-    const sweep = Math.PI * (0.82 + index * 0.08);
-    const gradient = context.createLinearGradient(
-      center.x - radius,
-      center.y,
-      center.x + radius,
-      center.y,
-    );
-
-    gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.22, withAlpha(index % 2 === 0 ? "#B89AFF" : "#00E0C7", fieldAlpha * 0.22));
-    gradient.addColorStop(0.52, withAlpha("#FFFFFF", fieldAlpha * (0.36 - index * 0.035)));
-    gradient.addColorStop(0.82, withAlpha("#FFB87A", fieldAlpha * 0.16));
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
-
-    context.strokeStyle = gradient;
-    context.lineWidth = Math.max(0.7, orbRadius * (0.0028 + index * 0.0006));
-    context.lineCap = "round";
-    context.beginPath();
-    context.arc(center.x, center.y, radius, start, start + sweep);
-    context.stroke();
-
-    context.beginPath();
-    context.arc(center.x, center.y, radius * 1.015, start + Math.PI, start + Math.PI + sweep * 0.58);
-    context.globalAlpha = 0.58;
-    context.stroke();
-    context.globalAlpha = 1;
-  }
-
-  context.restore();
-
-  drawInfallFilaments(context, center, orbRadius, seconds);
-}
-
-function drawInfallFilaments(
-  context: CanvasRenderingContext2D,
-  center: CanvasPoint,
-  orbRadius: number,
-  seconds: number,
-) {
-  const strands = [
-    { angle: 32, tint: "#FFB87A", phase: 0.1 },
-    { angle: 205, tint: "#67D7FF", phase: 2.1 },
-    { angle: 286, tint: "#00E0C7", phase: 3.4 },
-  ];
-
-  context.save();
-  context.globalCompositeOperation = "lighter";
-  context.lineCap = "round";
-
-  strands.forEach((strand, strandIndex) => {
-    const startAngle = ((strand.angle + Math.sin(seconds * 0.22 + strand.phase) * 12) / 180) * Math.PI;
-    const points: CanvasPoint[] = [];
-
-    for (let index = 0; index < 34; index += 1) {
-      const t = index / 33;
-      const radius = orbRadius * (1.9 + (0.58 - 1.9) * t ** 0.72);
-      const wind = (1.4 + strandIndex * 0.18) * t;
-      const angle = startAngle + wind + Math.sin(seconds * 0.45 + t * 5 + strand.phase) * 0.08 * (1 - t);
-
-      points.push({
-        x: center.x + Math.cos(angle) * radius,
-        y: center.y + Math.sin(angle) * radius,
-      });
-    }
-
-    const gradient = context.createLinearGradient(
-      points[0].x,
-      points[0].y,
-      points[points.length - 1].x,
-      points[points.length - 1].y,
-    );
-
-    gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.55, withAlpha(strand.tint, 0.032));
-    gradient.addColorStop(0.86, withAlpha("#FFFFFF", 0.09));
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
-
-    context.strokeStyle = gradient;
-    context.lineWidth = Math.max(0.45, orbRadius * 0.0018);
-    context.beginPath();
-    points.forEach((point, index) => {
-      if (index === 0) {
-        context.moveTo(point.x, point.y);
-        return;
-      }
-
-      const previous = points[index - 1];
-      context.quadraticCurveTo(previous.x, previous.y, (previous.x + point.x) / 2, (previous.y + point.y) / 2);
-    });
-    context.stroke();
-  });
-
-  context.restore();
-}
-
-function drawAmbientGravityHaze(
-  context: CanvasRenderingContext2D,
-  center: CanvasPoint,
-  orbRadius: number,
-  seconds: number,
-) {
-  const blobs = [
-    { angle: 24, distance: 0.06, radius: 0.64, alpha: 0.12, stretchX: 1.34, stretchY: 0.86, tint: "#00E0C7", phase: 0.1 },
-    { angle: 124, distance: 0.24, radius: 0.58, alpha: 0.11, stretchX: 1.3, stretchY: 0.82, tint: "#B89AFF", phase: 1.6 },
-    { angle: 244, distance: 0.22, radius: 0.54, alpha: 0.1, stretchX: 1.28, stretchY: 0.78, tint: "#8F82E8", phase: 3.1 },
-  ];
-
-  blobs.forEach((blob) => {
-    const angle = (blob.angle / 180) * Math.PI;
-    const spin = Math.sin(seconds * 0.18 + blob.phase) * 7;
-    const point = {
-      x: center.x + Math.cos(angle) * orbRadius * blob.distance,
-      y: center.y + Math.sin(angle) * orbRadius * blob.distance,
-    };
-
-    context.save();
-    context.translate(point.x, point.y);
-    context.rotate((spin / 180) * Math.PI);
-    context.scale(blob.stretchX, blob.stretchY);
-    context.translate(-point.x, -point.y);
-    drawNebulaBlob(
-      context,
-      point.x,
-      point.y,
-      orbRadius * blob.radius,
-      orbRadius * blob.radius,
-      blob.tint,
-      blob.alpha,
-    );
-    context.restore();
-  });
-}
-
-function drawSoftStar(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  coreRadius: number,
-  glowRadius: number,
-  color: string,
-  coreAlpha: number,
-  glowAlpha: number,
-  spikeStrength: number,
-) {
-  const glow = context.createRadialGradient(x, y, 0, x, y, glowRadius);
-  const hotCoreRadius = Math.max(coreRadius * 0.48, 0.45);
-  const spikeAlpha = clamp((spikeStrength - 0.34) / 0.66, 0, 1) * coreAlpha;
-  const spikeLength = glowRadius * (1.35 + spikeStrength * 1.85);
-  const shortSpikeLength = spikeLength * 0.46;
-
-  glow.addColorStop(0, withAlpha("#FFFFFF", glowAlpha * 1.35));
-  glow.addColorStop(0.12, withAlpha(color, glowAlpha));
-  glow.addColorStop(0.45, withAlpha(color, glowAlpha * 0.3));
-  glow.addColorStop(1, "rgba(0,0,0,0)");
-
-  context.fillStyle = glow;
-  context.beginPath();
-  context.arc(x, y, glowRadius, 0, Math.PI * 2);
-  context.fill();
-
-  if (spikeAlpha > 0.03) {
-    drawStarSpike(context, x, y, spikeLength, 0, "#FFFFFF", spikeAlpha * 0.34, 0.72);
-    drawStarSpike(context, x, y, spikeLength * 0.82, Math.PI / 2, "#FFFFFF", spikeAlpha * 0.28, 0.62);
-    drawStarSpike(context, x, y, shortSpikeLength, Math.PI / 4, color, spikeAlpha * 0.16, 0.5);
-    drawStarSpike(context, x, y, shortSpikeLength, -Math.PI / 4, color, spikeAlpha * 0.16, 0.5);
-  }
-
-  const rim = context.createRadialGradient(x, y, 0, x, y, coreRadius * 2.8);
-  rim.addColorStop(0, withAlpha("#FFFFFF", clamp(coreAlpha * 1.25, 0, 1)));
-  rim.addColorStop(0.38, withAlpha("#FFF7D6", clamp(coreAlpha * 0.45, 0, 1)));
-  rim.addColorStop(1, withAlpha(color, 0));
-
-  context.fillStyle = rim;
-  context.beginPath();
-  context.arc(x, y, coreRadius * 2.8, 0, Math.PI * 2);
-  context.fill();
-
-  context.fillStyle = withAlpha("#FFFFFF", clamp(coreAlpha * 1.45, 0, 1));
-  context.beginPath();
-  context.arc(x, y, hotCoreRadius, 0, Math.PI * 2);
-  context.fill();
-}
-
 function drawStarSpike(
   context: CanvasRenderingContext2D,
   x: number,
@@ -865,66 +626,6 @@ function drawStarSpike(
   context.lineTo(x + dx, y + dy);
   context.stroke();
   context.restore();
-}
-
-function sampleAmbientGravityField(
-  point: CanvasPoint,
-  center: CanvasPoint,
-  config: {
-    influenceRadius: number;
-    eventHorizonRadius: number;
-    maxPullPx: number;
-    maxSwirlPx: number;
-  },
-  seconds: number,
-) {
-  const vector = { x: point.x - center.x, y: point.y - center.y };
-  const pointDistance = Math.hypot(vector.x, vector.y);
-
-  if (pointDistance <= 0.001 || pointDistance >= config.influenceRadius) {
-    return {
-      warpedPoint: point,
-      strength: 0,
-      tangent: { x: 0, y: 0 },
-    };
-  }
-
-  const outward = { x: vector.x / pointDistance, y: vector.y / pointDistance };
-  const inward = { x: -outward.x, y: -outward.y };
-  const tangent = { x: -outward.y, y: outward.x };
-  const usableRadius = Math.max(config.influenceRadius - config.eventHorizonRadius, 1);
-  const normalizedDistance = clamp(
-    (pointDistance - config.eventHorizonRadius) / usableRadius,
-    0,
-    1,
-  );
-  const proximity = 1 - normalizedDistance;
-  const strength = proximity ** 2.35;
-  const phaseOffset = (outward.x * 1.7 + outward.y * 0.9) * Math.PI;
-  const swirlPulse = 0.74 + 0.26 * Math.sin(seconds * 0.32 + phaseOffset);
-  const pull = config.maxPullPx * strength * (0.4 + 0.8 * strength);
-  const swirl = config.maxSwirlPx * strength * swirlPulse * (0.32 + 0.78 * strength);
-
-  return {
-    warpedPoint: {
-      x: point.x + inward.x * pull + tangent.x * swirl,
-      y: point.y + inward.y * pull + tangent.y * swirl,
-    },
-    strength,
-    tangent,
-  };
-}
-
-function starTint(paletteIndex: number) {
-  if (paletteIndex % 3 === 1) {
-    return "#00E0C7";
-  }
-
-  if (paletteIndex % 3 === 2) {
-    return "#B89AFF";
-  }
-
-  return "#EDEAF5";
 }
 
 function drawNebulaBlob(
@@ -1003,49 +704,6 @@ function drawAndroidShootingStar(
   context.lineTo(headX, headY);
   context.stroke();
 
-  context.restore();
-}
-
-function drawPageShootingStar(
-  context: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-  seconds: number,
-) {
-  const cycle = 15;
-  const local = (seconds + 3.2) % cycle;
-
-  if (local > 1.2) {
-    return;
-  }
-
-  const travel = local / 1.2;
-  const alpha = Math.pow(1 - travel, 0.7) * 0.22;
-  const startX = width * 0.82;
-  const startY = height * 0.18;
-  const length = width * 0.18;
-  const angle = Math.PI * 1.18;
-  const headX = startX + Math.cos(angle) * travel * length;
-  const headY = startY + Math.sin(angle) * travel * length;
-  const tailLength = Math.min(length * 0.52, travel * length);
-  const tailX = headX - Math.cos(angle) * tailLength;
-  const tailY = headY - Math.sin(angle) * tailLength;
-
-  context.save();
-  context.lineCap = "round";
-  context.strokeStyle = withAlpha("#00E0C7", alpha * 0.42);
-  context.lineWidth = 3;
-  context.beginPath();
-  context.moveTo(tailX, tailY);
-  context.lineTo(headX, headY);
-  context.stroke();
-
-  context.strokeStyle = withAlpha("#F7F3FF", alpha);
-  context.lineWidth = 1.1;
-  context.beginPath();
-  context.moveTo(tailX, tailY);
-  context.lineTo(headX, headY);
-  context.stroke();
   context.restore();
 }
 
