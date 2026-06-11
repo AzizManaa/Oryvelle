@@ -1,11 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../_components/site-header";
+import { absoluteUrl, SITE_NAME } from "../site-config";
 
 export const metadata: Metadata = {
-  title: "Support — Oryvelle",
+  title: "Support",
   description:
     "Get help with Oryvelle. Answers to common questions about sounds, playback, journal, backup, and more.",
+  alternates: {
+    canonical: absoluteUrl("/support"),
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: "website",
+    url: absoluteUrl("/support"),
+    title: "Support - Oryvelle",
+    description:
+      "Get help with Oryvelle. Answers to common questions about sounds, playback, journal, backup, and more.",
+    siteName: SITE_NAME,
+  },
 };
 
 const FAQ_SECTIONS = [
@@ -127,7 +143,10 @@ export default function SupportPage() {
     <div className="min-h-screen bg-[#080510] text-[#EDEAF5]">
       <SiteHeader activePage="support" />
 
-      <main className="mx-auto w-full max-w-2xl px-5 pt-28 pb-24 sm:px-8">
+      <main
+        id="main-content"
+        className="mx-auto w-full max-w-2xl px-5 pt-28 pb-24 sm:px-8"
+      >
         {/* Page header */}
         <div className="mb-10 border-b border-white/[0.08] pb-8">
           <p className="mb-3 text-xs font-medium tracking-[0.28em] text-[#00E0C7] uppercase">

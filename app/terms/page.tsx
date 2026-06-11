@@ -1,11 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../_components/site-header";
+import { absoluteUrl, SITE_NAME } from "../site-config";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Oryvelle",
+  title: "Terms of Service",
   description:
     "Terms of Service for Oryvelle, a sleep companion app by NekoDesk.",
+  alternates: {
+    canonical: absoluteUrl("/terms"),
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: "website",
+    url: absoluteUrl("/terms"),
+    title: "Terms of Service - Oryvelle",
+    description:
+      "Terms of Service for Oryvelle, a sleep companion app by NekoDesk.",
+    siteName: SITE_NAME,
+  },
 };
 
 export default function TermsPage() {
@@ -13,7 +29,10 @@ export default function TermsPage() {
     <div className="min-h-screen bg-[#080510] text-[#EDEAF5]">
       <SiteHeader activePage="terms" />
 
-      <main className="mx-auto w-full max-w-2xl px-5 pt-28 pb-24 sm:px-8">
+      <main
+        id="main-content"
+        className="mx-auto w-full max-w-2xl px-5 pt-28 pb-24 sm:px-8"
+      >
         {/* Page header */}
         <div className="mb-10 border-b border-white/[0.08] pb-8">
           <p className="mb-3 text-xs font-medium tracking-[0.28em] text-[#00E0C7] uppercase">

@@ -1,11 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../_components/site-header";
+import { absoluteUrl, SITE_NAME } from "../site-config";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Oryvelle",
+  title: "Privacy Policy",
   description:
     "Oryvelle stores your data on your device. No accounts, no analytics, no ads.",
+  alternates: {
+    canonical: absoluteUrl("/privacy"),
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: "website",
+    url: absoluteUrl("/privacy"),
+    title: "Privacy Policy - Oryvelle",
+    description:
+      "Oryvelle stores your data on your device. No accounts, no analytics, no ads.",
+    siteName: SITE_NAME,
+  },
 };
 
 const DATA_ROWS = [
@@ -46,7 +62,10 @@ export default function PrivacyPage() {
     <div className="min-h-screen bg-[#080510] text-[#EDEAF5]">
       <SiteHeader activePage="privacy" />
 
-      <main className="mx-auto w-full max-w-2xl px-5 pt-28 pb-24 sm:px-8">
+      <main
+        id="main-content"
+        className="mx-auto w-full max-w-2xl px-5 pt-28 pb-24 sm:px-8"
+      >
         {/* Page header */}
         <div className="mb-10 border-b border-white/[0.08] pb-8">
           <p className="mb-3 text-xs font-medium tracking-[0.28em] text-[#00E0C7] uppercase">
