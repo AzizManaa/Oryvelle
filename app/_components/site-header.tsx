@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 type SiteHeaderProps = {
-  activePage?: "privacy" | "terms";
+  activePage?: "privacy" | "support" | "terms";
 };
 
 export function SiteHeader({ activePage }: SiteHeaderProps) {
@@ -32,12 +32,16 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
               Privacy
             </Link>
           )}
-          <span
-            aria-disabled="true"
-            className="cursor-not-allowed select-none text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
-          >
-            Support
-          </span>
+          {activePage === "support" ? (
+            <span className="text-[#EDEAF5]">Support</span>
+          ) : (
+            <Link
+              href="/support"
+              className="text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+            >
+              Support
+            </Link>
+          )}
           {activePage === "terms" ? (
             <span className="text-[#EDEAF5]">Terms</span>
           ) : (
