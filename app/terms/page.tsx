@@ -6,7 +6,7 @@ import { absoluteUrl, SITE_NAME } from "../site-config";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "Terms of Service for Oryvelle, a sleep companion app by NekoDesk.",
+    "Terms of Service for Oryvelle, a relaxation app by NekoDesk.",
   alternates: {
     canonical: absoluteUrl("/terms"),
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     url: absoluteUrl("/terms"),
     title: "Terms of Service - Oryvelle",
     description:
-      "Terms of Service for Oryvelle, a sleep companion app by NekoDesk.",
+      "Terms of Service for Oryvelle, a relaxation app by NekoDesk.",
     siteName: SITE_NAME,
   },
 };
@@ -90,10 +90,10 @@ export default function TermsPage() {
               2. What Oryvelle is
             </h2>
             <p className="mb-3">
-              Oryvelle is a sleep companion app that provides ambient
-              soundscapes, guided breathing, a sleep timer, and a private sleep
-              journal. It is designed to support relaxation and healthy sleep
-              habits.
+              Oryvelle is a relaxation app that provides ambient
+              soundscapes, guided breathing, a fade timer, and private
+              reflection notes. It is designed to support calm, focus,
+              wind-down routines, and rest.
             </p>
             <p className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-5 py-4 text-[#9A9CAF]">
               <strong className="font-medium text-[#EDEAF5]">
@@ -135,7 +135,7 @@ export default function TermsPage() {
               unauthorised access to your Google account.
             </p>
             <p>
-              Your journal entries, sleep data, and preferences are stored
+              Your journal entries, session data, and preferences are stored
               locally on your device. You own your data. We do not access it,
               transfer it, or use it for any purpose other than running the app
               on your device. See our{" "}
@@ -293,7 +293,7 @@ export default function TermsPage() {
               Aziz Manaa shall not be liable for any indirect, incidental,
               special, consequential, or punitive damages arising from your use
               of Oryvelle, including but not limited to loss of data, loss of
-              sleep, or health-related outcomes.
+              rest, relaxation, sleep, or health-related outcomes.
             </p>
             <p>
               Nothing in these terms limits liability for death or personal

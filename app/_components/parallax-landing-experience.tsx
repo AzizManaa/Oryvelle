@@ -125,7 +125,7 @@ const ORB_ANNOTATIONS: Record<ParallaxMoment["id"], OrbAnnotation[]> = {
     { label: "close", value: "soft", detail: "no hard stop", x: 30, y: 76 },
   ],
   final: [
-    { label: "status", value: "soon", detail: "first night", x: 22, y: 32 },
+    { label: "status", value: "soon", detail: "first calm", x: 22, y: 32 },
     { label: "privacy", value: "quiet", detail: "by design", x: 78, y: 48, align: "right" },
     { label: "return", value: "when ready", detail: "no hard sell", x: 34, y: 76 },
   ],
@@ -1265,11 +1265,11 @@ function MobileNightNote({
     <aside
       key={moment.id}
       className="mt-8 animate-[sceneText_680ms_ease_120ms_both] border-l border-[var(--scene-accent)]/35 pl-4 lg:hidden"
-      aria-label={`${moment.label} night note`}
+      aria-label={`${moment.label} calm note`}
     >
       <div className="flex items-center justify-between gap-4">
         <p className="text-[0.66rem] font-medium tracking-[0.28em] text-[var(--scene-accent)] uppercase">
-          Night note 0{activeIndex + 1}
+          Calm note 0{activeIndex + 1}
         </p>
         <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_16px_var(--scene-accent)]" />
       </div>
@@ -1321,14 +1321,14 @@ function ReducedMotionLanding({ moments }: { moments: ParallaxMoment[] }) {
       <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="mb-4 text-xs font-medium tracking-[0.34em] text-[#00E0C7] uppercase">
-            Obsidian Sleep
+            Ambient sounds
           </p>
           <h1 className="text-balance text-5xl leading-[0.94] font-semibold text-[#F7F3FF] sm:text-7xl">
-            Build a softer path into sleep.
+            Sounds for when you need to reset.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-8 text-[#B8B5C7] sm:text-lg">
-            Oryvelle keeps the ritual quiet: sound constellations, a gentle
-            fade, and a small morning note without dashboard pressure.
+            Mix rain, cabin air, forest sounds, or soft noise. Set a timer,
+            breathe for a bit, and write a quick note if it helps.
           </p>
           <button
             type="button"

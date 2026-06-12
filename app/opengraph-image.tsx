@@ -58,10 +58,10 @@ export default function Image() {
               maxWidth: 720,
             }}
           >
-            Build a softer path into sleep.
+            Ambient sounds for quiet breaks.
           </div>
           <div style={{ color: "#B8B5C7", fontSize: 30, lineHeight: 1.35, maxWidth: 660 }}>
-            Ambient soundscapes, gentle fade timers, and private sleep notes.
+            Mix sounds, breathe for a bit, set a timer, and keep notes private.
           </div>
         </div>
 

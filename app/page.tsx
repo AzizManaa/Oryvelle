@@ -13,9 +13,9 @@ import {
 } from "./site-config";
 
 export const metadata: Metadata = {
-  title: "Oryvelle - Ambient Sleep Sounds, Timer, and Private Journal",
+  title: "Oryvelle - Ambient Sounds, Breathing, Timer, and Private Notes",
   description:
-    "Build a softer path into sleep with Oryvelle: ambient soundscapes, a gentle fade timer, guided breathing, and a private sleep journal for Android.",
+    "Use Oryvelle anytime you want to slow down: ambient soundscapes, breathing, fade timers, and private notes for Android.",
   keywords: SITE_KEYWORDS,
   alternates: {
     canonical: absoluteUrl(),
@@ -34,24 +34,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: absoluteUrl(),
-    title: "Oryvelle - Ambient Sleep Sounds and Private Sleep Journal",
+    title: "Oryvelle - Ambient Sounds, Breathing, and Private Notes",
     description:
-      "A calm Android sleep companion for ambient soundscapes, fade timers, guided breathing, and private sleep notes.",
+      "Ambient soundscapes, breathing, fade timers, and private notes for quiet breaks, focus, rest, and sleep.",
     siteName: SITE_NAME,
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Oryvelle ambient sleep app landing experience",
+        alt: "Oryvelle ambient sounds app landing experience",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Oryvelle - Ambient Sleep Sounds and Private Sleep Journal",
+    title: "Oryvelle - Ambient Sounds, Breathing, and Private Notes",
     description:
-      "Ambient soundscapes, gentle fade timers, guided breathing, and private sleep notes for Android.",
+      "Ambient soundscapes, breathing, fade timers, and private notes for quiet breaks, focus, rest, and sleep.",
     images: ["/twitter-image"],
   },
 };
@@ -60,75 +60,75 @@ const moments: ParallaxMoment[] = [
   {
     id: "arrival",
     label: "Arrival",
-    eyebrow: "Obsidian Sleep",
-    title: "Build a softer path into sleep.",
-    body: "Layer calming sounds, set a gentle timer, and leave a small note for morning. Oryvelle keeps the ritual quiet.",
+    eyebrow: "Ambient sounds",
+    title: "Sounds for when you need to reset.",
+    body: "Mix rain, cabin air, forest sounds, or soft noise. Set a timer, breathe for a bit, and write a quick note if it helps.",
     accent: "#00E0C7",
     secondary: "#B89AFF",
-    cue: "Enter the night",
-    panelBody: "The first layer is atmosphere: dark space, a living orb, and a ritual that does not rush you.",
+    cue: "Start simple",
+    panelBody: "Start with the sound you need right now, whether you are winding down, focusing, or trying to sleep.",
   },
   {
     id: "constellations",
-    label: "Constellations",
-    eyebrow: "Layer the night",
-    title: "Sound becomes a small constellation.",
-    body: "Rain, cabin air, forest hush, and soft noise connect into a sky you can shape without opening another control panel.",
+    label: "Sound Mix",
+    eyebrow: "Layer sounds",
+    title: "Rain, cabin air, forest hush.",
+    body: "Pick a few sounds, balance the mix, and let it sit in the background instead of becoming another thing to manage.",
     accent: "#67D7FF",
     secondary: "#8F82E8",
-    cue: "Stars align",
-    panelBody: "Each sound is treated like a point in the night, close enough to guide you and quiet enough to disappear.",
+    cue: "Pick a mix",
+    panelBody: "Keep a favorite mix ready for the next break, evening, or long night.",
   },
   {
     id: "mix",
     label: "Active Mix",
-    eyebrow: "Mix without friction",
-    title: "The ritual gathers around the orb.",
-    body: "A living mix sits in reach while the rest of the page keeps its distance: visible, calm, and never crowded.",
+    eyebrow: "Simple controls",
+    title: "The mix stays easy to reach.",
+    body: "The controls are there when you need them and quiet when you do not.",
     accent: "#00E0C7",
     secondary: "#67D7FF",
     cue: "Active mix",
-    panelBody: "A soft glass preview comes forward only when it matters, then lets the night stay spacious.",
+    panelBody: "Change the sound, check the timer, then get back to whatever you were doing.",
   },
   {
     id: "fade",
     label: "Fade Timer",
-    eyebrow: "Fade without fuss",
-    title: "Let the night close itself.",
-    body: "Set a timer, let the mix fade, and leave the phone alone. The ritual keeps moving softly in the background.",
+    eyebrow: "Fade timer",
+    title: "Let the sound end gently.",
+    body: "Set a timer and let the mix fade out on its own. Useful for naps, focus sessions, reading, or sleep.",
     accent: "#FFB87A",
     secondary: "#00E0C7",
     cue: "45 min fade",
-    panelBody: "The constellation bends into time, then loosens its grip as the soundscape settles.",
+    panelBody: "No abrupt stop, no need to come back just to turn the sound off.",
   },
   {
     id: "final",
     label: "Invite",
-    eyebrow: "First night soon",
-    title: "Start with one softer night.",
-    body: "Oryvelle is still arriving. The landing page should leave the same feeling as the app: quiet, curious, and close enough to return to.",
+    eyebrow: "Coming soon",
+    title: "Use it for the small pauses.",
+    body: "Oryvelle is still being built. The goal is simple: sound, breathing, and notes without extra noise.",
     accent: "#FF6B9D",
     secondary: "#B89AFF",
     cue: "Coming soon",
-    panelBody: "No hard sell. Just a doorway into a calmer night ritual when the app is ready.",
+    panelBody: "No ads, no analytics, and no account required to use the core app.",
   },
 ];
 
 const seoHighlights = [
   {
     cue: "01",
-    title: "Ambient sleep soundscapes",
-    body: "Layer rain, cabin air, forest hush, and soft noise into a calm mix designed for winding down without a crowded dashboard.",
+    title: "Ambient soundscapes",
+    body: "Layer rain, cabin air, forest hush, and soft noise into a mix that can stay in the background.",
   },
   {
     cue: "02",
-    title: "Gentle fade timer",
-    body: "Set a timer and let the soundscape fade softly in the background, so the phone can stay out of the way once the ritual starts.",
+    title: "Fade timer",
+    body: "Set a timer and let the sound fade out without coming back to stop it manually.",
   },
   {
     cue: "03",
-    title: "Private sleep journal",
-    body: "Leave a short morning note, track sleep ratings and mood tags, and keep the record on your device by default.",
+    title: "Private notes",
+    body: "Write a quick note after a session, track how you felt, and keep it on your device by default.",
   },
   {
     cue: "04",
@@ -178,10 +178,10 @@ const jsonLd = {
         "@id": absoluteUrl("/#organization"),
       },
       featureList: [
-        "Ambient sleep soundscapes",
+        "Ambient relaxation soundscapes",
         "Gentle fade timer",
         "Guided breathing",
-        "Private sleep journal",
+        "Private notes",
         "Optional Google Drive backup",
       ],
     },
@@ -223,18 +223,18 @@ function SeoContent() {
         <div className="relative mx-auto grid w-full max-w-7xl gap-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(440px,1.1fr)] lg:items-start">
           <div className="lg:sticky lg:top-28">
             <p className="mb-5 text-xs font-medium tracking-[0.3em] text-[#00E0C7] uppercase">
-              Sleep companion for Android
+              Built for quiet breaks
             </p>
             <h2
               id="about-oryvelle"
               className="max-w-2xl text-3xl leading-tight font-semibold text-[#F7F3FF] sm:text-5xl"
             >
-              A quieter ritual for the edge of sleep.
+              For breaks, focus, rest, and sleep.
             </h2>
             <p className="mt-6 max-w-xl text-base leading-8 text-[#B8B5C7]">
-              Oryvelle helps you layer ambient sounds, start guided breathing,
-              set a gentle fade timer, and leave a simple morning note without
-              turning bedtime into another dashboard.
+              Use Oryvelle for focus, rest, sleep, or a few minutes away from
+              the noise. Mix sounds, breathe for a bit, set a timer, and leave a
+              note if it helps.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-2">
@@ -294,9 +294,9 @@ function SeoContent() {
               aria-label="Privacy note"
               className="mt-5 rounded-lg border border-[#67D7FF]/15 bg-[#67D7FF]/[0.045] p-5 text-sm leading-7 text-[#B8B5C7]"
             >
-              Your journal, mixes, and preferences stay on your device unless
-              you explicitly choose Google Drive backup. No ads, no analytics,
-              no required account, and no medical claims.
+              Your notes, mixes, and preferences stay on your device unless you
+              choose Google Drive backup. No ads, no analytics, no required
+              account, and no medical claims.
             </aside>
           </div>
         </div>

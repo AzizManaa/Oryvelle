@@ -31,7 +31,7 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "Do I need an account to use Oryvelle?",
-        a: "No. All core features — sounds, sleep timer, guided breathing, and your sleep journal — work without signing in. Google Sign-In is optional and only needed if you want to back up your journal to Google Drive.",
+        a: "No. All core features — sounds, fade timer, guided breathing, and your private notes — work without signing in. Google Sign-In is optional and only needed if you want to back up your journal to Google Drive.",
       },
       {
         q: "The app asks for notification permission. What is it used for?",
@@ -63,11 +63,11 @@ const FAQ_SECTIONS = [
   },
   {
     id: "journal",
-    heading: "Sleep journal",
+    heading: "Journal and notes",
     items: [
       {
         q: "Can I edit or delete a past journal entry?",
-        a: "Yes. Open Sleep Notes, tap the day you want to change, then use the edit or delete action. Deleting an entry is permanent and will ask for confirmation first.",
+        a: "Yes. Open Notes, tap the day you want to change, then use the edit or delete action. Deleting an entry is permanent and will ask for confirmation first.",
       },
       {
         q: "I accidentally deleted an entry. Can I recover it?",
@@ -108,12 +108,12 @@ const FAQ_SECTIONS = [
     heading: "Data and privacy",
     items: [
       {
-        q: "How do I export my sleep journal?",
+        q: "How do I export my journal?",
         a: "Go to Settings → Back up & restore → Export journal. This saves a JSON file to a location you choose on your device.",
       },
       {
         q: "How do I delete all my data?",
-        a: "You can clear your sleep notes and saved mixes individually from Settings. To remove everything, uninstall the app — this removes all locally stored data. If you also want to remove your Drive backup, delete it from Google Drive → Storage → Manage storage → Oryvelle.",
+        a: "You can clear your notes and saved mixes individually from Settings. To remove everything, uninstall the app — this removes all locally stored data. If you also want to remove your Drive backup, delete it from Google Drive → Storage → Manage storage → Oryvelle.",
       },
       {
         q: "Does Oryvelle collect analytics or share my data?",
@@ -128,11 +128,11 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "How do I reset the onboarding questionnaire?",
-        a: "Go to Settings → Personalization profile → Reset profile. This clears your onboarding answers and sleep profile. Your journal entries and saved mixes are not affected.",
+        a: "Go to Settings → Personalization profile → Reset profile. This clears your onboarding answers and relaxation profile. Your journal entries and saved mixes are not affected.",
       },
       {
-        q: "How do I reset my bedtime routine?",
-        a: "Go to Settings → Bedtime routine → Reset routine. This clears only the routine setup. It does not stop active playback, delete journal entries, or change your timer defaults.",
+        q: "How do I reset my wind-down routine?",
+        a: "Go to Settings → Wind-down routine → Reset routine. This clears only the routine setup. It does not stop active playback, delete journal entries, or change your timer defaults.",
       },
     ],
   },

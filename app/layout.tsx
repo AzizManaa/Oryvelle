@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(absoluteUrl()),
   applicationName: SITE_NAME,
   title: {
-    default: "Oryvelle - Privacy-First Sleep Companion",
+    default: "Oryvelle - Ambient Sounds for Relaxing",
     template: "%s | Oryvelle",
   },
   description: SITE_DESCRIPTION,
@@ -25,20 +25,20 @@ export const metadata: Metadata = {
     type: "website",
     url: absoluteUrl(),
     siteName: SITE_NAME,
-    title: "Oryvelle - Privacy-First Sleep Companion",
+    title: "Oryvelle - Ambient Sounds for Relaxing",
     description: SITE_DESCRIPTION,
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Oryvelle sleep companion in a calm night field",
+        alt: "Oryvelle ambient sounds app preview",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Oryvelle - Privacy-First Sleep Companion",
+    title: "Oryvelle - Ambient Sounds for Relaxing",
     description: SITE_DESCRIPTION,
     images: ["/twitter-image"],
   },

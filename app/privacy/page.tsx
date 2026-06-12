@@ -26,8 +26,8 @@ export const metadata: Metadata = {
 
 const DATA_ROWS = [
   {
-    data: "Sleep journal entries (rating, duration, mood tags, notes)",
-    purpose: "Show your sleep history and trends",
+    data: "Journal entries (rating, duration, mood tags, notes)",
+    purpose: "Show your relaxation history and trends",
     where: "Local device storage",
   },
   {
@@ -36,7 +36,7 @@ const DATA_ROWS = [
     where: "Local device storage",
   },
   {
-    data: "Onboarding preferences (sleep goals, sound categories, routine choices)",
+    data: "Onboarding preferences (relaxation goals, sound categories, routine choices)",
     purpose: "Personalize recommendations",
     where: "Local device storage",
   },
@@ -105,11 +105,12 @@ export default function PrivacyPage() {
           {/* Overview */}
           <section>
             <p>
-              Oryvelle is a sleep companion app. It stores your data on your
-              device. It does not run user accounts, does not collect analytics,
-              and does not serve ads. Google Sign-In and Google Drive backup are
-              optional features you can use to protect your sleep journal —
-              neither is required to use the app.
+              Oryvelle is for ambient soundscapes, guided breathing, wind-down
+              routines, and private notes. It stores your data on your device.
+              It does not run user accounts, does not collect analytics, and
+              does not serve ads. Google Sign-In and Google Drive backup are
+              optional features you can use to protect your journal — neither is
+              required to use the app.
             </p>
           </section>
 
@@ -180,7 +181,7 @@ export default function PrivacyPage() {
               <strong className="font-medium text-[#EDEAF5]">
                 Drive backup
               </strong>
-              , the app saves a copy of your sleep journal entries to a private
+              , the app saves a copy of your journal entries to a private
               folder in your own Google Drive (
               <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-[#B8B5C7]">
                 appDataFolder
@@ -301,7 +302,7 @@ export default function PrivacyPage() {
               <strong className="font-medium text-[#EDEAF5]">
                 On-device data:
               </strong>{" "}
-              You can delete your sleep notes individually from the journal
+              You can delete your notes individually from the journal
               screen, or clear all saved mixes from Settings. Uninstalling the
               app removes all locally stored data.
             </p>
