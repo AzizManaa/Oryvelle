@@ -1,5 +1,5 @@
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://oryvelle.nekodesk.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://oryvelle.app";
 
 export const SITE_NAME = "Oryvelle";
 

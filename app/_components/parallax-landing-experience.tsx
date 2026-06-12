@@ -395,7 +395,7 @@ export function ParallaxLandingExperience({
       window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
     };
-  }, [reducedMotion]);
+  }, [moments.length, reducedMotion]);
 
   if (reducedMotion) {
     return <ReducedMotionLanding moments={moments} />;
@@ -713,7 +713,6 @@ function drawArrivalCanvas(
   height: number,
   sceneBlend: number,
   moment: ParallaxMoment,
-  _seconds: number,
 ) {
   const points = TIMER_PATH.map((point) => ({
     x: (point.x / 100) * width,
@@ -751,7 +750,6 @@ function drawConstellationsCanvas(
   height: number,
   sceneBlend: number,
   moment: ParallaxMoment,
-  _seconds: number,
 ) {
   const starPixels = SOUND_STARS.map((s) => ({
     x: (s.x / 100) * width,
@@ -1005,10 +1003,10 @@ function drawSceneForIndex(
   context.globalAlpha = displayAlpha;
   switch (sceneIndex) {
     case 0:
-      drawArrivalCanvas(context, width, height, sceneBlend, moment, seconds);
+      drawArrivalCanvas(context, width, height, sceneBlend, moment);
       break;
     case 1:
-      drawConstellationsCanvas(context, width, height, sceneBlend, moment, seconds);
+      drawConstellationsCanvas(context, width, height, sceneBlend, moment);
       break;
     case 2:
       drawMixCanvas(context, width, height, sceneBlend, moment, seconds, orbCenter, orbRadius);

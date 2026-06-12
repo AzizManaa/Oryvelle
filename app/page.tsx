@@ -116,22 +116,28 @@ const moments: ParallaxMoment[] = [
 
 const seoHighlights = [
   {
+    cue: "01",
     title: "Ambient sleep soundscapes",
     body: "Layer rain, cabin air, forest hush, and soft noise into a calm mix designed for winding down without a crowded dashboard.",
   },
   {
+    cue: "02",
     title: "Gentle fade timer",
     body: "Set a timer and let the soundscape fade softly in the background, so the phone can stay out of the way once the ritual starts.",
   },
   {
+    cue: "03",
     title: "Private sleep journal",
     body: "Leave a short morning note, track sleep ratings and mood tags, and keep the record on your device by default.",
   },
   {
+    cue: "04",
     title: "Optional Drive backup",
     body: "Use Oryvelle without an account, or choose Google Sign-In and Drive backup when you want an extra copy of your journal.",
   },
 ];
+
+const trustSignals = ["No ads", "No analytics", "No required account"];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -206,109 +212,92 @@ function SeoContent() {
     <>
       <section
         aria-labelledby="about-oryvelle"
-        className="relative border-t border-white/[0.08] bg-[#080510] px-5 py-20 sm:px-8 lg:py-28"
+        className="relative overflow-hidden border-t border-white/[0.08] bg-[#080510] px-5 py-20 sm:px-8 lg:py-28"
       >
-        <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[0.78fr_1.22fr]">
-          <div>
-            <p className="mb-4 text-xs font-medium tracking-[0.3em] text-[#00E0C7] uppercase">
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(0,224,199,0.55),rgba(184,154,255,0.35),transparent)]"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(103,215,255,0.035),rgba(8,5,16,0)_32%),radial-gradient(circle_at_82%_18%,rgba(255,184,122,0.075),transparent_30%)]" />
+
+        <div className="relative mx-auto grid w-full max-w-7xl gap-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(440px,1.1fr)] lg:items-start">
+          <div className="lg:sticky lg:top-28">
+            <p className="mb-5 text-xs font-medium tracking-[0.3em] text-[#00E0C7] uppercase">
               Sleep companion for Android
             </p>
             <h2
               id="about-oryvelle"
-              className="max-w-xl text-3xl leading-tight font-semibold text-[#F7F3FF] sm:text-4xl"
+              className="max-w-2xl text-3xl leading-tight font-semibold text-[#F7F3FF] sm:text-5xl"
             >
-              Ambient sounds, a fade timer, and private notes for softer nights.
+              A quieter ritual for the edge of sleep.
             </h2>
-          </div>
-
-          <div className="space-y-6 text-sm leading-7 text-[#B8B5C7] sm:text-base">
-            <p>
-              Oryvelle is a privacy-first sleep companion for building a calmer
-              night ritual. It helps you layer ambient sounds, start guided
-              breathing, set a gentle timer, and leave a simple sleep note in
-              the morning.
+            <p className="mt-6 max-w-xl text-base leading-8 text-[#B8B5C7]">
+              Oryvelle helps you layer ambient sounds, start guided breathing,
+              set a gentle fade timer, and leave a simple morning note without
+              turning bedtime into another dashboard.
             </p>
-            <p>
-              The app is designed to stay quiet: no advertising, no analytics,
-              no required account, and no medical claims. Your journal, mixes,
-              and preferences stay on your device unless you explicitly choose
-              Google Drive backup.
-            </p>
-          </div>
-        </div>
-      </section>
 
-      <section
-        aria-labelledby="sleep-features"
-        className="bg-[#0B0715] px-5 py-18 sm:px-8 lg:py-24"
-      >
-        <div className="mx-auto w-full max-w-7xl">
-          <div className="max-w-2xl">
-            <p className="mb-4 text-xs font-medium tracking-[0.3em] text-[#67D7FF] uppercase">
-              What Oryvelle does
-            </p>
-            <h2
-              id="sleep-features"
-              className="text-3xl leading-tight font-semibold text-[#F7F3FF] sm:text-4xl"
-            >
-              A focused toolkit for winding down.
-            </h2>
-          </div>
+            <div className="mt-8 flex flex-wrap gap-2">
+              {trustSignals.map((signal) => (
+                <span
+                  key={signal}
+                  className="rounded-full border border-white/[0.08] bg-white/[0.035] px-4 py-2 text-xs font-medium tracking-[0.14em] text-[#D8D4E8]/75 uppercase"
+                >
+                  {signal}
+                </span>
+              ))}
+            </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-2">
-            {seoHighlights.map((highlight) => (
-              <article
-                key={highlight.title}
-                className="rounded-lg border border-white/[0.08] bg-white/[0.035] p-6"
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Link
+                href="/privacy"
+                className="rounded-full border border-[#00E0C7]/30 bg-[#00E0C7]/10 px-5 py-3 text-sm font-medium text-[#EDEAF5] transition-colors hover:bg-[#00E0C7]/15"
               >
-                <h3 className="text-lg font-semibold text-[#F7F3FF]">
-                  {highlight.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-[#A8A5B8]">
-                  {highlight.body}
-                </p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="privacy-first"
-        className="bg-[#080510] px-5 py-18 sm:px-8 lg:py-24"
-      >
-        <div className="mx-auto grid w-full max-w-7xl gap-10 border-y border-white/[0.08] py-12 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div className="max-w-3xl">
-            <p className="mb-4 text-xs font-medium tracking-[0.3em] text-[#00E0C7] uppercase">
-              Privacy-first by default
-            </p>
-            <h2
-              id="privacy-first"
-              className="text-3xl leading-tight font-semibold text-[#F7F3FF] sm:text-4xl"
-            >
-              No ads, no analytics, no account required.
-            </h2>
-            <p className="mt-5 text-sm leading-7 text-[#B8B5C7] sm:text-base">
-              Oryvelle keeps its core sleep features available offline after
-              sounds are cached. Google Sign-In and Drive backup are optional,
-              and the privacy policy explains exactly what stays local and what
-              only happens when you choose it.
-            </p>
+                Privacy Policy
+              </Link>
+              <Link
+                href="/support"
+                className="rounded-full border border-white/[0.12] px-5 py-3 text-sm font-medium text-[#B8B5C7] transition-colors hover:border-white/[0.22] hover:text-[#F7F3FF]"
+              >
+                Support
+              </Link>
+            </div>
           </div>
 
-          <div className="flex flex-wrap gap-3 lg:justify-end">
-            <Link
-              href="/privacy"
-              className="rounded-full border border-[#00E0C7]/30 bg-[#00E0C7]/10 px-5 py-3 text-sm font-medium text-[#EDEAF5] transition-colors hover:bg-[#00E0C7]/15"
+          <div className="relative">
+            <div className="absolute left-3 top-3 bottom-3 w-px bg-[linear-gradient(180deg,rgba(0,224,199,0),rgba(0,224,199,0.34),rgba(184,154,255,0.18),rgba(0,224,199,0))]" />
+            <div className="space-y-3">
+              {seoHighlights.map((highlight) => (
+                <article
+                  key={highlight.title}
+                  className="relative grid gap-4 rounded-lg border border-white/[0.075] bg-[#0D0A18]/72 p-5 pl-12 shadow-[0_18px_70px_rgba(0,0,0,0.2)] sm:grid-cols-[8rem_1fr] sm:gap-6 sm:p-6 sm:pl-14"
+                >
+                  <div className="absolute left-[0.7rem] top-6 grid h-5 w-5 place-items-center rounded-full border border-[#00E0C7]/40 bg-[#080510] shadow-[0_0_20px_rgba(0,224,199,0.25)]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#EDEAF5]" />
+                  </div>
+                  <p className="text-xs font-medium tracking-[0.28em] text-[#00E0C7] uppercase">
+                    {highlight.cue}
+                  </p>
+                  <div>
+                    <h3 className="text-lg font-semibold text-[#F7F3FF]">
+                      {highlight.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-7 text-[#A8A5B8]">
+                      {highlight.body}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <aside
+              aria-label="Privacy note"
+              className="mt-5 rounded-lg border border-[#67D7FF]/15 bg-[#67D7FF]/[0.045] p-5 text-sm leading-7 text-[#B8B5C7]"
             >
-              Privacy Policy
-            </Link>
-            <Link
-              href="/support"
-              className="rounded-full border border-white/[0.12] px-5 py-3 text-sm font-medium text-[#B8B5C7] transition-colors hover:border-white/[0.22] hover:text-[#F7F3FF]"
-            >
-              Support
-            </Link>
+              Your journal, mixes, and preferences stay on your device unless
+              you explicitly choose Google Drive backup. No ads, no analytics,
+              no required account, and no medical claims.
+            </aside>
           </div>
         </div>
       </section>
