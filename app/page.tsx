@@ -146,7 +146,7 @@ const jsonLd = {
       "@type": "Organization",
       "@id": absoluteUrl("/#organization"),
       name: "NekoDesk",
-      url: "https://nekodesk.com",
+      url: "https://aziz-manaa.com",
       email: "support@nekodesk.com",
     },
     {
@@ -304,7 +304,18 @@ function SeoContent() {
 
       <footer className="bg-[#080510] px-5 pb-10 text-sm text-[#7C8094] sm:px-8">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 border-t border-white/[0.08] pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p>Oryvelle by NekoDesk. Coming soon for Android.</p>
+          <p>
+            Oryvelle by{" "}
+            <a
+              href="https://aziz-manaa.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-[#B8B5C7]"
+            >
+              NekoDesk
+            </a>
+            . Coming soon for Android.
+          </p>
           <nav aria-label="Footer pages" className="flex flex-wrap gap-5">
             <Link
               href="/privacy"

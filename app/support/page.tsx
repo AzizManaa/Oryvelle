@@ -156,7 +156,15 @@ export default function SupportPage() {
             Support
           </h1>
           <p className="mt-3 text-sm leading-6 text-[#B8B5C7]">
-            App: Oryvelle &nbsp;·&nbsp; Developer: NekoDesk — Aziz Manaa
+            App: Oryvelle &nbsp;·&nbsp; Developer:{" "}
+            <a
+              href="https://aziz-manaa.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline-offset-2 hover:text-[#00E0C7] hover:underline"
+            >
+              NekoDesk — Aziz Manaa
+            </a>
           </p>
         </div>
 

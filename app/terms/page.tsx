@@ -48,7 +48,16 @@ export default function TermsPage() {
             </div>
             <div>
               <dt className="inline text-[#7C8094]">Developer </dt>
-              <dd className="inline text-[#B8B5C7]">NekoDesk — Aziz Manaa</dd>
+              <dd className="inline">
+                <a
+                  href="https://aziz-manaa.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#B8B5C7] underline-offset-2 hover:text-[#00E0C7] hover:underline"
+                >
+                  NekoDesk — Aziz Manaa
+                </a>
+              </dd>
             </div>
             <div>
               <dt className="inline text-[#7C8094]">Contact </dt>
@@ -388,9 +397,14 @@ export default function TermsPage() {
               </p>
               <p>
                 <span className="text-[#7C8094]">Developer </span>
-                <span className="text-[#B8B5C7]">
+                <a
+                  href="https://aziz-manaa.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#B8B5C7] underline-offset-2 hover:text-[#00E0C7] hover:underline"
+                >
                   NekoDesk — Aziz Manaa, Barcelona, Spain
-                </span>
+                </a>
               </p>
             </div>
           </section>
