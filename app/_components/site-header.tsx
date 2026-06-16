@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 type SiteHeaderProps = {
@@ -10,11 +11,21 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-5 sm:px-8">
         <Link
           href="/"
-          className="flex min-w-0 items-center gap-3 transition-opacity hover:opacity-75"
+          aria-label="Oryvelle home"
+          className="flex min-w-0 items-center gap-1.5 transition-opacity hover:opacity-75"
         >
-          <span className="h-2.5 w-2.5 rounded-full bg-[#00E0C7] shadow-[0_0_18px_rgba(0,224,199,0.8)]" />
+          <span className="relative h-7 w-7 overflow-hidden rounded-full border border-white/[0.12] bg-[#080510] shadow-[0_0_22px_rgba(184,154,255,0.25)]">
+            <Image
+              src="/icons/web-app-manifest-192x192.png"
+              alt=""
+              width={28}
+              height={28}
+              className="h-full w-full object-cover"
+              priority
+            />
+          </span>
           <span className="text-sm font-medium tracking-[0.18em] text-[#EDEAF5] uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
-            Oryvelle
+            Ryvelle
           </span>
         </Link>
 
