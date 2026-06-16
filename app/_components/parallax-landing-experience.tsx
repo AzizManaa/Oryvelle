@@ -1298,7 +1298,7 @@ function ProgressRail({
   return (
     <div
       aria-hidden="true"
-      className="relative z-30 mx-auto mb-1 flex w-full max-w-sm items-center justify-center gap-3 rounded-full border border-white/[0.08] bg-[#080510]/44 p-2 backdrop-blur-xl"
+      className="relative z-30 mx-auto mb-1 flex w-fit items-center justify-center gap-3 px-2 py-1"
     >
       {moments.map((moment, index) => (
         <span
