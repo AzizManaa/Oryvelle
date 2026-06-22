@@ -96,10 +96,10 @@ export default function PrivacyPage() {
               <dt className="inline text-[#7C8094]">Contact </dt>
               <dd className="inline">
                 <a
-                  href="mailto:privacy@nekodesk.com"
+                  href="mailto:nekodesk.dev@gmail.com"
                   className="text-[#00E0C7] underline-offset-2 hover:underline"
                 >
-                  privacy@nekodesk.com
+                  nekodesk.dev@gmail.com
                 </a>
               </dd>
             </div>
@@ -351,10 +351,10 @@ export default function PrivacyPage() {
               believe a child has provided personal information through the app,
               please contact us at{" "}
               <a
-                href="mailto:privacy@nekodesk.com"
+                href="mailto:nekodesk.dev@gmail.com"
                 className="text-[#00E0C7] underline-offset-2 hover:underline"
               >
-                privacy@nekodesk.com
+                nekodesk.dev@gmail.com
               </a>{" "}
               and we will take steps to remove that information.
             </p>
@@ -381,10 +381,10 @@ export default function PrivacyPage() {
             <p className="mt-3">
               For any other requests, contact us at{" "}
               <a
-                href="mailto:privacy@nekodesk.com"
+                href="mailto:nekodesk.dev@gmail.com"
                 className="text-[#00E0C7] underline-offset-2 hover:underline"
               >
-                privacy@nekodesk.com
+                nekodesk.dev@gmail.com
               </a>
               .
             </p>
@@ -440,10 +440,10 @@ export default function PrivacyPage() {
               <p>
                 <span className="text-[#7C8094]">Email </span>
                 <a
-                  href="mailto:privacy@nekodesk.com"
+                  href="mailto:nekodesk.dev@gmail.com"
                   className="text-[#00E0C7] underline-offset-2 hover:underline"
                 >
-                  privacy@nekodesk.com
+                  nekodesk.dev@gmail.com
                 </a>
               </p>
               <p>

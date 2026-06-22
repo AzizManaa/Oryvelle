@@ -147,7 +147,7 @@ const jsonLd = {
       "@id": absoluteUrl("/#organization"),
       name: "NekoDesk",
       url: "https://aziz-manaa.com",
-      email: "support@nekodesk.com",
+      email: "nekodesk.dev@gmail.com",
     },
     {
       "@type": "WebSite",

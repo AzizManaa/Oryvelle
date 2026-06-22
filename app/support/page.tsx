@@ -178,10 +178,10 @@ export default function SupportPage() {
             covered below, email us. We aim to respond within 2 business days.
           </p>
           <a
-            href="mailto:support@nekodesk.com"
+            href="mailto:nekodesk.dev@gmail.com"
             className="inline-flex items-center gap-2 rounded-full border border-[#00E0C7]/30 bg-[#00E0C7]/10 px-4 py-2 text-sm font-medium text-[#00E0C7] transition-colors hover:bg-[#00E0C7]/15"
           >
-            support@nekodesk.com
+            nekodesk.dev@gmail.com
           </a>
         </div>
 
@@ -236,10 +236,10 @@ export default function SupportPage() {
           <p className="mb-4 text-sm leading-6 text-[#B8B5C7]">
             Email us at{" "}
             <a
-              href="mailto:support@nekodesk.com"
+              href="mailto:nekodesk.dev@gmail.com"
               className="text-[#00E0C7] underline-offset-2 hover:underline"
             >
-              support@nekodesk.com
+              nekodesk.dev@gmail.com
             </a>{" "}
             and include:
           </p>

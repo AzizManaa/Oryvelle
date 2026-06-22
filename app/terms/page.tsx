@@ -63,10 +63,10 @@ export default function TermsPage() {
               <dt className="inline text-[#7C8094]">Contact </dt>
               <dd className="inline">
                 <a
-                  href="mailto:legal@nekodesk.com"
+                  href="mailto:nekodesk.dev@gmail.com"
                   className="text-[#00E0C7] underline-offset-2 hover:underline"
                 >
-                  legal@nekodesk.com
+                  nekodesk.dev@gmail.com
                 </a>
               </dd>
             </div>
@@ -389,10 +389,10 @@ export default function TermsPage() {
               <p>
                 <span className="text-[#7C8094]">Email </span>
                 <a
-                  href="mailto:legal@nekodesk.com"
+                  href="mailto:nekodesk.dev@gmail.com"
                   className="text-[#00E0C7] underline-offset-2 hover:underline"
                 >
-                  legal@nekodesk.com
+                  nekodesk.dev@gmail.com
                 </a>
               </p>
               <p>
