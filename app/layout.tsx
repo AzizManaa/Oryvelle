@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME } from "./site-config";
 import "./globals.css";
 
@@ -69,6 +70,7 @@ export default function RootLayout({
           Skip to content
         </a>
         {children}
+        <Analytics />
       </body>
     </html>
   );
