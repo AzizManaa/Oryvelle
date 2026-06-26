@@ -197,17 +197,43 @@ export function OryvelleOrbCanvas({
       drawInfallingDebris(context, center, baseRadius, flowProgress, glowStrength, palette, true);
       drawInfallStreams(context, center, baseRadius, flowProgress, true, palette);
       drawPhotonSphere(context, center, baseRadius, diskProgress, glowStrength, palette);
-
-      animationFrame = window.requestAnimationFrame(drawFrame);
     };
 
+    const tick = (time: number) => {
+      drawFrame(time);
+      animationFrame = window.requestAnimationFrame(tick);
+    };
+
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const start = () => {
+      window.cancelAnimationFrame(animationFrame);
+      if (motionQuery.matches) {
+        drawFrame(0);
+        return;
+      }
+      animationFrame = window.requestAnimationFrame(tick);
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) start();
+        else window.cancelAnimationFrame(animationFrame);
+      },
+      { threshold: 0 },
+    );
+
     resize();
-    animationFrame = window.requestAnimationFrame(drawFrame);
+    start();
+    io.observe(canvas);
     window.addEventListener("resize", resize);
+    motionQuery.addEventListener("change", start);
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("resize", resize);
+      motionQuery.removeEventListener("change", start);
+      io.disconnect();
     };
   }, []);
 

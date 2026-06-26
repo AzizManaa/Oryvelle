@@ -376,16 +376,43 @@ export function ParallaxLandingExperience({
         time,
       );
 
-      frame = window.requestAnimationFrame(draw);
     };
 
+    const tick = (time: number) => {
+      draw(time);
+      frame = window.requestAnimationFrame(tick);
+    };
+
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const start = () => {
+      window.cancelAnimationFrame(frame);
+      if (motionQuery.matches) {
+        draw(0);
+        return;
+      }
+      frame = window.requestAnimationFrame(tick);
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) start();
+        else window.cancelAnimationFrame(frame);
+      },
+      { threshold: 0 },
+    );
+
     resize();
-    frame = window.requestAnimationFrame(draw);
+    start();
+    io.observe(canvas);
     window.addEventListener("resize", resize);
+    motionQuery.addEventListener("change", start);
 
     return () => {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
+      motionQuery.removeEventListener("change", start);
+      io.disconnect();
     };
   }, [moments.length]);
 
