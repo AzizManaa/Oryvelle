@@ -7,7 +7,6 @@ type OryvelleOrbCanvasProps = {
   secondaryColor?: string;
   glowStrength?: number;
   className?: string;
-  reducedMotion?: boolean;
 };
 
 type Point = {
@@ -134,14 +133,13 @@ export function OryvelleOrbCanvas({
   secondaryColor = "#B89AFF",
   glowStrength = 1,
   className,
-  reducedMotion = false,
 }: OryvelleOrbCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const colorsRef = useRef({ primaryColor, secondaryColor, glowStrength, reducedMotion });
+  const colorsRef = useRef({ primaryColor, secondaryColor, glowStrength });
 
   useEffect(() => {
-    colorsRef.current = { primaryColor, secondaryColor, glowStrength, reducedMotion };
-  }, [primaryColor, secondaryColor, glowStrength, reducedMotion]);
+    colorsRef.current = { primaryColor, secondaryColor, glowStrength };
+  }, [primaryColor, secondaryColor, glowStrength]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -171,9 +169,9 @@ export function OryvelleOrbCanvas({
     };
 
     const drawFrame = (time: number) => {
-      const { primaryColor: primary, secondaryColor: secondary, glowStrength: externalGlowStrength, reducedMotion: isReduced } =
+      const { primaryColor: primary, secondaryColor: secondary, glowStrength: externalGlowStrength } =
         colorsRef.current;
-      const elapsed = isReduced ? 0 : time;
+      const elapsed = time;
       const diskProgress = wrapLoopProgress(0.28 + elapsed / 26000);
       const flowProgress = wrapLoopProgress(0.34 + elapsed / 11500);
       const pulseProgress = wrapLoopProgress(0.14 + elapsed / 8500);
@@ -200,9 +198,7 @@ export function OryvelleOrbCanvas({
       drawInfallStreams(context, center, baseRadius, flowProgress, true, palette);
       drawPhotonSphere(context, center, baseRadius, diskProgress, glowStrength, palette);
 
-      if (!isReduced) {
-        animationFrame = window.requestAnimationFrame(drawFrame);
-      }
+      animationFrame = window.requestAnimationFrame(drawFrame);
     };
 
     resize();

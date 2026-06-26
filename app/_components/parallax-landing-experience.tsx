@@ -261,7 +261,6 @@ export function ParallaxLandingExperience({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const progressRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(false);
   const activeMoment = moments[activeIndex];
   const activeMomentRef = useRef(activeMoment);
   const style = {
@@ -274,20 +273,10 @@ export function ParallaxLandingExperience({
   }, [activeMoment]);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleMotionChange = () => setReducedMotion(mediaQuery.matches);
-
-    handleMotionChange();
-    mediaQuery.addEventListener("change", handleMotionChange);
-
-    return () => mediaQuery.removeEventListener("change", handleMotionChange);
-  }, []);
-
-  useEffect(() => {
     const track = trackRef.current;
     const stage = stageRef.current;
 
-    if (!track || !stage || reducedMotion) {
+    if (!track || !stage) {
       return;
     }
 
@@ -342,7 +331,7 @@ export function ParallaxLandingExperience({
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
     };
-  }, [moments.length, reducedMotion]);
+  }, [moments.length]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -372,10 +361,10 @@ export function ParallaxLandingExperience({
     };
 
     const draw = (time = 0) => {
-      const progress = reducedMotion ? 0.42 : progressRef.current;
+      const progress = progressRef.current;
 
       context.clearRect(0, 0, width, height);
-      drawPageSky(context, width, height, progress, time, reducedMotion, activeMomentRef.current.accent);
+      drawPageSky(context, width, height, progress, time, activeMomentRef.current.accent);
       const sceneState = computeSceneState(progress, moments.length);
       drawSceneCanvas(
         context,
@@ -385,12 +374,9 @@ export function ParallaxLandingExperience({
         sceneState,
         activeMomentRef.current,
         time,
-        reducedMotion,
       );
 
-      if (!reducedMotion) {
-        frame = window.requestAnimationFrame(draw);
-      }
+      frame = window.requestAnimationFrame(draw);
     };
 
     resize();
@@ -401,11 +387,7 @@ export function ParallaxLandingExperience({
       window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
     };
-  }, [moments.length, reducedMotion]);
-
-  if (reducedMotion) {
-    return <ReducedMotionLanding moments={moments} />;
-  }
+  }, [moments.length]);
 
   return (
     <section
@@ -533,11 +515,10 @@ function drawPageSky(
   height: number,
   _progress: number,
   time: number,
-  reducedMotion: boolean,
   nebulaAccent = "#00E0C7",
 ) {
   const palette = getCachedSkyPalette(Date.now());
-  const seconds = reducedMotion ? 0 : time * 0.001;
+  const seconds = time * 0.001;
 
   // Layer 0: Deep field gradient
   const bg = context.createLinearGradient(0, 0, 0, height);
@@ -579,9 +560,7 @@ function drawPageSky(
   const sizeRef = Math.min(width, height) / 900;
 
   ANDROID_STARS.forEach((star) => {
-    const flicker = reducedMotion
-      ? 0.78
-      : 0.5 + 0.5 * Math.sin((twinkleT + star.phase) * Math.PI * 2);
+    const flicker = 0.5 + 0.5 * Math.sin((twinkleT + star.phase) * Math.PI * 2);
     const finalAlpha = star.baseAlpha * palette.starVisibility * flicker;
     if (finalAlpha < 0.05) return;
 
@@ -598,9 +577,7 @@ function drawPageSky(
   });
 
   // Layer 3: Shooting star
-  if (!reducedMotion) {
-    drawAndroidShootingStar(context, width, height, time);
-  }
+  drawAndroidShootingStar(context, width, height, time);
 }
 
 function drawStarSpike(
@@ -1035,9 +1012,8 @@ function drawSceneCanvas(
   state: SceneState,
   moment: ParallaxMoment,
   time: number,
-  reducedMotion: boolean,
 ) {
-  const seconds = reducedMotion ? 0 : time * 0.001;
+  const seconds = time * 0.001;
   const orbCenter: CanvasPoint = {
     x: width * (0.58 + progress * 0.14),
     y: height * (0.52 - progress * 0.08),
@@ -1318,60 +1294,6 @@ function ProgressRail({
         />
       ))}
     </div>
-  );
-}
-
-function ReducedMotionLanding({ moments }: { moments: ParallaxMoment[] }) {
-  return (
-    <section className="relative bg-background px-5 pt-28 pb-12 text-foreground sm:px-8">
-      <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-        <div>
-          <p className="mb-4 text-xs font-medium tracking-[0.34em] text-[#00E0C7] uppercase">
-            Ambient sounds
-          </p>
-          <h1 className="text-balance text-5xl leading-[0.94] font-semibold text-[#F7F3FF] sm:text-7xl">
-            Sounds for when you need to reset.
-          </h1>
-          <p className="mt-6 max-w-2xl text-base leading-8 text-[#B8B5C7] sm:text-lg">
-            Mix rain, cabin air, forest sounds, or soft noise. Set a timer,
-            breathe for a bit, and write a quick note if it helps.
-          </p>
-          <button
-            type="button"
-            disabled
-            className="mt-8 rounded-full border border-[#00E0C7]/35 bg-[#00E0C7]/12 px-5 py-3 text-sm font-medium text-[#F7F3FF]"
-          >
-            Coming soon
-          </button>
-        </div>
-        <div className="relative min-h-[22rem] overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[#101421]/58">
-          <OryvelleOrbCanvas
-            primaryColor="#00E0C7"
-            secondaryColor="#B89AFF"
-            reducedMotion
-            className="absolute inset-0 h-full w-full"
-          />
-        </div>
-      </div>
-      <div className="mx-auto mt-12 grid w-full max-w-7xl gap-4 md:grid-cols-2">
-        {moments.slice(1).map((moment) => (
-          <article
-            key={moment.id}
-            className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.035] p-5"
-          >
-            <p className="mb-2 text-xs font-medium tracking-[0.24em] text-[#7C8094] uppercase">
-              {moment.label}
-            </p>
-            <h2 className="text-2xl font-semibold text-[#F7F3FF]">
-              {moment.title}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-[#B8B5C7]">
-              {moment.body}
-            </p>
-          </article>
-        ))}
-      </div>
-    </section>
   );
 }
 
