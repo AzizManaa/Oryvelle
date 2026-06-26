@@ -140,7 +140,7 @@ const FAQ_SECTIONS = [
 
 export default function SupportPage() {
   return (
-    <div className="min-h-screen bg-[#080510] text-[#EDEAF5]">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteHeader activePage="support" />
 
       <main
@@ -149,19 +149,19 @@ export default function SupportPage() {
       >
         {/* Page header */}
         <div className="mb-10 border-b border-white/[0.08] pb-8">
-          <p className="mb-3 text-xs font-medium tracking-[0.28em] text-[#00E0C7] uppercase">
+          <p className="mb-3 text-xs font-medium tracking-[0.28em] text-teal uppercase">
             Help
           </p>
-          <h1 className="text-3xl font-semibold text-[#F7F3FF] sm:text-4xl">
+          <h1 className="text-3xl font-semibold text-ink sm:text-4xl">
             Support
           </h1>
-          <p className="mt-3 text-sm leading-6 text-[#B8B5C7]">
+          <p className="mt-3 text-sm leading-6 text-muted">
             App: Oryvelle &nbsp;·&nbsp; Developer:{" "}
             <a
               href="https://aziz-manaa.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline-offset-2 hover:text-[#00E0C7] hover:underline"
+              className="underline-offset-2 hover:text-teal hover:underline"
             >
               NekoDesk — Aziz Manaa
             </a>
@@ -169,57 +169,57 @@ export default function SupportPage() {
         </div>
 
         {/* Contact card */}
-        <div className="mb-12 rounded-xl border border-[#00E0C7]/20 bg-[#00E0C7]/[0.04] p-6">
-          <h2 className="mb-2 text-base font-semibold text-[#F7F3FF]">
+        <div className="mb-12 rounded-xl border border-teal/20 bg-teal/[0.04] p-6">
+          <h2 className="mb-2 text-base font-semibold text-ink">
             Contact us
           </h2>
-          <p className="mb-4 text-sm leading-6 text-[#B8B5C7]">
+          <p className="mb-4 text-sm leading-6 text-muted">
             If you have a question, found a bug, or need help with anything not
             covered below, email us. We aim to respond within 2 business days.
           </p>
           <a
             href="mailto:nekodesk.dev@gmail.com"
-            className="inline-flex items-center gap-2 rounded-full border border-[#00E0C7]/30 bg-[#00E0C7]/10 px-4 py-2 text-sm font-medium text-[#00E0C7] transition-colors hover:bg-[#00E0C7]/15"
+            className="inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 px-4 py-2 text-sm font-medium text-teal transition-colors hover:bg-teal/15"
           >
             nekodesk.dev@gmail.com
           </a>
         </div>
 
         {/* FAQ */}
-        <div className="space-y-12 text-sm leading-7 text-[#B8B5C7]">
+        <div className="space-y-12 text-sm leading-7 text-muted">
           {FAQ_SECTIONS.map((section) => (
             <section key={section.id} aria-labelledby={section.id}>
               <h2
                 id={section.id}
-                className="mb-5 text-base font-semibold text-[#F7F3FF]"
+                className="mb-5 text-base font-semibold text-ink"
               >
                 {section.heading}
               </h2>
               <div className="space-y-6">
                 {section.items.map((item) => (
                   <div key={item.q}>
-                    <p className="mb-1.5 font-medium text-[#EDEAF5]">
+                    <p className="mb-1.5 font-medium text-foreground">
                       {item.q}
                     </p>
                     {"steps" in item && item.steps ? (
-                      <ol className="list-decimal space-y-1 pl-5 text-[#9A9CAF]">
+                      <ol className="list-decimal space-y-1 pl-5 text-subtle">
                         {item.steps.map((step) => (
                           <li key={step}>{step}</li>
                         ))}
                       </ol>
                     ) : "link" in item && item.link ? (
-                      <p className="text-[#9A9CAF]">
+                      <p className="text-subtle">
                         No. See our{" "}
                         <Link
                           href={item.link.href}
-                          className="text-[#00E0C7] underline-offset-2 hover:underline"
+                          className="text-teal underline-offset-2 hover:underline"
                         >
                           {item.link.text}
                         </Link>{" "}
                         for full details.
                       </p>
                     ) : (
-                      <p className="text-[#9A9CAF]">{item.a}</p>
+                      <p className="text-subtle">{item.a}</p>
                     )}
                   </div>
                 ))}
@@ -230,20 +230,20 @@ export default function SupportPage() {
 
         {/* Still need help */}
         <div className="mt-14 rounded-xl border border-white/[0.07] bg-white/[0.03] p-6">
-          <h2 className="mb-3 text-base font-semibold text-[#F7F3FF]">
+          <h2 className="mb-3 text-base font-semibold text-ink">
             Still need help?
           </h2>
-          <p className="mb-4 text-sm leading-6 text-[#B8B5C7]">
+          <p className="mb-4 text-sm leading-6 text-muted">
             Email us at{" "}
             <a
               href="mailto:nekodesk.dev@gmail.com"
-              className="text-[#00E0C7] underline-offset-2 hover:underline"
+              className="text-teal underline-offset-2 hover:underline"
             >
               nekodesk.dev@gmail.com
             </a>{" "}
             and include:
           </p>
-          <ul className="mb-5 list-disc space-y-1 pl-5 text-sm text-[#9A9CAF]">
+          <ul className="mb-5 list-disc space-y-1 pl-5 text-sm text-subtle">
             <li>Your device model and Android version</li>
             <li>
               A description of what you expected to happen and what happened
@@ -251,7 +251,7 @@ export default function SupportPage() {
             </li>
             <li>Whether the issue is consistent or intermittent</li>
           </ul>
-          <p className="text-sm text-[#7C8094]">
+          <p className="text-sm text-faint">
             We read every message and will get back to you as soon as we can.
           </p>
         </div>
@@ -260,7 +260,7 @@ export default function SupportPage() {
         <div className="mt-12 border-t border-white/[0.08] pt-8 text-center">
           <Link
             href="/"
-            className="text-sm text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+            className="text-sm text-subtle transition-colors hover:text-muted"
           >
             ← Back to Oryvelle
           </Link>

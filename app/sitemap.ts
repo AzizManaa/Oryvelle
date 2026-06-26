@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "./site-config";
 
-const lastModified = new Date("2026-06-11T00:00:00.000Z");
+const lastModified = new Date();
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

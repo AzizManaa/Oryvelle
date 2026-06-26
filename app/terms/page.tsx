@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#080510] text-[#EDEAF5]">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteHeader activePage="terms" />
 
       <main
@@ -35,52 +35,52 @@ export default function TermsPage() {
       >
         {/* Page header */}
         <div className="mb-10 border-b border-white/[0.08] pb-8">
-          <p className="mb-3 text-xs font-medium tracking-[0.28em] text-[#00E0C7] uppercase">
+          <p className="mb-3 text-xs font-medium tracking-[0.28em] text-teal uppercase">
             Legal
           </p>
-          <h1 className="text-3xl font-semibold text-[#F7F3FF] sm:text-4xl">
+          <h1 className="text-3xl font-semibold text-ink sm:text-4xl">
             Terms of Service
           </h1>
           <dl className="mt-5 grid gap-1.5 text-sm sm:grid-cols-2">
             <div>
-              <dt className="inline text-[#7C8094]">App </dt>
-              <dd className="inline text-[#B8B5C7]">Oryvelle</dd>
+              <dt className="inline text-faint">App </dt>
+              <dd className="inline text-muted">Oryvelle</dd>
             </div>
             <div>
-              <dt className="inline text-[#7C8094]">Developer </dt>
+              <dt className="inline text-faint">Developer </dt>
               <dd className="inline">
                 <a
                   href="https://aziz-manaa.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#B8B5C7] underline-offset-2 hover:text-[#00E0C7] hover:underline"
+                  className="text-muted underline-offset-2 hover:text-teal hover:underline"
                 >
                   NekoDesk — Aziz Manaa
                 </a>
               </dd>
             </div>
             <div>
-              <dt className="inline text-[#7C8094]">Contact </dt>
+              <dt className="inline text-faint">Contact </dt>
               <dd className="inline">
                 <a
                   href="mailto:nekodesk.dev@gmail.com"
-                  className="text-[#00E0C7] underline-offset-2 hover:underline"
+                  className="text-teal underline-offset-2 hover:underline"
                 >
                   nekodesk.dev@gmail.com
                 </a>
               </dd>
             </div>
             <div>
-              <dt className="inline text-[#7C8094]">Effective date </dt>
-              <dd className="inline text-[#B8B5C7]">June 9, 2026</dd>
+              <dt className="inline text-faint">Effective date </dt>
+              <dd className="inline text-muted">June 9, 2026</dd>
             </div>
           </dl>
         </div>
 
-        <div className="space-y-10 text-sm leading-7 text-[#B8B5C7]">
+        <div className="space-y-10 text-sm leading-7 text-muted">
           {/* 1 */}
           <section aria-labelledby="s1">
-            <h2 id="s1" className="mb-3 text-base font-semibold text-[#F7F3FF]">
+            <h2 id="s1" className="mb-3 text-base font-semibold text-ink">
               1. Acceptance of these terms
             </h2>
             <p className="mb-3">
@@ -95,7 +95,7 @@ export default function TermsPage() {
 
           {/* 2 */}
           <section aria-labelledby="s2">
-            <h2 id="s2" className="mb-3 text-base font-semibold text-[#F7F3FF]">
+            <h2 id="s2" className="mb-3 text-base font-semibold text-ink">
               2. What Oryvelle is
             </h2>
             <p className="mb-3">
@@ -104,8 +104,8 @@ export default function TermsPage() {
               reflection notes. It is designed to support calm, focus,
               wind-down routines, and rest.
             </p>
-            <p className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-5 py-4 text-[#9A9CAF]">
-              <strong className="font-medium text-[#EDEAF5]">
+            <p className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-5 py-4 text-subtle">
+              <strong className="font-medium text-foreground">
                 Oryvelle is not a medical device.
               </strong>{" "}
               The app does not diagnose, treat, cure, or prevent any medical
@@ -117,7 +117,7 @@ export default function TermsPage() {
 
           {/* 3 */}
           <section aria-labelledby="s3">
-            <h2 id="s3" className="mb-3 text-base font-semibold text-[#F7F3FF]">
+            <h2 id="s3" className="mb-3 text-base font-semibold text-ink">
               3. Eligibility
             </h2>
             <p>
@@ -130,7 +130,7 @@ export default function TermsPage() {
 
           {/* 4 */}
           <section aria-labelledby="s4">
-            <h2 id="s4" className="mb-3 text-base font-semibold text-[#F7F3FF]">
+            <h2 id="s4" className="mb-3 text-base font-semibold text-ink">
               4. Your account and data
             </h2>
             <p className="mb-3">
@@ -150,7 +150,7 @@ export default function TermsPage() {
               on your device. See our{" "}
               <Link
                 href="/privacy"
-                className="text-[#00E0C7] underline-offset-2 hover:underline"
+                className="text-teal underline-offset-2 hover:underline"
               >
                 Privacy Policy
               </Link>{" "}
@@ -160,7 +160,7 @@ export default function TermsPage() {
 
           {/* 5 */}
           <section aria-labelledby="s5">
-            <h2 id="s5" className="mb-3 text-base font-semibold text-[#F7F3FF]">
+            <h2 id="s5" className="mb-3 text-base font-semibold text-ink">
               5. Sound catalog and content
             </h2>
             <p className="mb-3">
@@ -181,7 +181,7 @@ export default function TermsPage() {
 
           {/* 6 */}
           <section aria-labelledby="s6">
-            <h2 id="s6" className="mb-3 text-base font-semibold text-[#F7F3FF]">
+            <h2 id="s6" className="mb-3 text-base font-semibold text-ink">
               6. Acceptable use
             </h2>
             <p className="mb-3">
@@ -206,7 +206,7 @@ export default function TermsPage() {
 
           {/* 7 */}
           <section aria-labelledby="s7">
-            <h2 id="s7" className="mb-3 text-base font-semibold text-[#F7F3FF]">
+            <h2 id="s7" className="mb-3 text-base font-semibold text-ink">
               7. Third-party services
             </h2>
             <p className="mb-3">
@@ -217,7 +217,7 @@ export default function TermsPage() {
                 href="https://policies.google.com/terms"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#00E0C7] underline-offset-2 hover:underline"
+                className="text-teal underline-offset-2 hover:underline"
               >
                 Terms of Service
               </a>{" "}
@@ -226,7 +226,7 @@ export default function TermsPage() {
                 href="https://policies.google.com/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#00E0C7] underline-offset-2 hover:underline"
+                className="text-teal underline-offset-2 hover:underline"
               >
                 Privacy Policy
               </a>
@@ -240,7 +240,7 @@ export default function TermsPage() {
 
           {/* 8 */}
           <section aria-labelledby="s8">
-            <h2 id="s8" className="mb-3 text-base font-semibold text-[#F7F3FF]">
+            <h2 id="s8" className="mb-3 text-base font-semibold text-ink">
               8. Intellectual property
             </h2>
             <p className="mb-3">
@@ -258,13 +258,13 @@ export default function TermsPage() {
 
           {/* 9 */}
           <section aria-labelledby="s9">
-            <h2 id="s9" className="mb-3 text-base font-semibold text-[#F7F3FF]">
+            <h2 id="s9" className="mb-3 text-base font-semibold text-ink">
               9. Disclaimer of warranties
             </h2>
             <p className="mb-3">
               Oryvelle is provided{" "}
-              <strong className="font-medium text-[#EDEAF5]">as is</strong> and{" "}
-              <strong className="font-medium text-[#EDEAF5]">
+              <strong className="font-medium text-foreground">as is</strong> and{" "}
+              <strong className="font-medium text-foreground">
                 as available
               </strong>
               , without warranties of any kind, express or implied. NekoDesk
@@ -293,7 +293,7 @@ export default function TermsPage() {
           <section aria-labelledby="s10">
             <h2
               id="s10"
-              className="mb-3 text-base font-semibold text-[#F7F3FF]"
+              className="mb-3 text-base font-semibold text-ink"
             >
               10. Limitation of liability
             </h2>
@@ -315,7 +315,7 @@ export default function TermsPage() {
           <section aria-labelledby="s11">
             <h2
               id="s11"
-              className="mb-3 text-base font-semibold text-[#F7F3FF]"
+              className="mb-3 text-base font-semibold text-ink"
             >
               11. Governing law
             </h2>
@@ -337,7 +337,7 @@ export default function TermsPage() {
           <section aria-labelledby="s12">
             <h2
               id="s12"
-              className="mb-3 text-base font-semibold text-[#F7F3FF]"
+              className="mb-3 text-base font-semibold text-ink"
             >
               12. Changes to these terms
             </h2>
@@ -358,7 +358,7 @@ export default function TermsPage() {
           <section aria-labelledby="s13">
             <h2
               id="s13"
-              className="mb-3 text-base font-semibold text-[#F7F3FF]"
+              className="mb-3 text-base font-semibold text-ink"
             >
               13. Termination
             </h2>
@@ -380,28 +380,28 @@ export default function TermsPage() {
           >
             <h2
               id="s14"
-              className="mb-3 text-base font-semibold text-[#F7F3FF]"
+              className="mb-3 text-base font-semibold text-ink"
             >
               14. Contact
             </h2>
             <p className="mb-4">Questions about these terms:</p>
             <div className="space-y-1 text-sm">
               <p>
-                <span className="text-[#7C8094]">Email </span>
+                <span className="text-faint">Email </span>
                 <a
                   href="mailto:nekodesk.dev@gmail.com"
-                  className="text-[#00E0C7] underline-offset-2 hover:underline"
+                  className="text-teal underline-offset-2 hover:underline"
                 >
                   nekodesk.dev@gmail.com
                 </a>
               </p>
               <p>
-                <span className="text-[#7C8094]">Developer </span>
+                <span className="text-faint">Developer </span>
                 <a
                   href="https://aziz-manaa.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#B8B5C7] underline-offset-2 hover:text-[#00E0C7] hover:underline"
+                  className="text-muted underline-offset-2 hover:text-teal hover:underline"
                 >
                   NekoDesk — Aziz Manaa, Barcelona, Spain
                 </a>
@@ -414,7 +414,7 @@ export default function TermsPage() {
         <div className="mt-12 border-t border-white/[0.08] pt-8 text-center">
           <Link
             href="/"
-            className="text-sm text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+            className="text-sm text-subtle transition-colors hover:text-muted"
           >
             ← Back to Oryvelle
           </Link>

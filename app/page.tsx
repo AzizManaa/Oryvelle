@@ -212,7 +212,7 @@ function SeoContent() {
     <>
       <section
         aria-labelledby="about-oryvelle"
-        className="relative overflow-hidden border-t border-white/[0.08] bg-[#080510] px-5 py-20 sm:px-8 lg:py-28"
+        className="relative overflow-hidden border-t border-white/[0.08] bg-background px-5 py-20 sm:px-8 lg:py-28"
       >
         <div
           aria-hidden="true"
@@ -222,16 +222,16 @@ function SeoContent() {
 
         <div className="relative mx-auto grid w-full max-w-7xl gap-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(440px,1.1fr)] lg:items-start">
           <div className="lg:sticky lg:top-28">
-            <p className="mb-5 text-xs font-medium tracking-[0.3em] text-[#00E0C7] uppercase">
+            <p className="mb-5 text-xs font-medium tracking-[0.3em] text-teal uppercase">
               Built for quiet breaks
             </p>
             <h2
               id="about-oryvelle"
-              className="max-w-2xl text-3xl leading-tight font-semibold text-[#F7F3FF] sm:text-5xl"
+              className="max-w-2xl text-3xl leading-tight font-semibold text-ink sm:text-5xl"
             >
               For breaks, focus, rest, and sleep.
             </h2>
-            <p className="mt-6 max-w-xl text-base leading-8 text-[#B8B5C7]">
+            <p className="mt-6 max-w-xl text-base leading-8 text-muted">
               Use Oryvelle for focus, rest, sleep, or a few minutes away from
               the noise. Mix sounds, breathe for a bit, set a timer, and leave a
               note if it helps.
@@ -251,13 +251,13 @@ function SeoContent() {
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
                 href="/privacy"
-                className="rounded-full border border-[#00E0C7]/30 bg-[#00E0C7]/10 px-5 py-3 text-sm font-medium text-[#EDEAF5] transition-colors hover:bg-[#00E0C7]/15"
+                className="rounded-full border border-teal/30 bg-teal/10 px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-teal/15"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/support"
-                className="rounded-full border border-white/[0.12] px-5 py-3 text-sm font-medium text-[#B8B5C7] transition-colors hover:border-white/[0.22] hover:text-[#F7F3FF]"
+                className="rounded-full border border-white/[0.12] px-5 py-3 text-sm font-medium text-muted transition-colors hover:border-white/[0.22] hover:text-ink"
               >
                 Support
               </Link>
@@ -272,14 +272,14 @@ function SeoContent() {
                   key={highlight.title}
                   className="relative grid gap-4 rounded-lg border border-white/[0.075] bg-[#0D0A18]/72 p-5 pl-12 shadow-[0_18px_70px_rgba(0,0,0,0.2)] sm:grid-cols-[8rem_1fr] sm:gap-6 sm:p-6 sm:pl-14"
                 >
-                  <div className="absolute left-[0.7rem] top-6 grid h-5 w-5 place-items-center rounded-full border border-[#00E0C7]/40 bg-[#080510] shadow-[0_0_20px_rgba(0,224,199,0.25)]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#EDEAF5]" />
+                  <div className="absolute left-[0.7rem] top-6 grid h-5 w-5 place-items-center rounded-full border border-teal/40 bg-background shadow-[0_0_20px_rgba(0,224,199,0.25)]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-foreground" />
                   </div>
-                  <p className="text-xs font-medium tracking-[0.28em] text-[#00E0C7] uppercase">
+                  <p className="text-xs font-medium tracking-[0.28em] text-teal uppercase">
                     {highlight.cue}
                   </p>
                   <div>
-                    <h3 className="text-lg font-semibold text-[#F7F3FF]">
+                    <h3 className="text-lg font-semibold text-ink">
                       {highlight.title}
                     </h3>
                     <p className="mt-2 text-sm leading-7 text-[#A8A5B8]">
@@ -292,7 +292,7 @@ function SeoContent() {
 
             <aside
               aria-label="Privacy note"
-              className="mt-5 rounded-lg border border-[#67D7FF]/15 bg-[#67D7FF]/[0.045] p-5 text-sm leading-7 text-[#B8B5C7]"
+              className="mt-5 rounded-lg border border-sky/15 bg-sky/[0.045] p-5 text-sm leading-7 text-muted"
             >
               Your notes, mixes, and preferences stay on your device unless you
               choose Google Drive backup. No ads, no analytics, no required
@@ -302,7 +302,7 @@ function SeoContent() {
         </div>
       </section>
 
-      <footer className="bg-[#080510] px-5 pb-10 text-sm text-[#7C8094] sm:px-8">
+      <footer className="bg-background px-5 pb-10 text-sm text-faint sm:px-8">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 border-t border-white/[0.08] pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p>
             Oryvelle by{" "}
@@ -310,7 +310,7 @@ function SeoContent() {
               href="https://aziz-manaa.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-[#B8B5C7]"
+              className="transition-colors hover:text-muted"
             >
               NekoDesk
             </a>
@@ -319,19 +319,19 @@ function SeoContent() {
           <nav aria-label="Footer pages" className="flex flex-wrap gap-5">
             <Link
               href="/privacy"
-              className="transition-colors hover:text-[#B8B5C7]"
+              className="transition-colors hover:text-muted"
             >
               Privacy
             </Link>
             <Link
               href="/support"
-              className="transition-colors hover:text-[#B8B5C7]"
+              className="transition-colors hover:text-muted"
             >
               Support
             </Link>
             <Link
               href="/terms"
-              className="transition-colors hover:text-[#B8B5C7]"
+              className="transition-colors hover:text-muted"
             >
               Terms
             </Link>

@@ -59,7 +59,7 @@ const DATA_ROWS = [
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#080510] text-[#EDEAF5]">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteHeader activePage="privacy" />
 
       <main
@@ -68,49 +68,49 @@ export default function PrivacyPage() {
       >
         {/* Page header */}
         <div className="mb-10 border-b border-white/[0.08] pb-8">
-          <p className="mb-3 text-xs font-medium tracking-[0.28em] text-[#00E0C7] uppercase">
+          <p className="mb-3 text-xs font-medium tracking-[0.28em] text-teal uppercase">
             Legal
           </p>
-          <h1 className="text-3xl font-semibold text-[#F7F3FF] sm:text-4xl">
+          <h1 className="text-3xl font-semibold text-ink sm:text-4xl">
             Privacy Policy
           </h1>
           <dl className="mt-5 grid gap-1.5 text-sm sm:grid-cols-2">
             <div>
-              <dt className="inline text-[#7C8094]">App </dt>
-              <dd className="inline text-[#B8B5C7]">Oryvelle</dd>
+              <dt className="inline text-faint">App </dt>
+              <dd className="inline text-muted">Oryvelle</dd>
             </div>
             <div>
-              <dt className="inline text-[#7C8094]">Developer </dt>
+              <dt className="inline text-faint">Developer </dt>
               <dd className="inline">
                 <a
                   href="https://aziz-manaa.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#B8B5C7] underline-offset-2 hover:text-[#00E0C7] hover:underline"
+                  className="text-muted underline-offset-2 hover:text-teal hover:underline"
                 >
                   NekoDesk — Aziz Manaa
                 </a>
               </dd>
             </div>
             <div>
-              <dt className="inline text-[#7C8094]">Contact </dt>
+              <dt className="inline text-faint">Contact </dt>
               <dd className="inline">
                 <a
                   href="mailto:nekodesk.dev@gmail.com"
-                  className="text-[#00E0C7] underline-offset-2 hover:underline"
+                  className="text-teal underline-offset-2 hover:underline"
                 >
                   nekodesk.dev@gmail.com
                 </a>
               </dd>
             </div>
             <div>
-              <dt className="inline text-[#7C8094]">Effective date </dt>
-              <dd className="inline text-[#B8B5C7]">June 9, 2026</dd>
+              <dt className="inline text-faint">Effective date </dt>
+              <dd className="inline text-muted">June 9, 2026</dd>
             </div>
           </dl>
         </div>
 
-        <div className="space-y-10 text-sm leading-7 text-[#B8B5C7]">
+        <div className="space-y-10 text-sm leading-7 text-muted">
           {/* Overview */}
           <section>
             <p>
@@ -127,25 +127,25 @@ export default function PrivacyPage() {
           <section aria-labelledby="what-data">
             <h2
               id="what-data"
-              className="mb-4 text-base font-semibold text-[#F7F3FF]"
+              className="mb-4 text-base font-semibold text-ink"
             >
               What data the app stores
             </h2>
 
-            <h3 className="mb-3 font-medium text-[#EDEAF5]">
+            <h3 className="mb-3 font-medium text-foreground">
               On your device (always)
             </h3>
             <div className="mb-5 overflow-x-auto rounded-xl border border-white/[0.07]">
               <table className="w-full text-xs">
                 <thead>
                   <tr className="border-b border-white/[0.07]">
-                    <th className="px-4 py-3 text-left font-medium text-[#7C8094]">
+                    <th className="px-4 py-3 text-left font-medium text-faint">
                       Data
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-[#7C8094]">
+                    <th className="px-4 py-3 text-left font-medium text-faint">
                       Purpose
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-[#7C8094]">
+                    <th className="px-4 py-3 text-left font-medium text-faint">
                       Where stored
                     </th>
                   </tr>
@@ -153,13 +153,13 @@ export default function PrivacyPage() {
                 <tbody className="divide-y divide-white/[0.05]">
                   {DATA_ROWS.map((row) => (
                     <tr key={row.data}>
-                      <td className="px-4 py-3 align-top text-[#B8B5C7]">
+                      <td className="px-4 py-3 align-top text-muted">
                         {row.data}
                       </td>
-                      <td className="px-4 py-3 align-top text-[#9A9CAF]">
+                      <td className="px-4 py-3 align-top text-subtle">
                         {row.purpose}
                       </td>
-                      <td className="px-4 py-3 align-top text-[#9A9CAF]">
+                      <td className="px-4 py-3 align-top text-subtle">
                         {row.where}
                       </td>
                     </tr>
@@ -173,12 +173,12 @@ export default function PrivacyPage() {
               parties.
             </p>
 
-            <h3 className="mb-3 mt-6 font-medium text-[#EDEAF5]">
+            <h3 className="mb-3 mt-6 font-medium text-foreground">
               With Google — only if you choose to sign in
             </h3>
             <p className="mb-3">
               If you tap{" "}
-              <strong className="font-medium text-[#EDEAF5]">
+              <strong className="font-medium text-foreground">
                 Sign in with Google
               </strong>{" "}
               in Settings, the app stores your Google account display name and
@@ -187,12 +187,12 @@ export default function PrivacyPage() {
             </p>
             <p className="mb-3">
               If you also enable{" "}
-              <strong className="font-medium text-[#EDEAF5]">
+              <strong className="font-medium text-foreground">
                 Drive backup
               </strong>
               , the app saves a copy of your journal entries to a private
               folder in your own Google Drive (
-              <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-[#B8B5C7]">
+              <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
                 appDataFolder
               </code>
               ). This folder is:
@@ -218,12 +218,12 @@ export default function PrivacyPage() {
           <section aria-labelledby="third-party">
             <h2
               id="third-party"
-              className="mb-4 text-base font-semibold text-[#F7F3FF]"
+              className="mb-4 text-base font-semibold text-ink"
             >
               Third-party services
             </h2>
 
-            <h3 className="mb-2 font-medium text-[#EDEAF5]">
+            <h3 className="mb-2 font-medium text-foreground">
               Google Sign-In and Google Drive
             </h3>
             <p className="mb-5">
@@ -233,16 +233,16 @@ export default function PrivacyPage() {
                 href="https://policies.google.com/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#00E0C7] underline-offset-2 hover:underline"
+                className="text-teal underline-offset-2 hover:underline"
               >
                 policies.google.com/privacy
               </a>
             </p>
 
-            <h3 className="mb-2 font-medium text-[#EDEAF5]">Sound catalog</h3>
+            <h3 className="mb-2 font-medium text-foreground">Sound catalog</h3>
             <p>
               The app fetches a list of available sounds from our server (
-              <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-[#B8B5C7]">
+              <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
                 assets.aziz-manaa.com
               </code>
               ) and streams audio files when you play them. This requires a
@@ -255,7 +255,7 @@ export default function PrivacyPage() {
           <section aria-labelledby="do-not">
             <h2
               id="do-not"
-              className="mb-4 text-base font-semibold text-[#F7F3FF]"
+              className="mb-4 text-base font-semibold text-ink"
             >
               What we do not do
             </h2>
@@ -286,7 +286,7 @@ export default function PrivacyPage() {
           <section aria-labelledby="os-backup">
             <h2
               id="os-backup"
-              className="mb-4 text-base font-semibold text-[#F7F3FF]"
+              className="mb-4 text-base font-semibold text-ink"
             >
               Android OS backup
             </h2>
@@ -303,12 +303,12 @@ export default function PrivacyPage() {
           <section aria-labelledby="retention">
             <h2
               id="retention"
-              className="mb-4 text-base font-semibold text-[#F7F3FF]"
+              className="mb-4 text-base font-semibold text-ink"
             >
               Data retention and deletion
             </h2>
             <p className="mb-3">
-              <strong className="font-medium text-[#EDEAF5]">
+              <strong className="font-medium text-foreground">
                 On-device data:
               </strong>{" "}
               You can delete your notes individually from the journal
@@ -316,19 +316,19 @@ export default function PrivacyPage() {
               app removes all locally stored data.
             </p>
             <p className="mb-3">
-              <strong className="font-medium text-[#EDEAF5]">
+              <strong className="font-medium text-foreground">
                 Drive backup data:
               </strong>{" "}
               If you have enabled Drive backup, your backup files remain in your
               Google Drive until you delete them. You can remove them through
               Google Drive settings under{" "}
-              <strong className="font-medium text-[#EDEAF5]">
+              <strong className="font-medium text-foreground">
                 Storage → Manage storage → Oryvelle
               </strong>
               .
             </p>
             <p>
-              <strong className="font-medium text-[#EDEAF5]">
+              <strong className="font-medium text-foreground">
                 Google account:
               </strong>{" "}
               Sign out from Settings to remove your account information from the
@@ -341,7 +341,7 @@ export default function PrivacyPage() {
           <section aria-labelledby="children">
             <h2
               id="children"
-              className="mb-4 text-base font-semibold text-[#F7F3FF]"
+              className="mb-4 text-base font-semibold text-ink"
             >
               Children&apos;s privacy
             </h2>
@@ -352,7 +352,7 @@ export default function PrivacyPage() {
               please contact us at{" "}
               <a
                 href="mailto:nekodesk.dev@gmail.com"
-                className="text-[#00E0C7] underline-offset-2 hover:underline"
+                className="text-teal underline-offset-2 hover:underline"
               >
                 nekodesk.dev@gmail.com
               </a>{" "}
@@ -364,7 +364,7 @@ export default function PrivacyPage() {
           <section aria-labelledby="rights">
             <h2
               id="rights"
-              className="mb-4 text-base font-semibold text-[#F7F3FF]"
+              className="mb-4 text-base font-semibold text-ink"
             >
               Your rights (EEA, UK, and California residents)
             </h2>
@@ -382,7 +382,7 @@ export default function PrivacyPage() {
               For any other requests, contact us at{" "}
               <a
                 href="mailto:nekodesk.dev@gmail.com"
-                className="text-[#00E0C7] underline-offset-2 hover:underline"
+                className="text-teal underline-offset-2 hover:underline"
               >
                 nekodesk.dev@gmail.com
               </a>
@@ -394,7 +394,7 @@ export default function PrivacyPage() {
           <section aria-labelledby="security">
             <h2
               id="security"
-              className="mb-4 text-base font-semibold text-[#F7F3FF]"
+              className="mb-4 text-base font-semibold text-ink"
             >
               Security
             </h2>
@@ -410,7 +410,7 @@ export default function PrivacyPage() {
           <section aria-labelledby="changes">
             <h2
               id="changes"
-              className="mb-4 text-base font-semibold text-[#F7F3FF]"
+              className="mb-4 text-base font-semibold text-ink"
             >
               Changes to this policy
             </h2>
@@ -429,7 +429,7 @@ export default function PrivacyPage() {
           >
             <h2
               id="contact"
-              className="mb-3 text-base font-semibold text-[#F7F3FF]"
+              className="mb-3 text-base font-semibold text-ink"
             >
               Contact
             </h2>
@@ -438,21 +438,21 @@ export default function PrivacyPage() {
             </p>
             <div className="space-y-1 text-sm">
               <p>
-                <span className="text-[#7C8094]">Email </span>
+                <span className="text-faint">Email </span>
                 <a
                   href="mailto:nekodesk.dev@gmail.com"
-                  className="text-[#00E0C7] underline-offset-2 hover:underline"
+                  className="text-teal underline-offset-2 hover:underline"
                 >
                   nekodesk.dev@gmail.com
                 </a>
               </p>
               <p>
-                <span className="text-[#7C8094]">Developer </span>
+                <span className="text-faint">Developer </span>
                 <a
                   href="https://aziz-manaa.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#B8B5C7] underline-offset-2 hover:text-[#00E0C7] hover:underline"
+                  className="text-muted underline-offset-2 hover:text-teal hover:underline"
                 >
                   NekoDesk — Aziz Manaa, Barcelona, Spain
                 </a>
@@ -465,7 +465,7 @@ export default function PrivacyPage() {
         <div className="mt-12 border-t border-white/[0.08] pt-8 text-center">
           <Link
             href="/"
-            className="text-sm text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+            className="text-sm text-subtle transition-colors hover:text-muted"
           >
             ← Back to Oryvelle
           </Link>

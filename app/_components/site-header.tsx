@@ -14,17 +14,17 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
           aria-label="Oryvelle home"
           className="flex min-w-0 items-center gap-1.5 transition-opacity hover:opacity-75"
         >
-          <span className="relative h-7 w-7 overflow-hidden rounded-full border border-white/[0.12] bg-[#080510] shadow-[0_0_22px_rgba(184,154,255,0.25)]">
+          <span className="relative h-7 w-7 overflow-hidden rounded-full border border-white/[0.12] bg-background shadow-[0_0_22px_rgba(184,154,255,0.25)]">
             <Image
               src="/icons/web-app-manifest-192x192.png"
-              alt=""
+              alt="O"
               width={28}
               height={28}
               className="h-full w-full object-cover"
               priority
             />
           </span>
-          <span className="text-sm font-medium tracking-[0.18em] text-[#EDEAF5] uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
+          <span className="text-sm font-medium tracking-[0.18em] text-foreground uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
             Ryvelle
           </span>
         </Link>
@@ -34,31 +34,31 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
           className="hidden items-center gap-6 text-sm drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:flex"
         >
           {activePage === "privacy" ? (
-            <span className="text-[#EDEAF5]">Privacy</span>
+            <span className="text-foreground">Privacy</span>
           ) : (
             <Link
               href="/privacy"
-              className="text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+              className="text-subtle transition-colors hover:text-muted"
             >
               Privacy
             </Link>
           )}
           {activePage === "support" ? (
-            <span className="text-[#EDEAF5]">Support</span>
+            <span className="text-foreground">Support</span>
           ) : (
             <Link
               href="/support"
-              className="text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+              className="text-subtle transition-colors hover:text-muted"
             >
               Support
             </Link>
           )}
           {activePage === "terms" ? (
-            <span className="text-[#EDEAF5]">Terms</span>
+            <span className="text-foreground">Terms</span>
           ) : (
             <Link
               href="/terms"
-              className="text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+              className="text-subtle transition-colors hover:text-muted"
             >
               Terms
             </Link>
@@ -71,31 +71,31 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
             className="flex items-center gap-4 text-xs drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:hidden"
           >
             {activePage === "privacy" ? (
-              <span className="font-medium text-[#EDEAF5]">Privacy</span>
+              <span className="font-medium text-foreground">Privacy</span>
             ) : (
               <Link
                 href="/privacy"
-                className="font-medium text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+                className="font-medium text-subtle transition-colors hover:text-muted"
               >
                 Privacy
               </Link>
             )}
             {activePage === "support" ? (
-              <span className="font-medium text-[#EDEAF5]">Support</span>
+              <span className="font-medium text-foreground">Support</span>
             ) : (
               <Link
                 href="/support"
-                className="font-medium text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+                className="font-medium text-subtle transition-colors hover:text-muted"
               >
                 Support
               </Link>
             )}
             {activePage === "terms" ? (
-              <span className="font-medium text-[#EDEAF5]">Terms</span>
+              <span className="font-medium text-foreground">Terms</span>
             ) : (
               <Link
                 href="/terms"
-                className="font-medium text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+                className="font-medium text-subtle transition-colors hover:text-muted"
               >
                 Terms
               </Link>
@@ -104,7 +104,7 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
           <button
             type="button"
             disabled
-            className="h-9 rounded-full border border-[#00E0C7]/30 bg-[#00E0C7]/10 px-3 text-xs font-medium text-[#EDEAF5] shadow-[0_0_24px_rgba(0,224,199,0.1)] sm:px-4"
+            className="h-9 rounded-full border border-teal/30 bg-teal/10 px-3 text-xs font-medium text-foreground shadow-[0_0_24px_rgba(0,224,199,0.1)] sm:px-4"
           >
             <span className="hidden sm:inline">Coming soon</span>
             <span className="sm:hidden">Soon</span>
