@@ -191,6 +191,16 @@ const SKY_BANDS: Array<{ startHour: number; palette: SkyPalette }> = [
   },
 ];
 
+let _skyPaletteCache: { key: number; palette: SkyPalette } | null = null;
+
+function getCachedSkyPalette(nowMs: number): SkyPalette {
+  const key = Math.floor(nowMs / 60_000); // recompute at most once per minute
+  if (_skyPaletteCache?.key === key) return _skyPaletteCache.palette;
+  const palette = computeSkyPalette(nowMs);
+  _skyPaletteCache = { key, palette };
+  return palette;
+}
+
 function computeSkyPalette(nowMs: number): SkyPalette {
   const d = new Date(nowMs);
   const fracHour = d.getHours() + d.getMinutes() / 60;
@@ -384,12 +394,8 @@ export function ParallaxLandingExperience({
     };
 
     resize();
-    draw();
+    frame = window.requestAnimationFrame(draw);
     window.addEventListener("resize", resize);
-
-    if (!reducedMotion) {
-      frame = window.requestAnimationFrame(draw);
-    }
 
     return () => {
       window.cancelAnimationFrame(frame);
@@ -530,7 +536,7 @@ function drawPageSky(
   reducedMotion: boolean,
   nebulaAccent = "#00E0C7",
 ) {
-  const palette = computeSkyPalette(Date.now());
+  const palette = getCachedSkyPalette(Date.now());
   const seconds = reducedMotion ? 0 : time * 0.001;
 
   // Layer 0: Deep field gradient

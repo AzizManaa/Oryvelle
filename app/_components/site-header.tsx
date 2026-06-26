@@ -66,18 +66,41 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
         </nav>
 
         <div className="flex shrink-0 items-center gap-3">
-          {activePage === "privacy" ? (
-            <span className="text-xs font-medium text-[#EDEAF5] drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:hidden">
-              Privacy
-            </span>
-          ) : (
-            <Link
-              href="/privacy"
-              className="text-xs font-medium text-[#9A9CAF] drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] transition-colors hover:text-[#B8B5C7] md:hidden"
-            >
-              Privacy
-            </Link>
-          )}
+          <nav
+            aria-label="Site pages"
+            className="flex items-center gap-4 text-xs drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:hidden"
+          >
+            {activePage === "privacy" ? (
+              <span className="font-medium text-[#EDEAF5]">Privacy</span>
+            ) : (
+              <Link
+                href="/privacy"
+                className="font-medium text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+              >
+                Privacy
+              </Link>
+            )}
+            {activePage === "support" ? (
+              <span className="font-medium text-[#EDEAF5]">Support</span>
+            ) : (
+              <Link
+                href="/support"
+                className="font-medium text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+              >
+                Support
+              </Link>
+            )}
+            {activePage === "terms" ? (
+              <span className="font-medium text-[#EDEAF5]">Terms</span>
+            ) : (
+              <Link
+                href="/terms"
+                className="font-medium text-[#9A9CAF] transition-colors hover:text-[#B8B5C7]"
+              >
+                Terms
+              </Link>
+            )}
+          </nav>
           <button
             type="button"
             disabled

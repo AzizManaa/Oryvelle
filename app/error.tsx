@@ -1,13 +1,19 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 
 export default function ErrorBoundary({
+  error,
   unstable_retry,
 }: {
   error: Error & { digest?: string };
   unstable_retry: () => void;
 }) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
   return (
     <main className="min-h-screen bg-[#080510] px-5 py-28 text-[#EDEAF5] sm:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-14rem)] w-full max-w-2xl flex-col justify-center">

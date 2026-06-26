@@ -206,12 +206,8 @@ export function OryvelleOrbCanvas({
     };
 
     resize();
-    drawFrame(0);
+    animationFrame = window.requestAnimationFrame(drawFrame);
     window.addEventListener("resize", resize);
-
-    if (!colorsRef.current.reducedMotion) {
-      animationFrame = window.requestAnimationFrame(drawFrame);
-    }
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
