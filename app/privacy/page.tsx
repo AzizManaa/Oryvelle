@@ -6,7 +6,7 @@ import { absoluteUrl, SITE_NAME } from "../site-config";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "Oryvelle stores your data on your device. No accounts, no analytics, no ads.",
+    "Oryvelle stores your data on your device. No accounts, no behavioral analytics, no ads. Uses Firebase Crashlytics for crash reporting only.",
   alternates: {
     canonical: absoluteUrl("/privacy"),
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     url: absoluteUrl("/privacy"),
     title: "Privacy Policy - Oryvelle",
     description:
-      "Oryvelle stores your data on your device. No accounts, no analytics, no ads.",
+      "Oryvelle stores your data on your device. No accounts, no behavioral analytics, no ads. Uses Firebase Crashlytics for crash reporting only.",
     siteName: SITE_NAME,
   },
 };
@@ -116,9 +116,14 @@ export default function PrivacyPage() {
             <p>
               Oryvelle is for ambient soundscapes, guided breathing, wind-down
               routines, and private notes. It stores your data on your device.
-              It does not run user accounts, does not collect analytics, and
-              does not serve ads. Google Sign-In and Google Drive backup are
-              optional features you can use to protect your journal — neither is
+              It does not run user accounts, does not collect behavioral
+              analytics, and does not serve ads. It uses Firebase Crashlytics
+              for crash reporting to keep the app stable — see{" "}
+              <a href="#third-party" className="text-teal underline-offset-2 hover:underline">
+                Third-party services
+              </a>{" "}
+              below. Google Sign-In and Google Drive backup are optional
+              features you can use to protect your journal — neither is
               required to use the app.
             </p>
           </section>
@@ -240,7 +245,7 @@ export default function PrivacyPage() {
             </p>
 
             <h3 className="mb-2 font-medium text-foreground">Sound catalog</h3>
-            <p>
+            <p className="mb-5">
               The app fetches a list of available sounds from our server (
               <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
                 assets.aziz-manaa.com
@@ -248,6 +253,62 @@ export default function PrivacyPage() {
               ) and streams audio files when you play them. This requires a
               standard internet connection. No personal data is sent with these
               requests — they are anonymous file downloads.
+            </p>
+
+            <h3 className="mb-2 font-medium text-foreground">
+              Firebase Crashlytics (crash reporting)
+            </h3>
+            <p className="mb-3">
+              Oryvelle uses Firebase Crashlytics, provided by Google, to detect
+              and diagnose app crashes. Crashlytics is active in release builds
+              only — it does not run during development.
+            </p>
+            <p className="mb-3">What Crashlytics collects:</p>
+            <ul className="mb-3 list-disc space-y-1 pl-5">
+              <li>Device model and manufacturer</li>
+              <li>Android OS version</li>
+              <li>App version and build number</li>
+              <li>
+                A randomly generated installation ID (not linked to your
+                identity)
+              </li>
+              <li>Crash stack traces and exception details</li>
+              <li>Timestamps of crashes</li>
+            </ul>
+            <p className="mb-3">
+              This data is used only to identify and fix stability issues. It
+              is not used for behavioral tracking, advertising, or product
+              analytics.
+            </p>
+            <p className="mb-5">
+              Data is handled by Google under the Firebase Privacy Policy:{" "}
+              <a
+                href="https://firebase.google.com/support/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-teal underline-offset-2 hover:underline"
+              >
+                firebase.google.com/support/privacy
+              </a>
+            </p>
+
+            <h3 className="mb-2 font-medium text-foreground">
+              Google Play In-App Updates
+            </h3>
+            <p>
+              The app uses the Google Play In-App Update API to check whether a
+              newer version of Oryvelle is available. This is handled by the
+              Google Play Store on your device and governed by{" "}
+              <a
+                href="https://policies.google.com/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-teal underline-offset-2 hover:underline"
+              >
+                Google&apos;s Terms of Service
+              </a>
+              . No personal data from within Oryvelle is sent during update
+              checks.
             </p>
           </section>
 
@@ -260,11 +321,7 @@ export default function PrivacyPage() {
               What we do not do
             </h2>
             <ul className="list-disc space-y-2 pl-5">
-              <li>We do not collect analytics or usage data.</li>
-              <li>
-                We do not use crash reporting, error analytics, or any
-                third-party monitoring SDK.
-              </li>
+              <li>We do not collect behavioral or product analytics.</li>
               <li>We do not serve ads or share data with advertisers.</li>
               <li>We do not sell your data to anyone.</li>
               <li>
@@ -277,7 +334,7 @@ export default function PrivacyPage() {
               </li>
               <li>
                 We do not transfer data to third parties except as described
-                above (Google, when you explicitly enable those features).
+                above (Google Sign-In, Drive backup, and Firebase Crashlytics).
               </li>
             </ul>
           </section>
@@ -327,13 +384,28 @@ export default function PrivacyPage() {
               </strong>
               .
             </p>
-            <p>
+            <p className="mb-3">
               <strong className="font-medium text-foreground">
                 Google account:
               </strong>{" "}
               Sign out from Settings to remove your account information from the
               app. This does not delete your Drive backup files — you must
               delete those separately if you want them removed.
+            </p>
+            <p>
+              <strong className="font-medium text-foreground">
+                Crashlytics data:
+              </strong>{" "}
+              Crash reports are associated with a randomly generated
+              installation ID, not your identity. To request deletion of crash
+              data, contact us at{" "}
+              <a
+                href="mailto:nekodesk.dev@gmail.com"
+                className="text-teal underline-offset-2 hover:underline"
+              >
+                nekodesk.dev@gmail.com
+              </a>{" "}
+              and we will submit a deletion request to Firebase on your behalf.
             </p>
           </section>
 
@@ -376,7 +448,9 @@ export default function PrivacyPage() {
               transmit it to our servers, you exercise most of these rights
               directly through the app. For any data held by Google (account
               display info, Drive backup), exercise your rights through your
-              Google account settings.
+              Google account settings. For crash data held by Firebase
+              Crashlytics, contact us and we will handle the request on your
+              behalf.
             </p>
             <p className="mt-3">
               For any other requests, contact us at{" "}

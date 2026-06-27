@@ -99,10 +99,17 @@ export default function TermsPage() {
               2. What Oryvelle is
             </h2>
             <p className="mb-3">
-              Oryvelle is a relaxation app that provides ambient
-              soundscapes, guided breathing, a fade timer, and private
-              reflection notes. It is designed to support calm, focus,
-              wind-down routines, and rest.
+              Oryvelle is a sleep and relaxation app that provides ambient
+              soundscapes, guided breathing exercises, a configurable fade
+              timer, a sleep journal with mood tracking and sleep analytics,
+              a bedtime routine builder, and private notes. It is designed to
+              support calm, focus, wind-down routines, and rest.
+            </p>
+            <p className="mb-3">
+              The free version of Oryvelle allows up to two sounds per mix and
+              up to five saved mixes. A premium tier with expanded limits is
+              planned for a future update. Feature availability and limits may
+              change over time.
             </p>
             <p className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-5 py-4 text-subtle">
               <strong className="font-medium text-foreground">
@@ -231,6 +238,18 @@ export default function TermsPage() {
                 Privacy Policy
               </a>
               .
+            </p>
+            <p className="mb-3">
+              Oryvelle also uses Firebase Crashlytics (Google) in release
+              builds to detect app crashes. No personal or behavioral data is
+              collected through Crashlytics — see the{" "}
+              <Link
+                href="/privacy"
+                className="text-teal underline-offset-2 hover:underline"
+              >
+                Privacy Policy
+              </Link>{" "}
+              for full details.
             </p>
             <p>
               NekoDesk is not responsible for the availability, accuracy, or

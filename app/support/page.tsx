@@ -37,6 +37,14 @@ const FAQ_SECTIONS = [
         q: "The app asks for notification permission. What is it used for?",
         a: "Oryvelle can send a gentle morning reminder to log how you slept, after a session of at least 5 minutes. You can decline the permission and the rest of the app works normally. You can also control reminders from your device's notification settings at any time.",
       },
+      {
+        q: "What is the bedtime routine builder?",
+        a: "The routine builder lets you set up a sequence of steps for winding down — choosing a sound mix, a breathing exercise, a sleep timer, and a morning journal reminder. You can set a goal (such as falling asleep faster or winding down gently) and a support level. Set it up once in Settings → Wind-down routine, then start it from the home screen each evening.",
+      },
+      {
+        q: "What breathing patterns does Oryvelle include?",
+        a: "The app includes two patterns: Box breathing (inhale, hold, exhale, hold — each 4 seconds) and 4-7-8 breathing (inhale for 4 seconds, hold for 7, exhale for 8). Both can be used as part of your bedtime routine or started independently.",
+      },
     ],
   },
   {
@@ -67,11 +75,23 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "Can I edit or delete a past journal entry?",
-        a: "Yes. Open Notes, tap the day you want to change, then use the edit or delete action. Deleting an entry is permanent and will ask for confirmation first.",
+        a: "Yes. Open Sleep notes, tap the day you want to change, then use the edit or delete action. Deleting an entry is permanent and will ask for confirmation first.",
       },
       {
         q: "I accidentally deleted an entry. Can I recover it?",
-        a: "If you have a Drive backup or a local JSON export that includes the deleted entry, you can restore it from Settings → Back up & restore → Restore. The restore adds missing dates and updates existing ones, so it will not overwrite entries that are already there.",
+        a: "If you have a Drive backup or a local JSON export that includes the deleted entry, you can restore it from Bedtime settings → BACKUP & TRANSFER → Restore sleep notes from Drive. The restore adds missing dates and updates existing ones, so it will not overwrite entries that are already there.",
+      },
+      {
+        q: "Can I add my own mood tags?",
+        a: "Yes. When logging a journal entry, tap + Add tag at the bottom of the mood tag list to add a custom tag. Custom tags are saved on your device and appear alongside the predefined ones for future entries.",
+      },
+      {
+        q: "What does the sleep analytics screen show?",
+        a: "The trends screen shows your sleep quality over the last 7 days, 30 days, or all time, based on the ratings and duration you log in your journal. It includes a quality trend line, a weekday pattern chart to spot which nights you tend to sleep best, and a rating breakdown. Personalized insights appear on the home screen and update weekly as you build more entries.",
+      },
+      {
+        q: "How many entries do I need before insights appear?",
+        a: "The app starts surfacing insights after a few entries. The more consistently you log, the more specific the weekly insights become — including which sounds and mixes are associated with your best nights.",
       },
     ],
   },
@@ -109,11 +129,11 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "How do I export my journal?",
-        a: "Go to Settings → Back up & restore → Export journal. This saves a JSON file to a location you choose on your device.",
+        a: "Go to Bedtime settings → BACKUP & TRANSFER → Export sleep notes backup. This saves a JSON file to a location you choose on your device.",
       },
       {
         q: "How do I delete all my data?",
-        a: "You can clear your notes and saved mixes individually from Settings. To remove everything, uninstall the app — this removes all locally stored data. If you also want to remove your Drive backup, delete it from Google Drive → Storage → Manage storage → Oryvelle.",
+        a: "You can clear your sleep notes and saved mixes individually from Bedtime settings. To remove everything, uninstall the app — this removes all locally stored data. If you also want to remove your Drive backup, delete it from Google Drive → Storage → Manage storage → Oryvelle.",
       },
       {
         q: "Does Oryvelle collect analytics or share my data?",
@@ -128,11 +148,11 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "How do I reset the onboarding questionnaire?",
-        a: "Go to Settings → Personalization profile → Reset profile. This clears your onboarding answers and relaxation profile. Your journal entries and saved mixes are not affected.",
+        a: "Go to Bedtime settings → PERSONALIZATION PROFILE → Reset profile. This clears your onboarding answers and relaxation profile. Your journal entries and saved mixes are not affected.",
       },
       {
         q: "How do I reset my wind-down routine?",
-        a: "Go to Settings → Wind-down routine → Reset routine. This clears only the routine setup. It does not stop active playback, delete journal entries, or change your timer defaults.",
+        a: "Go to Bedtime settings → BEDTIME ROUTINE → Reset routine. This clears only the routine setup. It does not stop active playback, delete journal entries, or change your timer defaults.",
       },
     ],
   },

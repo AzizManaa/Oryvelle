@@ -110,7 +110,7 @@ const moments: ParallaxMoment[] = [
     accent: "#FF6B9D",
     secondary: "#B89AFF",
     cue: "Coming soon",
-    panelBody: "No ads, no analytics, and no account required to use the core app.",
+    panelBody: "No ads, no tracking, and no account required to use the core app.",
   },
 ];
 
@@ -137,7 +137,7 @@ const seoHighlights = [
   },
 ];
 
-const trustSignals = ["No ads", "No analytics", "No required account"];
+const trustSignals = ["No ads", "No tracking", "No required account"];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -179,8 +179,12 @@ const jsonLd = {
       },
       featureList: [
         "Ambient relaxation soundscapes",
+        "Sound mixing with up to two layers",
         "Gentle fade timer",
-        "Guided breathing",
+        "Guided breathing exercises",
+        "Sleep journal with mood tracking",
+        "Sleep analytics and weekly insights",
+        "Bedtime routine builder",
         "Private notes",
         "Optional Google Drive backup",
       ],
@@ -295,7 +299,7 @@ function SeoContent() {
               className="mt-5 rounded-lg border border-sky/15 bg-sky/[0.045] p-5 text-sm leading-7 text-muted"
             >
               Your notes, mixes, and preferences stay on your device unless you
-              choose Google Drive backup. No ads, no analytics, no required
+              choose Google Drive backup. No ads, no tracking, no required
               account, and no medical claims.
             </aside>
           </div>
