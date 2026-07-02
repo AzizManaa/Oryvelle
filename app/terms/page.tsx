@@ -154,7 +154,8 @@ export default function TermsPage() {
               Your journal entries, session data, and preferences are stored
               locally on your device. You own your data. We do not access it,
               transfer it, or use it for any purpose other than running the app
-              on your device. See our{" "}
+              on your device, except when you choose a feature that transfers
+              data yourself, such as Drive backup or manual export. See our{" "}
               <Link
                 href="/privacy"
                 className="text-teal underline-offset-2 hover:underline"

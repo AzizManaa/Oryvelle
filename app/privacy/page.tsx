@@ -105,7 +105,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <dt className="inline text-faint">Effective date </dt>
-              <dd className="inline text-muted">June 9, 2026</dd>
+              <dd className="inline text-muted">June 30, 2026</dd>
             </div>
           </dl>
         </div>
@@ -195,24 +195,56 @@ export default function PrivacyPage() {
               <strong className="font-medium text-foreground">
                 Drive backup
               </strong>
-              , the app saves a copy of your journal entries to a private
-              folder in your own Google Drive (
+              , the app uploads a copy of your sleep journal content to a
+              private folder in your own Google Drive (
               <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
                 appDataFolder
               </code>
-              ). This folder is:
+              ). The backup includes:
+            </p>
+            <ul className="mb-3 list-disc space-y-1 pl-5">
+              <li>The free-text notes you write for each journal entry</li>
+              <li>Your sleep rating</li>
+              <li>The sleep duration</li>
+              <li>Your mood tags</li>
+            </ul>
+            <p className="mb-3">
+              This{" "}
+              <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
+                appDataFolder
+              </code>{" "}
+              is:
             </p>
             <ul className="mb-3 list-disc space-y-1 pl-5">
               <li>Visible only to you and to Oryvelle</li>
-              <li>
-                Not accessible to other apps or visible in your main Drive file
-                list
-              </li>
+              <li>Not accessible to other apps</li>
+              <li>Not visible in your main Drive file list</li>
               <li>
                 Controlled entirely by you — you can delete it at any time
                 through your Google account settings
               </li>
             </ul>
+            <p className="mb-3">
+              <strong className="font-medium text-foreground">
+                Backup encryption.
+              </strong>{" "}
+              Oryvelle does not apply its own client-side encryption to the
+              backup before uploading it. Your journal content is transmitted
+              to Google Drive over HTTPS and is stored in your own Google
+              Drive account. Because Oryvelle does not encrypt the backup
+              with a separate key before upload, anyone who can access your
+              Google account or Drive backup data could read your backed-up
+              journal entries.
+            </p>
+            <p className="mb-3">
+              <strong className="font-medium text-foreground">
+                What is not backed up.
+              </strong>{" "}
+              Drive backup covers only your sleep journal content. Your
+              playback sessions, onboarding preferences, saved mixes, and app
+              settings are <strong className="font-medium text-foreground">not</strong>{" "}
+              uploaded to Drive backup — they remain on your device.
+            </p>
             <p>
               Signing in and Drive backup are independent. You can sign out or
               disable backup at any time in Settings without losing local data.
@@ -473,10 +505,15 @@ export default function PrivacyPage() {
               Security
             </h2>
             <p>
-              Audio cache files and preferences are stored in the app&apos;s
-              private storage directory, which is not accessible to other apps
-              on a standard Android device. Drive backup data is transmitted
-              over HTTPS and stored in your private Google Drive folder.
+              Your journal, preferences, and saved mixes are stored in the
+              app&apos;s private storage directory, which is not accessible to
+              other apps on a standard Android device. Cached audio files are
+              stored in the app&apos;s cache directory under the same
+              sandboxed protection. Drive backup data is transmitted over
+              HTTPS. Note that Oryvelle does not apply client-side encryption
+              to Drive backups, so once uploaded the backup content is
+              protected by your Google account and Google Drive&apos;s
+              controls, not by a separate Oryvelle encryption key.
             </p>
           </section>
 
