@@ -72,7 +72,7 @@ export default function TermsPage() {
             </div>
             <div>
               <dt className="inline text-faint">Effective date </dt>
-              <dd className="inline text-muted">June 9, 2026</dd>
+              <dd className="inline text-muted">July 15, 2026</dd>
             </div>
           </dl>
         </div>
@@ -172,9 +172,9 @@ export default function TermsPage() {
               5. Sound catalog and content
             </h2>
             <p className="mb-3">
-              The sounds available in Oryvelle are provided by NekoDesk and
-              hosted on our servers. The catalog may change over time — sounds
-              may be added, modified, or removed without notice.
+              The sounds available in Oryvelle are provided or licensed by
+              NekoDesk and hosted on our servers. The catalog may change over
+              time — sounds may be added, modified, or removed without notice.
             </p>
             <p className="mb-3">
               You may use the sounds in Oryvelle for personal, non-commercial
@@ -264,10 +264,14 @@ export default function TermsPage() {
               8. Intellectual property
             </h2>
             <p className="mb-3">
-              The Oryvelle app, its design, graphics, sounds, and all associated
-              content are owned by NekoDesk and protected by copyright and other
-              intellectual property laws. These terms do not transfer any
-              ownership rights to you.
+              The Oryvelle app, mixer experience, original design, graphics,
+              and NekoDesk-created content are owned by NekoDesk and protected
+              by copyright and other intellectual property laws. Certain audio
+              recordings are licensed from third-party providers; ownership of
+              those recordings remains with their respective rights holders.
+              NekoDesk publishes the Oryvelle application and does not claim
+              copyright ownership of third-party audio. These terms do not
+              transfer any ownership or reuse rights to you.
             </p>
             <p>
               You are granted a limited, non-exclusive, non-transferable,
