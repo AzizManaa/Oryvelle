@@ -65,6 +65,11 @@ const DATA_ROWS = [
     purpose: "Remember recently verified Premium access for up to 72 hours",
     where: "Encrypted local app storage",
   },
+  {
+    data: "Google Play reviewer session token and expiry",
+    purpose: "Restore temporary reviewer access after an app restart",
+    where: "Encrypted local app storage until expiry, access is ended, or uninstall",
+  },
 ];
 
 export default function PrivacyPage() {
@@ -115,7 +120,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <dt className="inline text-faint">Effective date </dt>
-              <dd className="inline text-muted">August 28, 2026</dd>
+              <dd className="inline text-muted">August 29, 2026</dd>
             </div>
           </dl>
         </div>
@@ -134,7 +139,10 @@ export default function PrivacyPage() {
               </a>{" "}
               below. Google Drive Backup and Restore are optional features you
               can use to protect your journal — neither is required to use the
-              app, and Oryvelle does not create a Google profile.
+              app, and Oryvelle does not create a Google profile. An optional
+              Google Play subscription unlocks Premium sounds. Google Play
+              reviewers can use a non-personal reusable review code to evaluate
+              those same features without an account, purchase, or free trial.
             </p>
           </section>
 
@@ -262,6 +270,44 @@ export default function PrivacyPage() {
             </p>
           </section>
 
+          {/* Google Play reviewer access */}
+          <section aria-labelledby="reviewer-access">
+            <h2
+              id="reviewer-access"
+              className="mb-4 text-base font-semibold text-ink"
+            >
+              Google Play reviewer access
+            </h2>
+            <p className="mb-3">
+              Google Play reviewers can enter a reusable, non-personal review
+              code to access all Premium features without creating an account,
+              purchase, free trial, or permanent entitlement. The app sends the
+              code over HTTPS to the NekoDesk service only to authorize reviewer
+              access. The raw code is cleared from the screen after submission,
+              is never written to app storage, and is not stored or logged by
+              the service.
+            </p>
+            <p className="mb-3">
+              After successful activation, the service returns a signed reviewer
+              session valid for 30 days and a short-lived Premium media grant.
+              The session contains protocol and expiry claims only; it does not
+              contain a name, email address, Google account, user ID, device or
+              installation identifier, or location. The app stores the session
+              token and expiry in encrypted app-private storage so reviewer access
+              can be restored after a restart. Premium media grants remain in
+              memory only. Ending reviewer access or uninstalling the app removes
+              the local session; an expired or invalid session is also cleared.
+            </p>
+            <p>
+              Reviewer credentials are used only to authorize and secure reviewer
+              access. They are not used for advertising, analytics,
+              personalization, or account creation. Application-generated logs
+              contain only the route, outcome code, and HTTP status; request
+              bodies, credentials, authorization headers, session tokens, media
+              grants, and IP addresses are excluded.
+            </p>
+          </section>
+
           {/* Third-party services */}
           <section aria-labelledby="third-party">
             <h2
@@ -303,6 +349,25 @@ export default function PrivacyPage() {
               grant remains in memory only.
             </p>
 
+            <h3 className="mb-2 font-medium text-foreground">
+              Cloudflare delivery and abuse protection
+            </h3>
+            <p className="mb-5">
+              Cloudflare delivers requests to{" "}
+              <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
+                assets.aziz-manaa.com
+              </code>{" "}
+              and protects the service from abuse. Ordinary request metadata,
+              including the request-origin IP address and standard HTTP headers,
+              may be processed for delivery, security, and short-window rate
+              limiting. Reviewer-access rate limiting uses request-origin
+              information only to limit repeated activation or refresh attempts,
+              not to infer location, build a profile, or support advertising or
+              analytics. NekoDesk does not write IP addresses or reviewer
+              credentials to application-generated logs or durable application
+              storage.
+            </p>
+
             <h3 className="mb-2 font-medium text-foreground">Sound catalog</h3>
             <p className="mb-5">
               The app fetches a list of available sounds from our server (
@@ -310,8 +375,10 @@ export default function PrivacyPage() {
                 assets.aziz-manaa.com
               </code>
               ) and streams audio files when you play them. This requires a
-              standard internet connection. No personal data is sent with these
-              requests — they are anonymous file downloads.
+              standard internet connection. Public catalog and free-audio
+              requests do not include app-provided personal data. A Premium
+              cache miss includes only the short-lived entitlement grant
+              described above; that credential is not stored with cached audio.
             </p>
 
             <h3 className="mb-2 font-medium text-foreground">
@@ -384,8 +451,12 @@ export default function PrivacyPage() {
               <li>We do not serve ads or share data with advertisers.</li>
               <li>We do not sell your data to anyone.</li>
               <li>
-                We do not create user accounts or store your data on our
-                servers.
+                We do not create NekoDesk user accounts or store your sleep
+                journal on our servers.
+              </li>
+              <li>
+                We do not use Google Play reviewer credentials to identify
+                reviewers or create accounts.
               </li>
               <li>
                 We do not access your microphone, camera, contacts, or
@@ -393,8 +464,8 @@ export default function PrivacyPage() {
               </li>
               <li>
                 We do not transfer data to third parties except as described
-                above (Google Drive, Google Play, Premium verification, and
-                Firebase Crashlytics).
+                above (Google Drive, Google Play, Premium verification,
+                reviewer authorization, Cloudflare, and Firebase Crashlytics).
               </li>
             </ul>
           </section>
@@ -452,6 +523,16 @@ export default function PrivacyPage() {
               does not delete your Drive backup files — you must delete those
               separately if you want them removed.
             </p>
+            <p className="mb-3">
+              <strong className="font-medium text-foreground">
+                Google Play reviewer data:
+              </strong>{" "}
+              The reusable review code is not stored by the app or NekoDesk
+              service. The encrypted reviewer session remains on the device
+              until it expires, reviewer access is ended, or the app is
+              uninstalled. Reviewer rate-limit state is short-lived and used
+              only for security and abuse prevention.
+            </p>
             <p>
               <strong className="font-medium text-foreground">
                 Crashlytics data:
@@ -506,11 +587,11 @@ export default function PrivacyPage() {
               data, including the right to access, correct, or delete it.
               Because Oryvelle stores data locally on your device and does not
               transmit it to our servers, you exercise most of these rights
-              directly through the app. For any data held by Google (Drive
-              backup or Google Play purchase data), exercise your rights through your
+              directly through the app. For data held by Google (Drive backup
+              or Google Play purchase data), exercise your rights through your
               Google account settings. For crash data held by Firebase
-              Crashlytics, contact us and we will handle the request on your
-              behalf.
+              Crashlytics or a request concerning the NekoDesk reviewer service,
+              contact us and we will handle the request.
             </p>
             <p className="mt-3">
               For any other requests, contact us at{" "}
@@ -533,15 +614,17 @@ export default function PrivacyPage() {
               Security
             </h2>
             <p>
-              Your journal, preferences, and saved mixes are stored in the
-              app&apos;s private storage directory, which is not accessible to
-              other apps on a standard Android device. Cached audio files are
-              stored in the app&apos;s cache directory under the same
-              sandboxed protection. Drive backup data is transmitted over
-              HTTPS. Note that Oryvelle does not apply client-side encryption
-              to Drive backups, so once uploaded the backup content is
-              protected by your Google account and Google Drive&apos;s
-              controls, not by a separate Oryvelle encryption key.
+              Your journal database is encrypted with SQLCipher. Serialized
+              preferences, saved mixes, Premium entitlement state, and reviewer
+              session values are encrypted with a key protected by Android
+              Keystore. Cached audio remains inside Android&apos;s app sandbox.
+              Google authorization tokens stay in memory for the requested Drive
+              operation and are not persisted by Oryvelle. Data sent to Google
+              Drive, Google services, Firebase, or the NekoDesk service is
+              transmitted over HTTPS. Oryvelle does not apply client-side
+              encryption to Drive backups, so once uploaded the backup content
+              is protected by your Google account and Google Drive&apos;s controls,
+              not by a separate Oryvelle encryption key.
             </p>
           </section>
 

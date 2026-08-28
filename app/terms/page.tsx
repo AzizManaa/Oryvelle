@@ -72,7 +72,7 @@ export default function TermsPage() {
             </div>
             <div>
               <dt className="inline text-faint">Effective date </dt>
-              <dd className="inline text-muted">August 28, 2026</dd>
+              <dd className="inline text-muted">August 29, 2026</dd>
             </div>
           </dl>
         </div>
