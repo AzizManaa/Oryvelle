@@ -478,9 +478,9 @@ export default function PrivacyPage() {
               Children&apos;s privacy
             </h2>
             <p>
-              Oryvelle is not directed at children under 13. We do not knowingly
-              collect personal information from children under 13. If you
-              believe a child has provided personal information through the app,
+              Oryvelle is intended for adults aged 18 and over. We do not
+              knowingly collect personal information from anyone under 18. If
+              you believe a minor has provided personal information through the app,
               please contact us at{" "}
               <a
                 href="mailto:nekodesk.dev@gmail.com"

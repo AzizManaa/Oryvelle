@@ -128,10 +128,8 @@ export default function TermsPage() {
               3. Eligibility
             </h2>
             <p>
-              You must be at least 13 years old to use Oryvelle. By using the
-              app, you confirm that you meet this requirement. If you are under
-              18, you confirm that you have your parent or guardian&apos;s
-              permission.
+              You must be at least 18 years old to use Oryvelle. By using the
+              app, you confirm that you meet this requirement.
             </p>
           </section>
 
