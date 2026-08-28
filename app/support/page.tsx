@@ -31,7 +31,7 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "Do I need an account to use Oryvelle?",
-        a: "No. All core features — sounds, fade timer, guided breathing, and your private notes — work without signing in. Google Sign-In is optional and only needed if you want to back up your journal to Google Drive.",
+        a: "No. All core features — sounds, fade timer, guided breathing, and your private notes — work without an account. Google Drive permission is requested only when you choose Backup or Restore.",
       },
       {
         q: "The app asks for notification permission. What is it used for?",
@@ -53,7 +53,7 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "Do sounds require an internet connection?",
-        a: "The first time you play a sound, the app downloads it over the internet. After that, it is cached on your device (up to 650 MB) so it plays faster and works offline. If you have cleared the cache or are playing a sound for the first time, an internet connection is required.",
+        a: "The first time you play a sound, the app downloads it over the internet. Public sounds use an automatically managed cache of up to 72 MiB. Premium audio used in the current session can use up to 64 MiB and is cleared when the session ends. If a sound is not cached, an internet connection is required.",
       },
       {
         q: "A sound I used before is no longer available.",
@@ -97,25 +97,25 @@ const FAQ_SECTIONS = [
   },
   {
     id: "backup",
-    heading: "Google Sign-In and Drive backup",
+    heading: "Google Drive backup",
     items: [
       {
-        q: "Why does Google show a warning when I try to back up?",
-        a: "Oryvelle is going through Google's app verification process. Until that is complete, Google shows a warning for the Drive permission. You can proceed safely by tapping Advanced → Go to Oryvelle. This warning will disappear once verification is complete.",
+        q: "Why does Google ask me to choose an account or grant permission?",
+        a: "Oryvelle requests access only when Backup or Restore needs the private Google Drive app-data folder. Continue only if you want to use that feature. Oryvelle does not create or keep a Google profile in the app.",
       },
       {
         q: "Where is my backup stored in Google Drive?",
         a: "Your backup is stored in a private app folder that only Oryvelle can access. It does not appear in your main Drive file list. You can find and delete it through Google Drive → Storage → Manage storage → Oryvelle.",
       },
       {
-        q: "I signed out of Google. Did I lose my data?",
-        a: "No. Signing out only removes your account information from the app. All journal entries, mixes, and settings stay on your device. Your Drive backup files also remain in Google Drive until you delete them.",
+        q: "What happens if I disconnect Google Drive?",
+        a: "Disconnecting revokes Oryvelle’s Drive permission and clears pending authorization state. Your local data is unchanged, and existing Drive backups remain until you delete them from Google Drive. The next Backup or Restore will ask for permission again.",
       },
       {
         q: "Drive backup says it failed. What should I try?",
         a: null,
         steps: [
-          "Sign out and sign back in from Settings to refresh your Drive permission.",
+          "Try Backup or Restore again and complete Google’s account and permission prompt.",
           "Check your internet connection.",
           "Make sure you have enough storage in your Google account (the backup is typically a few KB to a few MB).",
           "Try again — Drive can occasionally return a temporary error.",
@@ -144,7 +144,7 @@ const FAQ_SECTIONS = [
   },
   {
     id: "settings",
-    heading: "Account and settings",
+    heading: "Personalization and settings",
     items: [
       {
         q: "How do I reset the onboarding questionnaire?",

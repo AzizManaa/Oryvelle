@@ -51,9 +51,19 @@ const DATA_ROWS = [
     where: "Local device storage",
   },
   {
-    data: "Cached audio files (up to 650 MB)",
+    data: "Public cached audio files (up to 72 MiB)",
     purpose: "Play sounds without re-downloading",
     where: "Local device cache — automatically managed; can be cleared via Android Settings → Apps → Oryvelle → Storage",
+  },
+  {
+    data: "Premium audio for the active session (up to 64 MiB)",
+    purpose: "Play authorized premium sounds during the current session",
+    where: "Temporary local cache — cleared when the premium session ends",
+  },
+  {
+    data: "Premium entitlement status and verification timestamps",
+    purpose: "Remember recently verified Premium access for up to 72 hours",
+    where: "Encrypted local app storage",
   },
 ];
 
@@ -105,7 +115,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <dt className="inline text-faint">Effective date </dt>
-              <dd className="inline text-muted">June 30, 2026</dd>
+              <dd className="inline text-muted">August 28, 2026</dd>
             </div>
           </dl>
         </div>
@@ -122,9 +132,9 @@ export default function PrivacyPage() {
               <a href="#third-party" className="text-teal underline-offset-2 hover:underline">
                 Third-party services
               </a>{" "}
-              below. Google Sign-In and Google Drive backup are optional
-              features you can use to protect your journal — neither is
-              required to use the app.
+              below. Google Drive Backup and Restore are optional features you
+              can use to protect your journal — neither is required to use the
+              app, and Oryvelle does not create a Google profile.
             </p>
           </section>
 
@@ -173,25 +183,24 @@ export default function PrivacyPage() {
               </table>
             </div>
             <p>
-              All of this data stays on your device. It is never sent to our
-              servers, never used for advertising, and never shared with third
-              parties.
+              These stored values stay on your device unless you explicitly use
+              Drive backup or manual transfer. Subscription verification is the
+              limited exception described below. None of this data is used for
+              advertising or behavioral analytics.
             </p>
 
             <h3 className="mb-3 mt-6 font-medium text-foreground">
-              With Google — only if you choose to sign in
+              With Google Drive — only when you choose Backup or Restore
             </h3>
             <p className="mb-3">
-              If you tap{" "}
-              <strong className="font-medium text-foreground">
-                Sign in with Google
-              </strong>{" "}
-              in Settings, the app stores your Google account display name and
-              email address on your device so your account appears in the
-              Settings screen. No other Google account data is accessed.
+              When you choose Backup or Restore, Google may ask you to select an
+              account and grant access to Oryvelle&apos;s private Drive app-data
+              folder. Oryvelle receives a short-lived access token for that
+              operation. It does not store your Google display name, email
+              address, or a persistent Google profile.
             </p>
             <p className="mb-3">
-              If you also enable{" "}
+              If you choose{" "}
               <strong className="font-medium text-foreground">
                 Drive backup
               </strong>
@@ -246,8 +255,10 @@ export default function PrivacyPage() {
               uploaded to Drive backup — they remain on your device.
             </p>
             <p>
-              Signing in and Drive backup are independent. You can sign out or
-              disable backup at any time in Settings without losing local data.
+              You can disconnect Google Drive at any time without losing local
+              data. Disconnecting revokes Oryvelle&apos;s Drive permission and
+              clears pending authorization state, but does not delete an existing
+              backup. The next Backup or Restore will request permission again.
             </p>
           </section>
 
@@ -261,10 +272,10 @@ export default function PrivacyPage() {
             </h2>
 
             <h3 className="mb-2 font-medium text-foreground">
-              Google Sign-In and Google Drive
+              Google Drive authorization
             </h3>
             <p className="mb-5">
-              When you use Sign-In or Drive backup, your data is handled under
+              When you authorize Drive Backup or Restore, your data is handled under
               Google&apos;s Privacy Policy:{" "}
               <a
                 href="https://policies.google.com/privacy"
@@ -274,6 +285,22 @@ export default function PrivacyPage() {
               >
                 policies.google.com/privacy
               </a>
+            </p>
+
+            <h3 className="mb-2 font-medium text-foreground">
+              Google Play Billing and Premium verification
+            </h3>
+            <p className="mb-5">
+              Purchases are processed by Google Play. To verify Premium access,
+              Oryvelle sends the Google Play purchase token over HTTPS to{" "}
+              <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
+                assets.aziz-manaa.com/v1/entitlements/exchange
+              </code>
+              . The raw token is not logged or stored by Oryvelle&apos;s server;
+              a SHA-256-derived lookup key and entitlement result may be cached
+              there for up to five minutes. The app stores an encrypted Premium
+              status snapshot for up to 72 hours. A short-lived content access
+              grant remains in memory only.
             </p>
 
             <h3 className="mb-2 font-medium text-foreground">Sound catalog</h3>
@@ -366,7 +393,8 @@ export default function PrivacyPage() {
               </li>
               <li>
                 We do not transfer data to third parties except as described
-                above (Google Sign-In, Drive backup, and Firebase Crashlytics).
+                above (Google Drive, Google Play, Premium verification, and
+                Firebase Crashlytics).
               </li>
             </ul>
           </section>
@@ -418,11 +446,11 @@ export default function PrivacyPage() {
             </p>
             <p className="mb-3">
               <strong className="font-medium text-foreground">
-                Google account:
+                Google Drive authorization:
               </strong>{" "}
-              Sign out from Settings to remove your account information from the
-              app. This does not delete your Drive backup files — you must
-              delete those separately if you want them removed.
+              Disconnect from Settings to revoke Oryvelle&apos;s Drive access. This
+              does not delete your Drive backup files — you must delete those
+              separately if you want them removed.
             </p>
             <p>
               <strong className="font-medium text-foreground">
@@ -478,8 +506,8 @@ export default function PrivacyPage() {
               data, including the right to access, correct, or delete it.
               Because Oryvelle stores data locally on your device and does not
               transmit it to our servers, you exercise most of these rights
-              directly through the app. For any data held by Google (account
-              display info, Drive backup), exercise your rights through your
+              directly through the app. For any data held by Google (Drive
+              backup or Google Play purchase data), exercise your rights through your
               Google account settings. For crash data held by Firebase
               Crashlytics, contact us and we will handle the request on your
               behalf.

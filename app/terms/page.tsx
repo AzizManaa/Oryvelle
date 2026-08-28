@@ -72,7 +72,7 @@ export default function TermsPage() {
             </div>
             <div>
               <dt className="inline text-faint">Effective date </dt>
-              <dd className="inline text-muted">July 15, 2026</dd>
+              <dd className="inline text-muted">August 28, 2026</dd>
             </div>
           </dl>
         </div>
@@ -107,9 +107,9 @@ export default function TermsPage() {
             </p>
             <p className="mb-3">
               The free version of Oryvelle allows up to two sounds per mix and
-              up to five saved mixes. A premium tier with expanded limits is
-              planned for a future update. Feature availability and limits may
-              change over time.
+              up to five saved mixes. Premium provides expanded limits and
+              additional content. Feature availability and limits may change
+              over time.
             </p>
             <p className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-5 py-4 text-subtle">
               <strong className="font-medium text-foreground">
@@ -138,17 +138,18 @@ export default function TermsPage() {
           {/* 4 */}
           <section aria-labelledby="s4">
             <h2 id="s4" className="mb-3 text-base font-semibold text-ink">
-              4. Your account and data
+              4. Your data and Google Drive access
             </h2>
             <p className="mb-3">
               Oryvelle works without an account. All core features — sounds,
-              journal, timer, breathing — are available without signing in.
+              journal, timer, breathing — are available without an account.
             </p>
             <p className="mb-3">
-              If you choose to sign in with Google, you do so voluntarily to
-              enable Drive backup. You are responsible for keeping your Google
-              account secure. NekoDesk is not responsible for any loss caused by
-              unauthorised access to your Google account.
+              When you choose Drive Backup or Restore, Oryvelle requests only
+              the Google Drive app-data permission needed for that action. The
+              app does not create or retain a Google profile. You are responsible
+              for keeping your Google account secure. Disconnecting Drive access
+              does not delete an existing backup from Google Drive.
             </p>
             <p>
               Your journal entries, session data, and preferences are stored
@@ -218,8 +219,9 @@ export default function TermsPage() {
               7. Third-party services
             </h2>
             <p className="mb-3">
-              Oryvelle integrates with Google services (Sign-In and Drive) when
-              you choose to enable them. Your use of those services is governed
+              Oryvelle integrates with Google Drive when you choose Backup or
+              Restore, and with Google Play for subscriptions and app updates.
+              Your use of those services is governed
               by Google&apos;s{" "}
               <a
                 href="https://policies.google.com/terms"

@@ -133,7 +133,7 @@ const seoHighlights = [
   {
     cue: "04",
     title: "Optional Drive backup",
-    body: "Use Oryvelle without an account, or choose Google Sign-In and Drive backup when you want an extra copy of your journal.",
+    body: "Use Oryvelle without an account. Backup and Restore request access only to Oryvelle’s private Google Drive app folder when you choose them.",
   },
 ];
 
@@ -179,7 +179,7 @@ const jsonLd = {
       },
       featureList: [
         "Ambient relaxation soundscapes",
-        "Sound mixing with up to two layers",
+        "Layered sound mixing with up to five sounds with Premium",
         "Gentle fade timer",
         "Guided breathing exercises",
         "Sleep journal with mood tracking",
