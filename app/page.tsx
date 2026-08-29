@@ -62,7 +62,7 @@ const moments: ParallaxMoment[] = [
     label: "Arrival",
     eyebrow: "Android relaxation app",
     title: "Relax, focus, and sleep with calming sounds.",
-    body: "Oryvelle is an Android relaxation and sleep app for mixing ambient sounds, following guided breathing, setting a fade timer, and keeping private notes.",
+    body: "Oryvelle is an Android relaxation and sleep app for mixing ambient sounds, following guided breathing and meditation sessions across different programs, setting a fade timer, and keeping private notes.",
     accent: "#00E0C7",
     secondary: "#B89AFF",
     cue: "Start simple",
