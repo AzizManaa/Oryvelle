@@ -25,7 +25,7 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
             />
           </span>
           <span className="text-sm font-medium tracking-[0.18em] text-foreground uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
-            Ryvelle
+            Oryvelle
           </span>
         </Link>
 
