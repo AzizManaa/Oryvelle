@@ -340,7 +340,7 @@ export default function PrivacyPage() {
               Purchases are processed by Google Play. To verify Premium access,
               Oryvelle sends the Google Play purchase token over HTTPS to{" "}
               <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
-                assets.aziz-manaa.com/v1/entitlements/exchange
+                api.oryvelle.app/v1/entitlements/exchange
               </code>
               . The raw token is not logged or stored by Oryvelle&apos;s server;
               a SHA-256-derived lookup key and entitlement result may be cached
@@ -355,7 +355,7 @@ export default function PrivacyPage() {
             <p className="mb-5">
               Cloudflare delivers requests to{" "}
               <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
-                assets.aziz-manaa.com
+                cdn.oryvelle.app and api.oryvelle.app
               </code>{" "}
               and protects the service from abuse. Ordinary request metadata,
               including the request-origin IP address and standard HTTP headers,
@@ -370,15 +370,19 @@ export default function PrivacyPage() {
 
             <h3 className="mb-2 font-medium text-foreground">Sound catalog</h3>
             <p className="mb-5">
-              The app fetches a list of available sounds from our server (
+              The app fetches catalogs and public media from our CDN (
               <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
-                assets.aziz-manaa.com
+                cdn.oryvelle.app
               </code>
-              ) and streams audio files when you play them. This requires a
-              standard internet connection. Public catalog and free-audio
-              requests do not include app-provided personal data. A Premium
-              cache miss includes only the short-lived entitlement grant
-              described above; that credential is not stored with cached audio.
+              ); Premium media is authorized through{" "}
+              <code className="rounded bg-white/[0.06] px-1 py-0.5 font-mono text-muted">
+                api.oryvelle.app
+              </code>
+              . This requires a standard internet connection when content is not
+              cached. Public catalog and free-audio requests do not include
+              app-provided personal data. A Premium cache miss includes only the
+              short-lived entitlement grant described above; that credential is
+              not stored with cached audio.
             </p>
 
             <h3 className="mb-2 font-medium text-foreground">
