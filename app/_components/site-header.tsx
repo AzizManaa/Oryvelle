@@ -13,7 +13,7 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
         <Link
           href="/"
           aria-label="Oryvelle home"
-          className="flex min-w-0 items-center gap-1.5 transition-opacity hover:opacity-75"
+          className="flex shrink-0 items-center gap-1.5 transition-opacity hover:opacity-75"
         >
           <span className="relative h-7 w-7 overflow-hidden rounded-full border border-white/[0.12] bg-background shadow-[0_0_22px_rgba(184,154,255,0.25)]">
             <Image
@@ -25,7 +25,7 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
               priority
             />
           </span>
-          <span className="text-sm font-medium tracking-[0.18em] text-foreground uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] max-[359px]:hidden">
+          <span className="hidden text-sm font-medium tracking-[0.18em] text-foreground uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] sm:inline">
             Oryvelle
           </span>
         </Link>
@@ -69,7 +69,7 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
         <div className="flex shrink-0 items-center gap-3">
           <nav
             aria-label="Site pages"
-            className="flex items-center gap-4 text-xs drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:hidden"
+            className="flex items-center gap-4 text-xs drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] max-[359px]:hidden md:hidden"
           >
             {activePage === "privacy" ? (
               <span className="font-medium text-foreground">Privacy</span>
@@ -106,10 +106,16 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
             href={PLAY_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="h-9 rounded-full border border-teal/30 bg-teal/10 px-3 text-xs font-medium text-foreground shadow-[0_0_24px_rgba(0,224,199,0.1)] sm:px-4"
+            aria-label="Get Oryvelle on Google Play"
+            className="block shrink-0 transition-opacity hover:opacity-85"
           >
-            <span className="hidden sm:inline">Get it on Google Play</span>
-            <span className="inline leading-9 sm:hidden">Get app</span>
+            <Image
+              src="/google-play-badge.png"
+              alt="Get it on Google Play"
+              width={646}
+              height={250}
+              className="h-auto w-28 sm:w-32"
+            />
           </a>
         </div>
       </div>

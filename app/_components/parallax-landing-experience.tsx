@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   useEffect,
   useRef,
@@ -308,9 +309,17 @@ export function ParallaxLandingExperience({
                   href={PLAY_STORE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full border border-[var(--scene-accent)]/35 bg-[var(--scene-accent)]/12 px-5 py-3 text-sm font-medium text-[#F7F3FF] shadow-[0_0_30px_color-mix(in_srgb,var(--scene-accent)_16%,transparent)]"
+                  aria-label="Get Oryvelle on Google Play"
+                  className="block shrink-0 transition-opacity hover:opacity-85"
                 >
-                  Get it on Google Play
+                  <Image
+                    src="/google-play-badge.png"
+                    alt="Get it on Google Play"
+                    width={646}
+                    height={250}
+                    priority
+                    className="h-auto w-44 sm:w-48"
+                  />
                 </Link>
                 <span className="text-sm text-[#7C8094]">
                   Private by design. Quiet by default.
