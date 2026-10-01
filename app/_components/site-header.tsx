@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { PLAY_STORE_URL } from "../site-config";
 
 type SiteHeaderProps = {
@@ -7,8 +10,29 @@ type SiteHeaderProps = {
 };
 
 export function SiteHeader({ activePage }: SiteHeaderProps) {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const updateHeader = () => setIsScrolled(window.scrollY > 12);
+    const initialFrame = window.requestAnimationFrame(updateHeader);
+
+    window.addEventListener("scroll", updateHeader, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(initialFrame);
+      window.removeEventListener("scroll", updateHeader);
+    };
+  }, []);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-30">
+    <header
+      className={[
+        "fixed inset-x-0 top-0 z-30 border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
+        isScrolled
+          ? "border-white/[0.08] bg-[#080510]/88 shadow-[0_14px_40px_rgba(3,1,8,0.28)] backdrop-blur-xl"
+          : "border-transparent bg-transparent",
+      ].join(" ")}
+    >
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-5 sm:px-8">
         <Link
           href="/"
