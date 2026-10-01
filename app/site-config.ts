@@ -7,7 +7,7 @@ export const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.nekodesk.oryvelle";
 
 export const SITE_DESCRIPTION =
-  "Oryvelle helps you relax with ambient sounds, breathing, fade timers, and private notes that stay on your device.";
+  "Oryvelle is a private Android sleep companion with layered ambient sounds, guided meditations, breathing, bedtime routines, a sleep journal, and local insights.";
 
 export const SITE_KEYWORDS = [
   "Oryvelle",
@@ -15,11 +15,14 @@ export const SITE_KEYWORDS = [
   "ambient soundscapes",
   "calming sounds",
   "guided breathing",
+  "guided sleep meditation",
+  "bedtime routine app",
   "wind down app",
   "sleep companion app",
   "ambient sleep sounds",
   "sleep timer",
   "private journal app",
+  "sleep journal and insights",
   "privacy-first relaxation app",
   "Android relaxation app",
 ];

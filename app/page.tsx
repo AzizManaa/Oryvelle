@@ -14,9 +14,9 @@ import {
 } from "./site-config";
 
 export const metadata: Metadata = {
-  title: "Oryvelle - Ambient Sounds, Breathing, Timer, and Private Notes",
+  title: "Oryvelle - Sounds, Meditation, Routines, and Sleep Insights",
   description:
-    "Use Oryvelle anytime you want to slow down: ambient soundscapes, breathing, fade timers, and private notes for Android.",
+    "Wind down with layered ambient sounds, guided meditation, breathing, bedtime routines, a fade timer, private sleep notes, and local insights on Android.",
   keywords: SITE_KEYWORDS,
   alternates: {
     canonical: absoluteUrl(),
@@ -35,24 +35,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: absoluteUrl(),
-    title: "Oryvelle - Ambient Sounds, Breathing, and Private Notes",
+    title: "Oryvelle - A Calmer Path to Sleep",
     description:
-      "Ambient soundscapes, breathing, fade timers, and private notes for quiet breaks, focus, rest, and sleep.",
+      "Mix ambient sounds, follow guided meditations, build a bedtime routine, and reflect with private sleep notes and local insights.",
     siteName: SITE_NAME,
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Oryvelle ambient sounds app landing experience",
+        alt: "Oryvelle sounds, meditation, and sleep routine app",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Oryvelle - Ambient Sounds, Breathing, and Private Notes",
+    title: "Oryvelle - A Calmer Path to Sleep",
     description:
-      "Ambient soundscapes, breathing, fade timers, and private notes for quiet breaks, focus, rest, and sleep.",
+      "Mix ambient sounds, follow guided meditations, build a bedtime routine, and reflect with private sleep notes and local insights.",
     images: ["/twitter-image"],
   },
 };
@@ -61,57 +61,57 @@ const moments: ParallaxMoment[] = [
   {
     id: "arrival",
     label: "Arrival",
-    eyebrow: "Android relaxation app",
-    title: "Relax, focus, and sleep with calming sounds.",
-    body: "Oryvelle is an Android relaxation and sleep app for mixing ambient sounds, following guided breathing and meditation sessions across different programs, setting a fade timer, and keeping private notes.",
+    eyebrow: "Your bedtime companion",
+    title: "A calmer path into sleep.",
+    body: "Oryvelle brings layered ambient sounds, guided meditation, breathing, bedtime routines, and private sleep reflection into one quiet Android app.",
     accent: "#00E0C7",
     secondary: "#B89AFF",
     cue: "Start simple",
-    panelBody: "Start with the sound you need right now, whether you are winding down, focusing, or trying to sleep.",
+    panelBody: "Start with Tonight’s Path or choose the sound, practice, or routine that fits this evening.",
   },
   {
     id: "constellations",
     label: "Sound Mix",
     eyebrow: "Layer sounds",
     title: "Rain, cabin air, forest hush.",
-    body: "Pick a few sounds, balance the mix, and let it sit in the background instead of becoming another thing to manage.",
+    body: "Layer rain, nature, noise, and atmospheric sounds. Balance each layer, save a favorite mix, and let it continue in the background.",
     accent: "#67D7FF",
     secondary: "#8F82E8",
     cue: "Pick a mix",
-    panelBody: "Keep a favorite mix ready for the next break, evening, or long night.",
+    panelBody: "Use two sounds together for free, or build richer five-layer soundscapes with Premium.",
   },
   {
     id: "mix",
-    label: "Active Mix",
-    eyebrow: "Simple controls",
-    title: "The mix stays easy to reach.",
-    body: "The controls are there when you need them and quiet when you do not.",
+    label: "Guided Calm",
+    eyebrow: "Meditation and breathing",
+    title: "Give a busy mind somewhere softer to land.",
+    body: "Follow guided programs for winding down, overthinking, and closing the day, or settle into Box and 4-7-8 breathing.",
     accent: "#00E0C7",
     secondary: "#67D7FF",
-    cue: "Active mix",
-    panelBody: "Change the sound, check the timer, then get back to whatever you were doing.",
+    cue: "Guided calm",
+    panelBody: "Try the opening session in each meditation program, then continue the full journey with Premium.",
   },
   {
     id: "fade",
-    label: "Fade Timer",
-    eyebrow: "Fade timer",
-    title: "Let the sound end gently.",
-    body: "Set a timer and let the mix fade out on its own. Useful for naps, focus sessions, reading, or sleep.",
+    label: "Bedtime Routine",
+    eyebrow: "Make the evening yours",
+    title: "Turn a few quiet steps into a routine.",
+    body: "Combine a sound mix, breathing, a sleep timer, gentle fade-out, and an optional morning reminder into a reusable bedtime path.",
     accent: "#FFB87A",
     secondary: "#00E0C7",
-    cue: "45 min fade",
-    panelBody: "No abrupt stop, no need to come back just to turn the sound off.",
+    cue: "Your routine",
+    panelBody: "Set it once, return each evening, and let the app carry you from winding down toward sleep.",
   },
   {
     id: "final",
-    label: "Invite",
-    eyebrow: "Available now",
-    title: "Use it for the small pauses.",
-    body: "Oryvelle is available on Google Play: sound, breathing, meditation, and private notes without extra noise.",
+    label: "Sleep Insights",
+    eyebrow: "Private reflection",
+    title: "Notice what helps, night by night.",
+    body: "Rate your sleep, record duration and mood, and discover local trends connecting your nights with the sounds and mixes you use.",
     accent: "#FF6B9D",
     secondary: "#B89AFF",
     cue: "Google Play",
-    panelBody: "No ads, no tracking, and no account required to use the core app.",
+    panelBody: "Available now on Google Play, with no ads, no behavioral tracking, and no account required for the core app.",
   },
 ];
 
@@ -119,26 +119,36 @@ const seoHighlights = [
   {
     cue: "01",
     title: "Ambient soundscapes",
-    body: "Layer rain, cabin air, forest hush, and soft noise into a mix that can stay in the background.",
+    body: "Layer rain, nature, noise, and atmospheric sounds, tune each layer, save favorite mixes, and keep listening in the background.",
   },
   {
     cue: "02",
-    title: "Fade timer",
-    body: "Set a timer and let the sound fade out without coming back to stop it manually.",
+    title: "Guided meditation and breathing",
+    body: "Follow multi-session programs for winding down and overthinking, or use Box and 4-7-8 breathing whenever you need a quieter moment.",
   },
   {
     cue: "03",
-    title: "Private notes",
-    body: "Write a quick note after a session, track how you felt, and keep it on your device by default.",
+    title: "Bedtime routines",
+    body: "Build a repeatable path with your mix, breathing, timer, fade-out, and an optional morning sleep-note reminder.",
   },
   {
     cue: "04",
-    title: "Optional Drive backup",
-    body: "Use Oryvelle without an account. Backup and Restore request access only to Oryvelle’s private Google Drive app folder when you choose them.",
+    title: "Sleep journal and insights",
+    body: "Record a rating, duration, mood tags, and an optional note. Explore trends and locally generated insights as your journal grows.",
+  },
+  {
+    cue: "05",
+    title: "A timer that ends gently",
+    body: "Choose a preset or custom sleep timer, then let your soundscape fade instead of stopping abruptly.",
+  },
+  {
+    cue: "06",
+    title: "Private by design",
+    body: "Use the core app without an account. Your journal and personalization stay on your device, with optional journal backup to Oryvelle’s private Google Drive app folder.",
   },
 ];
 
-const trustSignals = ["No ads", "No tracking", "No required account"];
+const trustSignals = ["No ads", "No behavioral tracking", "No required account"];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -184,6 +194,7 @@ const jsonLd = {
         "Layered sound mixing with up to five sounds with Premium",
         "Gentle fade timer",
         "Guided breathing exercises",
+        "Guided meditation programs",
         "Sleep journal with mood tracking",
         "Sleep analytics and weekly insights",
         "Bedtime routine builder",
@@ -229,18 +240,18 @@ function SeoContent() {
         <div className="relative mx-auto grid w-full max-w-7xl gap-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(440px,1.1fr)] lg:items-start">
           <div className="lg:sticky lg:top-28">
             <p className="mb-5 text-xs font-medium tracking-[0.3em] text-teal uppercase">
-              Built for quiet breaks
+              More than a sound mixer
             </p>
             <h2
               id="about-oryvelle"
               className="max-w-2xl text-3xl leading-tight font-semibold text-ink sm:text-5xl"
             >
-              For breaks, focus, rest, and sleep.
+              Build the bedtime rhythm that works for you.
             </h2>
             <p className="mt-6 max-w-xl text-base leading-8 text-muted">
-              Use Oryvelle for focus, rest, sleep, or a few minutes away from
-              the noise. Mix sounds, breathe for a bit, set a timer, and leave a
-              note if it helps.
+              Explore soundscapes, guided meditation, breathing, and bedtime
+              routines. In the morning, capture how you slept and let your own
+              patterns shape more useful suggestions over time.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-2">
@@ -300,9 +311,10 @@ function SeoContent() {
               aria-label="Privacy note"
               className="mt-5 rounded-lg border border-sky/15 bg-sky/[0.045] p-5 text-sm leading-7 text-muted"
             >
-              Your notes, mixes, and preferences stay on your device unless you
-              choose Google Drive backup. No ads, no tracking, no required
-              account, and no medical claims.
+              Your journal, mixes, routines, and preferences stay on your
+              device. Optional Google Drive backup covers journal entries only.
+              No ads, no behavioral tracking, no required account, and no
+              medical claims.
             </aside>
           </div>
         </div>

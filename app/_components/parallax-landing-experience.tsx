@@ -36,19 +36,19 @@ const ORB_ANNOTATIONS: Record<ParallaxMoment["id"], OrbAnnotation[]> = {
     { label: "noise", value: "48", detail: "soft floor", x: 24, y: 70 },
   ],
   mix: [
-    { label: "mix", value: "live", detail: "4 layers", x: 18, y: 26 },
-    { label: "balance", value: "80", detail: "held softly", x: 80, y: 46, align: "right" },
-    { label: "orbit", value: "slow", detail: "never crowded", x: 32, y: 78 },
+    { label: "practice", value: "guided", detail: "at your pace", x: 18, y: 26 },
+    { label: "breath", value: "4–7–8", detail: "settle gently", x: 80, y: 46, align: "right" },
+    { label: "progress", value: "saved", detail: "return anytime", x: 32, y: 78 },
   ],
   fade: [
-    { label: "timer", value: "45", detail: "min fade", x: 20, y: 28 },
-    { label: "audio", value: "bg", detail: "keeps playing", x: 78, y: 42, align: "right" },
-    { label: "close", value: "soft", detail: "no hard stop", x: 30, y: 76 },
+    { label: "routine", value: "ready", detail: "your steps", x: 20, y: 28 },
+    { label: "timer", value: "45", detail: "min fade", x: 78, y: 42, align: "right" },
+    { label: "morning", value: "note", detail: "if you choose", x: 30, y: 76 },
   ],
   final: [
-    { label: "status", value: "soon", detail: "first calm", x: 22, y: 32 },
-    { label: "privacy", value: "quiet", detail: "by design", x: 78, y: 48, align: "right" },
-    { label: "return", value: "when ready", detail: "no hard sell", x: 34, y: 76 },
+    { label: "status", value: "live", detail: "on Google Play", x: 22, y: 32 },
+    { label: "insights", value: "local", detail: "private by design", x: 78, y: 48, align: "right" },
+    { label: "journal", value: "yours", detail: "night by night", x: 34, y: 76 },
   ],
 };
 
