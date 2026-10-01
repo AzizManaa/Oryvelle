@@ -7,6 +7,7 @@ import {
 import { SiteHeader } from "./_components/site-header";
 import {
   absoluteUrl,
+  PLAY_STORE_URL,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
   SITE_NAME,
@@ -104,12 +105,12 @@ const moments: ParallaxMoment[] = [
   {
     id: "final",
     label: "Invite",
-    eyebrow: "Coming soon",
+    eyebrow: "Available now",
     title: "Use it for the small pauses.",
-    body: "Oryvelle is still being built. The goal is simple: sound, breathing, and notes without extra noise.",
+    body: "Oryvelle is available on Google Play: sound, breathing, meditation, and private notes without extra noise.",
     accent: "#FF6B9D",
     secondary: "#B89AFF",
-    cue: "Coming soon",
+    cue: "Google Play",
     panelBody: "No ads, no tracking, and no account required to use the core app.",
   },
 ];
@@ -168,9 +169,10 @@ const jsonLd = {
       operatingSystem: "Android",
       description: SITE_DESCRIPTION,
       url: absoluteUrl(),
+      installUrl: PLAY_STORE_URL,
       offers: {
         "@type": "Offer",
-        availability: "https://schema.org/PreOrder",
+        availability: "https://schema.org/InStock",
         price: "0",
         priceCurrency: "USD",
       },
@@ -318,7 +320,16 @@ function SeoContent() {
             >
               NekoDesk
             </a>
-            . Coming soon for Android.
+            . Available now on{" "}
+            <a
+              href={PLAY_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-teal transition-colors hover:text-foreground"
+            >
+              Google Play
+            </a>
+            .
           </p>
           <nav aria-label="Footer pages" className="flex flex-wrap gap-5">
             <Link

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { PLAY_STORE_URL } from "../site-config";
 
 type SiteHeaderProps = {
   activePage?: "privacy" | "support" | "terms";
@@ -24,7 +25,7 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
               priority
             />
           </span>
-          <span className="text-sm font-medium tracking-[0.18em] text-foreground uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
+          <span className="text-sm font-medium tracking-[0.18em] text-foreground uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] max-[359px]:hidden">
             Oryvelle
           </span>
         </Link>
@@ -101,14 +102,15 @@ export function SiteHeader({ activePage }: SiteHeaderProps) {
               </Link>
             )}
           </nav>
-          <button
-            type="button"
-            disabled
+          <a
+            href={PLAY_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="h-9 rounded-full border border-teal/30 bg-teal/10 px-3 text-xs font-medium text-foreground shadow-[0_0_24px_rgba(0,224,199,0.1)] sm:px-4"
           >
-            <span className="hidden sm:inline">Coming soon</span>
-            <span className="sm:hidden">Soon</span>
-          </button>
+            <span className="hidden sm:inline">Get it on Google Play</span>
+            <span className="inline leading-9 sm:hidden">Get app</span>
+          </a>
         </div>
       </div>
     </header>

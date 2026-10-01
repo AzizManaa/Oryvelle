@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   useEffect,
   useRef,
@@ -12,6 +13,7 @@ import type { OrbAnnotation, SoundStar } from "./parallax/types";
 import { computeSceneState } from "./parallax/scene-state";
 import { drawPageSky } from "./parallax/sky";
 import { SOUND_STARS, drawSceneCanvas } from "./parallax/scenes";
+import { PLAY_STORE_URL } from "../site-config";
 
 export type { ParallaxMoment } from "./parallax/types";
 import type { ParallaxMoment } from "./parallax/types";
@@ -302,13 +304,14 @@ export function ParallaxLandingExperience({
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  disabled
+                <Link
+                  href={PLAY_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="rounded-full border border-[var(--scene-accent)]/35 bg-[var(--scene-accent)]/12 px-5 py-3 text-sm font-medium text-[#F7F3FF] shadow-[0_0_30px_color-mix(in_srgb,var(--scene-accent)_16%,transparent)]"
                 >
-                  Coming soon
-                </button>
+                  Get it on Google Play
+                </Link>
                 <span className="text-sm text-[#7C8094]">
                   Private by design. Quiet by default.
                 </span>

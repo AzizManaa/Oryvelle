@@ -3,6 +3,9 @@ export const SITE_URL =
 
 export const SITE_NAME = "Oryvelle";
 
+export const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=com.nekodesk.oryvelle&hl=en";
+
 export const SITE_DESCRIPTION =
   "Oryvelle helps you relax with ambient sounds, breathing, fade timers, and private notes that stay on your device.";
 
