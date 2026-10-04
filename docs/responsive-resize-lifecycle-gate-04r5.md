@@ -1,3 +1,5 @@
+> Historical validation report. The phone resize fix remains active. Section 02 and the associated gate-04r5 captures were removed during the opening-only restoration; references below describe the former test session, not the current page.
+
 # Gate 04R.5 — Responsive Resize / Lifecycle Cleanup
 
 Review: http://localhost:3000/new

@@ -1,2 +1,0 @@
-.field { position:absolute; inset:0; pointer-events:none; background:var(--night-desktop); opacity:calc(var(--night-opening,.22) + var(--night-boundary,0)); }
-@media (max-width:760px) { .field { background:var(--night-mobile); } }

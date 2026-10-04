@@ -8,6 +8,6 @@ export default async function OpeningPage({ searchParams }: { searchParams: Prom
   const params = development ? await searchParams : {};
   return <div className={outfit.variable}>
     <script dangerouslySetInnerHTML={{ __html: `window.__openingScrollRestoration=history.scrollRestoration;history.scrollRestoration="manual";window.scrollTo(0,0);` }} />
-    <OpeningChapter preview={development && typeof params.pose === "string" ? params.pose : undefined} debug={development && params.debug === "1"} posterOnly={development && params.poster === "1"} orbFallback={development && params.orbFallback === "1"} />
+    <OpeningChapter preview={development && typeof params.pose === "string" ? params.pose : undefined} debug={development && params.debug === "1"} posterOnly={development && params.poster === "1"} />
   </div>;
 }
