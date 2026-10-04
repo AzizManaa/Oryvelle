@@ -1,0 +1,122 @@
+{
+  "perfSamples": [
+    {
+      "at": 1791126499863,
+      "cosmicElapsed": "32377.0",
+      "hidden": false,
+      "orbDrawMs": "0.40",
+      "orbFrames": "728",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.5013"
+    },
+    {
+      "at": 1791126499936,
+      "cosmicElapsed": "32460.0",
+      "hidden": false,
+      "orbDrawMs": "0.20",
+      "orbFrames": "730",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.5013"
+    },
+    {
+      "at": 1791126500007,
+      "cosmicElapsed": "32511.0",
+      "hidden": false,
+      "orbDrawMs": "0.30",
+      "orbFrames": "731",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.5013"
+    },
+    {
+      "at": 1791126500074,
+      "cosmicElapsed": "32610.0",
+      "hidden": false,
+      "orbDrawMs": "0.20",
+      "orbFrames": "733",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.5013"
+    },
+    {
+      "at": 1791126500139,
+      "cosmicElapsed": "32661.0",
+      "hidden": false,
+      "orbDrawMs": "0.30",
+      "orbFrames": "734",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.5013"
+    },
+    {
+      "at": 1791126500207,
+      "cosmicElapsed": "32710.0",
+      "hidden": false,
+      "orbDrawMs": "0.20",
+      "orbFrames": "735",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.5013"
+    },
+    {
+      "at": 1791126500274,
+      "cosmicElapsed": "32794.0",
+      "hidden": false,
+      "orbDrawMs": "0.30",
+      "orbFrames": "737",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.5013"
+    },
+    {
+      "at": 1791126500339,
+      "cosmicElapsed": "32877.0",
+      "hidden": false,
+      "orbDrawMs": "0.30",
+      "orbFrames": "739",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.5013"
+    }
+  ],
+  "offscreenSamples": [
+    {
+      "at": 1791126500649,
+      "cosmicElapsed": "32927.0",
+      "orbDrawMs": "0.30",
+      "orbFrames": "741",
+      "renderState": "static",
+      "shootingStar": "false",
+      "worldProgress": "0.0000"
+    },
+    {
+      "at": 1791126500732,
+      "cosmicElapsed": "32927.0",
+      "orbDrawMs": "0.30",
+      "orbFrames": "741",
+      "renderState": "static",
+      "shootingStar": "false",
+      "worldProgress": "0.0000"
+    },
+    {
+      "at": 1791126500814,
+      "cosmicElapsed": "32927.0",
+      "orbDrawMs": "0.30",
+      "orbFrames": "741",
+      "renderState": "static",
+      "shootingStar": "false",
+      "worldProgress": "0.0000"
+    },
+    {
+      "at": 1791126500897,
+      "cosmicElapsed": "32927.0",
+      "orbDrawMs": "0.30",
+      "orbFrames": "741",
+      "renderState": "static",
+      "shootingStar": "false",
+      "worldProgress": "0.0000"
+    }
+  ]
+}

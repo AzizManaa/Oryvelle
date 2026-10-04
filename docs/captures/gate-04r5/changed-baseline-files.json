@@ -1,0 +1,6 @@
+[
+  "components/landing/chapters/boundary/LightToOrbBoundary.tsx",
+  "components/landing/chapters/opening/OpeningChapter.tsx",
+  "components/landing/chapters/opening/opening.timeline.ts",
+  "components/landing/chapters/orb-world/OrbWorld.tsx"
+]

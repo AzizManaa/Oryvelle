@@ -1,0 +1,32 @@
+[
+  {
+    "height": 900,
+    "journey": 7560,
+    "overflow": false,
+    "width": 1440,
+    "world": {
+      "orbDrawMs": "0.50",
+      "orbFrames": "28",
+      "renderState": "static",
+      "worldProgress": "0.0000"
+    },
+    "worldHeight": 3240,
+    "worldTop": 6660,
+    "y": 6660
+  },
+  {
+    "height": 1000,
+    "journey": 8400,
+    "overflow": false,
+    "width": 900,
+    "world": {
+      "orbDrawMs": "0.30",
+      "orbFrames": "30",
+      "renderState": "static",
+      "worldProgress": "0.0000"
+    },
+    "worldHeight": 3600,
+    "worldTop": 7400,
+    "y": 7400
+  }
+]

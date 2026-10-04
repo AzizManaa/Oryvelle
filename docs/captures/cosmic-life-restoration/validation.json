@@ -1,0 +1,352 @@
+[
+  {
+    "light": [
+      {
+        "opacity": "1",
+        "transform": "translate3d(0.0963287px, 0.189968px, 0px)"
+      },
+      {
+        "opacity": "0.897854",
+        "transform": "translate3d(4.9938px, 4.25022px, 0px)"
+      }
+    ],
+    "text": [
+      {
+        "box": {
+          "bottom": 297,
+          "height": 49,
+          "left": 921.59375,
+          "right": 1071.59375,
+          "top": 248,
+          "width": 150,
+          "x": 921.59375,
+          "y": 248
+        },
+        "text": "Calming Rain50% · sound layer",
+        "transform": "none"
+      },
+      {
+        "box": {
+          "bottom": 684,
+          "height": 49,
+          "left": 345.59375,
+          "right": 495.59375,
+          "top": 635,
+          "width": 150,
+          "x": 345.59375,
+          "y": 635
+        },
+        "text": "Brown Noise50% · sound layer",
+        "transform": "none"
+      }
+    ],
+    "world": {
+      "cosmicElapsed": "171.0",
+      "orbDrawMs": "0.70",
+      "orbFrames": "9",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.7308"
+    }
+  },
+  {
+    "light": [
+      {
+        "opacity": "1",
+        "transform": "translate3d(-2.65557px, -5.58788px, 0px)"
+      },
+      {
+        "opacity": "1",
+        "transform": "translate3d(-4.90422px, -0.422883px, 0px)"
+      }
+    ],
+    "text": [
+      {
+        "box": {
+          "bottom": 297,
+          "height": 49,
+          "left": 921.59375,
+          "right": 1071.59375,
+          "top": 248,
+          "width": 150,
+          "x": 921.59375,
+          "y": 248
+        },
+        "text": "Calming Rain50% · sound layer",
+        "transform": "none"
+      },
+      {
+        "box": {
+          "bottom": 684,
+          "height": 49,
+          "left": 345.59375,
+          "right": 495.59375,
+          "top": 635,
+          "width": 150,
+          "x": 345.59375,
+          "y": 635
+        },
+        "text": "Brown Noise50% · sound layer",
+        "transform": "none"
+      }
+    ],
+    "world": {
+      "cosmicElapsed": "27460.0",
+      "orbDrawMs": "0.80",
+      "orbFrames": "621",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.7308"
+    }
+  },
+  {
+    "light": [
+      {
+        "opacity": "1",
+        "transform": "translate3d(0.0109316px, 0.0215594px, 0px)"
+      },
+      {
+        "opacity": "0.917265",
+        "transform": "translate3d(1.39901px, 1.20112px, 0px)"
+      }
+    ],
+    "text": [
+      {
+        "box": {
+          "bottom": 387.203125,
+          "height": 50.5,
+          "left": 71.296875,
+          "right": 177.359375,
+          "top": 336.703125,
+          "width": 106.0625,
+          "x": 71.296875,
+          "y": 336.703125
+        },
+        "text": "Calming Rain50% · sound layer",
+        "transform": "none"
+      },
+      {
+        "box": {
+          "bottom": 513.8125,
+          "height": 50.5,
+          "left": 71.296875,
+          "right": 177.359375,
+          "top": 463.3125,
+          "width": 106.0625,
+          "x": 71.296875,
+          "y": 463.3125
+        },
+        "text": "Brown Noise50% · sound layer",
+        "transform": "none"
+      }
+    ],
+    "world": {
+      "cosmicElapsed": "69.3",
+      "orbDrawMs": "0.30",
+      "orbFrames": "7",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "1.0000"
+    }
+  },
+  {
+    "light": [
+      {
+        "opacity": "1",
+        "transform": "translate3d(0.106381px, 0.209577px, 0px)"
+      },
+      {
+        "opacity": "0.877319",
+        "transform": "translate3d(1.39145px, 1.13123px, 0px)"
+      }
+    ],
+    "text": [
+      {
+        "box": {
+          "bottom": 387.203125,
+          "height": 50.5,
+          "left": 71.296875,
+          "right": 177.359375,
+          "top": 336.703125,
+          "width": 106.0625,
+          "x": 71.296875,
+          "y": 336.703125
+        },
+        "text": "Calming Rain50% · sound layer",
+        "transform": "none"
+      },
+      {
+        "box": {
+          "bottom": 513.8125,
+          "height": 50.5,
+          "left": 71.296875,
+          "right": 177.359375,
+          "top": 463.3125,
+          "width": 106.0625,
+          "x": 71.296875,
+          "y": 463.3125
+        },
+        "text": "Brown Noise50% · sound layer",
+        "transform": "none"
+      }
+    ],
+    "world": {
+      "cosmicElapsed": "675.4",
+      "orbDrawMs": "0.30",
+      "orbFrames": "22",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "1.0000"
+    }
+  },
+  {
+    "light": [
+      {
+        "opacity": "0.708753",
+        "transform": "translate3d(2.69894px, 4.96203px, 0px)"
+      },
+      {
+        "opacity": "0.746624",
+        "transform": "translate3d(3.94157px, 1.2698px, 0px)"
+      }
+    ],
+    "text": [
+      {
+        "box": {
+          "bottom": 466.3468933105469,
+          "height": 47.975006103515625,
+          "left": 88.84843444824219,
+          "right": 189.6078186035156,
+          "top": 418.3718872070313,
+          "width": 100.75938415527344,
+          "x": 88.84843444824219,
+          "y": 418.3718872070313
+        },
+        "text": "Calming Rain50% · sound layer",
+        "transform": "none"
+      },
+      {
+        "box": {
+          "bottom": 592.9562377929688,
+          "height": 47.9749755859375,
+          "left": 56.84843826293945,
+          "right": 157.6078224182129,
+          "top": 544.9812622070312,
+          "width": 100.75938415527344,
+          "x": 56.84843826293945,
+          "y": 544.9812622070312
+        },
+        "text": "Brown Noise50% · sound layer",
+        "transform": "none"
+      }
+    ],
+    "world": {
+      "cosmicElapsed": "5258.3",
+      "orbDrawMs": "0.20",
+      "orbFrames": "143",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.3118"
+    }
+  },
+  {
+    "light": [
+      {
+        "opacity": "0.821105",
+        "transform": "translate3d(0.457971px, 5.08954px, 0px)"
+      },
+      {
+        "opacity": "0.751138",
+        "transform": "translate3d(3.55086px, 2.59159px, 0px)"
+      }
+    ],
+    "text": [
+      {
+        "box": {
+          "bottom": 455.609375,
+          "height": 50.5,
+          "left": 71.296875,
+          "right": 177.359375,
+          "top": 405.109375,
+          "width": 106.0625,
+          "x": 71.296875,
+          "y": 405.109375
+        },
+        "text": "Calming Rain50% · sound layer",
+        "transform": "none"
+      },
+      {
+        "box": {
+          "bottom": 582.21875,
+          "height": 50.5,
+          "left": 71.296875,
+          "right": 177.359375,
+          "top": 531.71875,
+          "width": 106.0625,
+          "x": 71.296875,
+          "y": 531.71875
+        },
+        "text": "Brown Noise50% · sound layer",
+        "transform": "none"
+      }
+    ],
+    "world": {
+      "cosmicElapsed": "45425.3",
+      "orbDrawMs": "0.40",
+      "orbFrames": "1043",
+      "renderState": "ambient",
+      "shootingStar": "false",
+      "worldProgress": "0.7566"
+    }
+  },
+  {
+    "light": [
+      {
+        "opacity": "0.798206",
+        "transform": "translate3d(0.551301px, 4.98886px, 0px)"
+      },
+      {
+        "opacity": "0.783515",
+        "transform": "translate3d(3.62096px, 2.48421px, 0px)"
+      }
+    ],
+    "text": [
+      {
+        "box": {
+          "bottom": 5952.3466796875,
+          "height": 47.974609375,
+          "left": 88.84843444824219,
+          "right": 189.6078186035156,
+          "top": 5904.3720703125,
+          "width": 100.75938415527344,
+          "x": 88.84843444824219,
+          "y": 5904.3720703125
+        },
+        "text": "Calming Rain50% · sound layer",
+        "transform": "none"
+      },
+      {
+        "box": {
+          "bottom": 6078.9560546875,
+          "height": 47.974609375,
+          "left": 56.84843826293945,
+          "right": 157.6078224182129,
+          "top": 6030.9814453125,
+          "width": 100.75938415527344,
+          "x": 56.84843826293945,
+          "y": 6030.9814453125
+        },
+        "text": "Brown Noise50% · sound layer",
+        "transform": "none"
+      }
+    ],
+    "world": {
+      "cosmicElapsed": "45592.3",
+      "orbDrawMs": "0.20",
+      "orbFrames": "1048",
+      "renderState": "static",
+      "shootingStar": "false",
+      "worldProgress": "0.0000"
+    }
+  }
+]

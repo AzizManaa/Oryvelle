@@ -1,0 +1,5 @@
+[
+  "components/landing/chapters/mix/orb-renderer.ts",
+  "components/landing/chapters/orb-world/OrbWorld.tsx",
+  "components/landing/chapters/orb-world/cosmic-field.ts"
+]

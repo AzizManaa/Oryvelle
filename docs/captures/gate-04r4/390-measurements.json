@@ -1,0 +1,50 @@
+[
+  {
+    "name": "stand",
+    "y": 4726,
+    "worldTop": 760,
+    "canvasTop": 760
+  },
+  {
+    "name": "trace",
+    "y": 4879,
+    "worldTop": 607,
+    "canvasTop": 607
+  },
+  {
+    "name": "ring",
+    "y": 5068,
+    "worldTop": 418,
+    "canvasTop": 418
+  },
+  {
+    "name": "orb",
+    "y": 5258,
+    "worldTop": 228,
+    "canvasTop": 228
+  },
+  {
+    "name": "field",
+    "y": 5486,
+    "worldTop": 0,
+    "canvasTop": 0
+  },
+  {
+    "name": "type",
+    "y": 5748,
+    "worldTop": -262,
+    "canvasTop": 0
+  },
+  {
+    "name": "sounds",
+    "y": 6043,
+    "worldTop": -557,
+    "canvasTop": 0
+  },
+  {
+    "name": "timer",
+    "y": 6237,
+    "worldTop": -751,
+    "canvasTop": 0
+  }
+]

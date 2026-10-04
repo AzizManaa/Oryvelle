@@ -1,0 +1,151 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { drawOrbFormation } from "../mix/orb-renderer";
+import styles from "./orb-world.module.css";
+import { drawCosmicField, fieldStars } from "./cosmic-field";
+import NightAtmosphere from "../../atmosphere/NightAtmosphere";
+import { worldNight } from "../../atmosphere/night-atmosphere";
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function OrbWorld({ debug = false, forceFallback = false }: { debug?: boolean; forceFallback?: boolean }) {
+  const root = useRef<HTMLElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const [fallback, setFallback] = useState(false);
+
+  useEffect(() => {
+    const host = root.current, element = canvas.current;
+    if (!host || !element) return;
+    const context = element.getContext("2d", { alpha: true });
+    const supported = !forceFallback && !!context && typeof context.createConicGradient === "function";
+    setFallback(!supported);
+    const mobile = matchMedia("(max-width: 760px)");
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const state = { progress: 0 };
+    let width = 0, height = 0, elapsed = 0, frames = 0, visible = false, running = false, lastPaint = 0, wasHidden = document.hidden;
+    let nightExposure = -1;
+    const rain = host.querySelector<HTMLElement>('[data-drift="rain"]')!;
+    const noise = host.querySelector<HTMLElement>('[data-drift="noise"]')!;
+    let stars = fieldStars(84);
+    const settle = () => gsap.utils.clamp(0, 1, (state.progress - .80) / .17);
+    const draw = () => {
+      const started = debug ? performance.now() : 0;
+      const exposure = worldNight(state.progress, settle());
+      if (exposure !== nightExposure) {
+        nightExposure = exposure;
+        host.style.setProperty("--night-opening", String(exposure));
+      }
+      if (supported && width && height) {
+        const arrival = gsap.utils.clamp(0, 1, state.progress / .09);
+        const field = mobile.matches ? 1 : gsap.utils.clamp(0, 1, state.progress / .20);
+        const atmosphere = field * field * (3 - 2 * field);
+        drawOrbFormation(context, width, height, 1, { life: 0, elapsed: elapsed * arrival * arrival * (3 - 2 * arrival), settle: settle(), contour: 1 - .65 * atmosphere, radiance: 1 + 1.8 * atmosphere, mobileComposition: mobile.matches });
+        drawCosmicField(context, width, height, stars, reduced.matches ? 0 : elapsed, atmosphere, settle(), mobile.matches, { life: 0, reduced: reduced.matches });
+      }
+      if (debug) {
+        host.dataset.orbFrames = String(++frames);
+        host.dataset.cosmicElapsed = elapsed.toFixed(1);
+        host.dataset.shootingStar = "false";
+        host.dataset.worldProgress = state.progress.toFixed(4);
+        host.dataset.orbDrawMs = (performance.now() - started).toFixed(2);
+      }
+    };
+    const tick = (_time: number, delta: number) => {
+      elapsed += Math.min(delta, 60) * (1 - .55 * settle());
+      if (elapsed - lastPaint < 1000 / 30) return;
+      lastPaint = elapsed;
+      const strength = 1 - .72 * settle();
+      const seconds = elapsed / 1000;
+      // These child transforms never belong to the scroll timeline.
+      rain.style.transform = `translate3d(${Math.sin(seconds / 7.1) * 4 * strength}px,${Math.sin(seconds / 5.4) * 6 * strength}px,0)`;
+      noise.style.transform = `translate3d(${Math.sin(seconds / 8.3 + 1.6) * 5 * strength}px,${Math.sin(seconds / 6.7 + 2.1) * 5 * strength}px,0)`;
+      draw();
+    };
+    const sync = () => {
+      if (debug) {
+        if (document.hidden) host.dataset.hiddenPauseFrame = String(frames);
+        else if (wasHidden) host.dataset.hiddenResumeFrame = String(frames);
+      }
+      wasHidden = document.hidden;
+      // Both responsive chapters activate only after their exact handoff.
+      const eligible = supported && visible && !document.hidden && !reduced.matches && state.progress > 0;
+      if (eligible !== running) {
+        running = eligible;
+        if (running) gsap.ticker.add(tick); else gsap.ticker.remove(tick);
+      }
+      if (debug) host.dataset.renderState = running ? "ambient" : "static";
+    };
+    const resize = () => {
+      const box = element.getBoundingClientRect();
+      width = box.width; height = box.height;
+      const dpr = Math.min(devicePixelRatio || 1, 1.5);
+      element.width = Math.round(width * dpr); element.height = Math.round(height * dpr);
+      context?.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (supported && width && height) stars = fieldStars(width <= 760 ? 38 : 84);
+      draw();
+    };
+    const media = gsap.matchMedia();
+    media.add({ desktop: "(min-width: 761px)", mobile: "(max-width: 760px)", reduce: "(prefers-reduced-motion: reduce)" }, scope => {
+      if (scope.conditions?.reduce) {
+        gsap.set(host.querySelector("[data-world-stage]"), { visibility: "visible" });
+        gsap.set(host.querySelectorAll("[data-reveal]"), { clearProps: "opacity,transform,clipPath" });
+        state.progress = 1; draw(); sync(); return;
+      }
+      const isMobile = !!scope.conditions?.mobile;
+      state.progress = 0;
+      const worldStage = host.querySelector<HTMLElement>("[data-world-stage]")!;
+      gsap.set(worldStage, { visibility: "hidden" });
+      const targets = ["night", "mix", "rain", "noise", "levels", "timer"].map(name => name === "levels" ? Array.from(host.querySelectorAll<HTMLElement>('[data-reveal="levels"]')) : host.querySelector<HTMLElement>(`[data-reveal="${name}"]`)!);
+      gsap.set(targets, { opacity: 0 });
+      gsap.set(targets.slice(0, 2), { y: 26, clipPath: "inset(0 0 100% 0)" });
+      gsap.set(targets[2], { x: isMobile ? 16 : 68, y: isMobile ? 12 : -35, scale: isMobile ? .95 : .78 });
+      gsap.set(targets[3], { x: isMobile ? -16 : -76, y: isMobile ? 12 : 42, scale: isMobile ? .95 : .78 });
+      const present = () => { worldStage.style.visibility = state.progress > 0 ? "visible" : "hidden"; sync(); if (!running) draw(); };
+      let refreshing = false;
+      const timeline = gsap.timeline({
+        defaults: { ease: "power2.out" },
+        scrollTrigger: { trigger: host, start: "top top", end: "bottom bottom", scrub: true, invalidateOnRefresh: true, onRefreshInit() { refreshing = true; }, onRefresh() { refreshing = false; present(); } },
+        onUpdate: () => { if (!refreshing) present(); },
+      });
+      timeline.to(state, { progress: 1, duration: 1, ease: "none" }, 0)
+        .to(targets[0], { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: .11 }, isMobile ? .12 : .09)
+        .to(targets[1], { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: .12 }, isMobile ? .25 : .23)
+        .to(targets[2], { opacity: 1, x: 0, y: 0, scale: 1, duration: .17 }, isMobile ? .38 : .37)
+        .to(targets[3], { opacity: 1, x: 0, y: 0, scale: 1, duration: .18 }, isMobile ? .52 : .53)
+        .to(targets[4], { opacity: 1, duration: .10 }, isMobile ? .69 : .72)
+        .to(targets[5], { opacity: 1, duration: .10 }, isMobile ? .82 : .84);
+      // matchMedia refreshes all chapters after rebuilding; an individual
+      // refresh here clears its saved scroll position before restoration.
+    });
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }, { threshold: .01 });
+    const size = new ResizeObserver(resize);
+    observer.observe(element); size.observe(element); resize();
+    document.addEventListener("visibilitychange", sync);
+    const preference = () => { sync(); draw(); };
+    reduced.addEventListener("change", preference); mobile.addEventListener("change", preference);
+    return () => {
+      gsap.ticker.remove(tick); media.revert(); observer.disconnect(); size.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+      reduced.removeEventListener("change", preference); mobile.removeEventListener("change", preference);
+    };
+  }, [debug, forceFallback]);
+
+  return <section ref={root} id="your-mix" className={styles.chapter} aria-labelledby="orb-world-title">
+    <div className={styles.stage} data-world-stage="">
+      <div className={styles.visual} aria-hidden="true">
+        <NightAtmosphere />
+        <canvas ref={canvas} />
+        <div className={styles.fallback} data-active={fallback}><i /><b /></div>
+      </div>
+      <div className={styles.story}>
+        <h2 id="orb-world-title" className={styles.title}><span data-reveal="night">Your night.</span><span data-reveal="mix">Your mix.</span></h2>
+        <figure className={styles.rain} data-reveal="rain"><div data-drift="rain"><i className={styles.soundStar} aria-hidden="true" /><figcaption>Calming Rain<span className={styles.level} data-reveal="levels">50% · sound layer</span></figcaption></div></figure>
+        <figure className={styles.noise} data-reveal="noise"><div data-drift="noise"><i className={styles.soundStar} aria-hidden="true" /><figcaption>Brown Noise<span className={styles.level} data-reveal="levels">50% · sound layer</span></figcaption></div></figure>
+        <p className={styles.timer} data-reveal="timer"><i aria-hidden="true" />30 min <span>· Fade out</span></p>
+      </div>
+    </div>
+  </section>;
+}
