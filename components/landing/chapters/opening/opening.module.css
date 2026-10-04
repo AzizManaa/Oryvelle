@@ -48,22 +48,24 @@
 .journey[data-phase="desk"] .deskCopy { opacity:1; visibility:visible; }
 .journey[data-phase="desk"] .environment { opacity:1; }
 @media (max-width:760px) {
- .journey { height:460svh; --device-span:min(68.64svh,72.16vw); }
+ .journey { height:460svh; --device-span:min(84.24svh,88.56vw); }
  .chapter { height:460svh; }
  .staticJourney,.staticChapter { height:100svh; }
  .previewJourney { height:100svh; }
  .brand { font-size:25px; top:2svh; right:5vw; }
  .copy { padding:9svh 5vw; }
  .copy h1,.copy h2 { font-size:clamp(56px,12.5vw,94px); line-height:.98; letter-spacing:-.045em; max-width:95%; }
- .support { left:5vw; bottom:8svh; max-width:80vw; font-size:17px; }
- .support p { margin-bottom:1.2em; }
- .hero .support { top:29svh; bottom:auto; }
- .returnCopy { z-index:35; }
- .returnCopy h2 { padding-top:0; text-shadow:0 2px 18px #09090bcc; }
- .returnCopy .support { text-shadow:0 1px 12px #09090b; }
+ .support { position:relative; left:auto; bottom:auto; max-width:90vw; margin-top:22px; font-size:17px; }
+ .support p { margin-bottom:22px; }
+ .hero .support { top:auto; bottom:auto; }
+ .download { font-size:14px; min-height:44px; box-sizing:border-box; padding:10px 13px; border-radius:14px; }
+ .returnCopy h2,.deskCopy h2 { font-size:clamp(42px,10.4vw,64px); }
+ .returnCopy h2 { padding-top:0; }
  .deskCopy h2 { padding-top:0; }
- .environment { top:calc(57.4% - var(--device-span) * .35); }
- .poster { height:calc(var(--device-span) * 5.99815225425); aspect-ratio:390/1688; top:67.6svh; transform:translate(-50%,-33.8%); }
+ .environment { top:calc(51% - var(--device-span) * .35); }
+ .poster { height:calc(min(68.64svh,72.16vw) * 5.99815225425); aspect-ratio:390/1688; top:67.6svh; transform:translate(-50%,-33.8%); }
+ .atmosphere { background:radial-gradient(ellipse at 91% 34%,#39324c52,transparent 60%),radial-gradient(ellipse at 12% 65%,#28234240,transparent 63%); }
+ .beam { width:190vw; height:65svh; left:-25vw; top:34svh; filter:blur(45px); }
  .floatingNav { left:auto; right:5vw; transform:none; width:60px; height:48px; bottom:3svh; border-radius:16px; font-size:25px; }
  .desktopBreak { display:none; }
 }
@@ -90,5 +92,5 @@
 /* On mobile the phone starts immediately beneath the CTA: keep availability
    beside the existing button, rather than underneath the device silhouette. */
 @media (max-width:760px) {
- .availability { top:auto; bottom:0; left:154px; width:calc(80vw - 154px); min-height:33px; white-space:normal; font-size:11px; line-height:1.3; }
+ .availability { top:auto; bottom:0; left:170px; width:calc(90vw - 170px); min-height:44px; white-space:normal; font-size:11px; line-height:1.3; }
 }
