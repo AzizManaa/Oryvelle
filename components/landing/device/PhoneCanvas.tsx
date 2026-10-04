@@ -9,28 +9,45 @@ import { PHONE_URL, preparePhone, type PhoneController, type PhonePose, type Scr
 
 import { SCREEN_KEYS, SCREEN_SOURCES } from "./screen-sources";
 import PhoneFloat from "./PhoneFloat";
+import { fitScreenTexture, usePhoneScreenVideo } from "./usePhoneScreenVideo";
+import { usePhoneExplore } from "./explore/usePhoneExplore";
+import type { ExploreDemo, ExploreSnapshot } from "./explore/explore-demo";
 
 function setEnvironment(scene: Scene, texture: Texture | null) {
   scene.environment = texture;
   scene.environmentIntensity = 0.6;
 }
 
-type Props = { onReady: (controller: PhoneController) => void; onLost: () => void; onStats?: (text: string) => void; onPresented?: () => void; ambientEnabled?: boolean };
-function Phone({ onReady, onStats, onPresented, ambientEnabled = false }: Props) {
+type Props = { onReady: (controller: PhoneController) => void; onLost: () => void; onStats?: (text: string) => void; onPresented?: () => void; ambientEnabled?: boolean; interactiveExplore?: boolean; onExploreReady?: (demo: ExploreDemo | null) => void; onExploreChange?: (snapshot: ExploreSnapshot) => void };
+function Phone({ onReady, onStats, onPresented, ambientEnabled = false, interactiveExplore = false, onExploreReady, onExploreChange }: Props) {
   const model = useLoader(GLTFLoader, PHONE_URL);
-  const loaded = useLoader(TextureLoader, SCREEN_KEYS.map(key => SCREEN_SOURCES[key].url));
+  const loaded = useLoader(TextureLoader, SCREEN_KEYS.map(key => {
+    const source = SCREEN_SOURCES[key];
+    return source.kind === "video" ? source.poster : source.url;
+  }));
   const screens = useMemo(() => {
     const textures = loaded.map(t => t.clone());
     textures.forEach(t => { t.flipY = false; t.colorSpace = SRGBColorSpace; t.minFilter = LinearMipmapLinearFilter; t.magFilter = LinearFilter; t.anisotropy = 4; t.needsUpdate = true; });
     return { portraitA: textures[0], portraitB: textures[1], landscapeC: textures[2] };
   }, [loaded]);
   const sources = useMemo<Record<ScreenState, Texture>>(() => ({ ...screens }), [screens]);
-  const phone = useMemo(() => preparePhone(model.scene, screens.portraitA), [model, screens]);
+  const phone = useMemo(() => {
+    const prepared = preparePhone(model.scene, screens.portraitA);
+    SCREEN_KEYS.forEach(key => {
+      if (SCREEN_SOURCES[key].kind !== "video") return;
+      const image = screens[key].image;
+      fitScreenTexture(screens[key], prepared.displayAspect, image.width / image.height);
+    });
+    return prepared;
+  }, [model, screens]);
   const pivot = useRef<Group>(null);
   const ambientProgress = useRef(0);
   const pose = useRef<PhonePose>({ yaw: 0, pitch: 0, roll: 0, scale: 1, y: 0 });
   const screen = useRef<ScreenState>("portraitA");
   const { gl, scene, viewport, invalidate } = useThree();
+  const tonightPlayback = usePhoneScreenVideo({ state: "portraitA", enabled: ambientEnabled, screen, pose, sources, phone });
+  const explorePlayback = usePhoneScreenVideo({ state: "portraitB", enabled: ambientEnabled, screen, pose, sources, phone, replaced: interactiveExplore });
+  const exploreInteraction = usePhoneExplore({ enabled: interactiveExplore, presented: ambientEnabled, screen, pose, sources, phone, onReady: onExploreReady, onChange: onExploreChange });
   const reported = useRef(false);
   const frameCount = useRef(0);
   useLayoutEffect(() => {
@@ -51,6 +68,9 @@ function Phone({ onReady, onStats, onPresented, ambientEnabled = false }: Props)
         pivot.current.position.set(0, viewport.height * next.y, 0);
       }
       phone.setScreen(sources[nextScreen]);
+      tonightPlayback.current();
+      explorePlayback.current();
+      exploreInteraction.current();
       if (!document.hidden) invalidate();
     };
     onReady({
@@ -66,7 +86,7 @@ function Phone({ onReady, onStats, onPresented, ambientEnabled = false }: Props)
     const visible = () => { if (!document.hidden) apply(pose.current, screen.current); };
     document.addEventListener("visibilitychange", visible);
     return () => document.removeEventListener("visibilitychange", visible);
-  }, [viewport.height, viewport.width, phone, sources, invalidate, onReady]);
+  }, [viewport.height, viewport.width, phone, sources, invalidate, onReady, tonightPlayback, explorePlayback, exploreInteraction]);
   useLayoutEffect(() => {
     const startingFrame = frameCount.current;
     let presented = false;

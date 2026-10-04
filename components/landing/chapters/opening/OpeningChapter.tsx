@@ -14,6 +14,8 @@ import { createOpeningTimeline } from "./opening.timeline";
 import styles from "./opening.module.css";
 import { PLAY_STORE_URL } from "@/app/site-config";
 import GlobalEntry from "../../entry/GlobalEntry";
+import ExploreControls from "../../device/explore/ExploreControls";
+import type { ExploreDemo, ExploreSnapshot } from "../../device/explore/explore-demo";
 const PhoneCanvas = dynamic(() => import("../../device/PhoneCanvas"), { ssr: false });
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 class RendererBoundary extends Component<{ children: ReactNode; onError(): void }, { failed: boolean }> {
@@ -22,7 +24,7 @@ class RendererBoundary extends Component<{ children: ReactNode; onError(): void 
   componentDidCatch() { this.props.onError(); }
   render() { return this.state.failed ? null : this.props.children; }
 }
-export default function OpeningChapter({ preview, debug = false, posterOnly = false }: { preview?: string; debug?: boolean; posterOnly?: boolean; }) {
+export default function OpeningChapter({ preview, debug = false, posterOnly = false, interactiveExplore = false }: { preview?: string; debug?: boolean; posterOnly?: boolean; interactiveExplore?: boolean; }) {
   const checkpoint = OPENING_POSES.find(p => p.name === preview) ?? OPENING_POSES[0];
   const chapter = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -41,6 +43,10 @@ export default function OpeningChapter({ preview, debug = false, posterOnly = fa
   const posterImage = useRef<HTMLImageElement>(null);
   const [posterReady, setPosterReady] = useState(false);
   const [entryReleased, setEntryReleased] = useState(Boolean(preview));
+  const exploreController = useRef<ExploreDemo | null>(null);
+  const [exploreState, setExploreState] = useState<ExploreSnapshot | null>(null);
+  const onExploreReady = useCallback((demo: ExploreDemo | null) => { exploreController.current = demo; }, []);
+  const onExploreChange = useCallback((snapshot: ExploreSnapshot) => { setExploreState(snapshot); }, []);
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => { setReduced(motion.matches); setPreferencesReady(true); };
@@ -98,7 +104,7 @@ export default function OpeningChapter({ preview, debug = false, posterOnly = fa
     <main id="main-content" className={styles.page} data-opening-content="" aria-busy={!entryReleased} data-readiness={debug ? JSON.stringify({ ready, fallback, reduced, failed, preferencesReady, fontsReady, layoutReady, posterReady }) : undefined}>
     <section className={`${styles.journey} ${preview ? styles.previewJourney : fallback ? styles.staticJourney : ""}`} aria-label="A quieter evening with Oryvelle" data-phase={phase} data-opening-chapter="">
       <div ref={chapter} className={`${styles.chapter} ${fallback || preview ? styles.staticChapter : ""}`} aria-hidden="true" />
-      <div ref={stage} className={styles.stage}>
+      <div ref={stage} className={styles.stage} data-explore-active={interactiveExplore && !fallback && exploreState?.active && exploreState.available ? "true" : undefined}>
         <div className={styles.atmosphere} aria-hidden="true"><div className={styles.beam} /><div className={styles.deskGlow} /></div>
         <Link className={styles.brand} href="/" aria-label="Oryvelle home">Oryvelle</Link>
         <div className={`${styles.copy} ${styles.hero}`}>
@@ -114,10 +120,11 @@ export default function OpeningChapter({ preview, debug = false, posterOnly = fa
             <source media="(max-width: 760px)" srcSet="/opening/poster-narrow.png" />
             <img ref={posterImage} src="/opening/poster-desktop.png" width={2545} height={2658} alt="" loading="eager" onLoad={() => setPosterReady(true)} onError={() => setPosterReady(true)} />
           </picture>
-          {!fallback && preferencesReady && <RendererBoundary onError={onLost}><div className={styles.renderer} data-presented={ready && !fallback}><PhoneCanvas onReady={onReady} onPresented={onPresented} onLost={onLost} onStats={debug ? onStats : undefined} ambientEnabled={entryReleased && !fallback} /></div></RendererBoundary>}
+          {!fallback && preferencesReady && <RendererBoundary onError={onLost}><div className={styles.renderer} data-presented={ready && !fallback}><PhoneCanvas onReady={onReady} onPresented={onPresented} onLost={onLost} onStats={debug ? onStats : undefined} ambientEnabled={entryReleased && !fallback} interactiveExplore={interactiveExplore} onExploreReady={onExploreReady} onExploreChange={onExploreChange} /></div></RendererBoundary>}
         </div>
         <div className={`${styles.environment} ${styles.foreground}`} aria-hidden="true"><Stand foreground /></div>
         <a className={styles.floatingNav} href={PLAY_STORE_URL} aria-label="Get Oryvelle for Android">O<span aria-hidden="true">↗</span></a>
+        {interactiveExplore && !fallback && <ExploreControls controller={exploreController} state={exploreState} />}
         {debug && <div className={styles.debug}><output ref={stats}>Loading renderer</output><input ref={meter} aria-label="Development chapter progress" type="range" min="0" max="1" step=".001" defaultValue={0} onChange={e => seek(Number(e.target.value))} /><nav aria-label="Development compositions">{OPENING_POSES.map(p => <a key={p.name} href={`?pose=${p.name}&debug=1`}>{p.name}</a>)}</nav><nav aria-label="Native scroll checkpoints">{OPENING_POSES.map(p => <button type="button" key={p.name} onClick={() => seek(p.at)}>{p.name}</button>)}</nav><a href="?poster=1&debug=1">Poster fallback</a><button type="button" onClick={() => { const canvas = product.current?.querySelector("canvas"); canvas?.getContext("webgl2")?.getExtension("WEBGL_lose_context")?.loseContext(); }}>Test context loss</button></div>}
       </div>
     </section>

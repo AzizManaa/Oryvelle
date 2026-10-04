@@ -24,5 +24,26 @@ export function openingScreenAt(progress: number): ScreenState {
   return progress < .32 ? "portraitA" : progress < .77 ? "portraitB" : "landscapeC";
 }
 export function responsivePose(pose: PhonePose, narrow: boolean): PhonePose {
-  return narrow ? { ...pose, x: (pose.x ?? 0) * .18, y: pose.y * .4 - .06, scale: pose.scale * .88 } : pose;
+  if (!narrow) return pose;
+  // Portrait is the dominant mobile object, not a miniature beneath the copy.
+  // Blend back to the approved supported landscape fit as the phone rolls over.
+  const portrait = Math.cos(pose.roll) ** 2;
+  const supportedY = pose.y * .4 - .06;
+  // Only the entrance sits below the copy: reveal the rest of the large phone
+  // as the authored hero-to-front movement advances, rather than fitting it all
+  // into the initial viewport. The later turn/return/stand anchors stay intact.
+  const entrance = Math.max(0, Math.min(1, (-.17 - pose.y) / .12));
+  const entranceOffset = .28 * entrance * entrance * (3 - 2 * entrance);
+  const portraitY = pose.y * .32 - .02 - entranceOffset;
+  // Give the interactive returning front its own mobile emphasis; taper away
+  // before the second rear reveal and preserve the supported landscape fit.
+  const returnDistance = Math.abs(pose.yaw / Math.PI - 2);
+  const returnWeight = Math.max(0, 1 - returnDistance / .5);
+  const returning = returnWeight * returnWeight * (3 - 2 * returnWeight);
+  return {
+    ...pose,
+    x: (pose.x ?? 0) * .18 + .065 * returning,
+    y: supportedY + (portraitY - supportedY) * portrait - .09 * returning,
+    scale: pose.scale * (.88 + .77 * portrait + .20 * returning),
+  };
 }

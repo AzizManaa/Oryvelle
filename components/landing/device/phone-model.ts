@@ -98,7 +98,15 @@ export function preparePhone(source: Group, initialScreen: Texture) {
   scene.position.copy(center).multiplyScalar(-1);
   return {
     scene,
-    setScreen(texture: Texture) { displayMaterial.map = texture; },
+    display,
+    displayAspect: screenSize.x / screenSize.y,
+    setScreen(texture: Texture) {
+      if (displayMaterial.map === texture) return;
+      displayMaterial.map = texture;
+      // Image and video maps use different sRGB decoding shader variants.
+      // Re-select the program on a source change, never on every pose/frame.
+      displayMaterial.needsUpdate = true;
+    },
     dispose() { finish.dispose(); resources.materials.forEach(m => m.dispose()); resources.geometries.forEach(g => g.dispose()); },
   };
 }
