@@ -1,0 +1,6 @@
+{
+  "note": "All emitted JS chunks across app, not route transfer or compressed network payload",
+  "files": 15,
+  "rawBytes": 1792340,
+  "gzipBytes": 521569
+}
