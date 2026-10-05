@@ -32,6 +32,8 @@ The static mobile poster keeps its previous dimensions explicitly, independent o
 
 ## Review status
 
+Entrance-edge correction following user screenshots: the mobile hero's existing entrance envelope now reduces its roll by up to 55%, reduces the portrait scale multiplier by 0.16 and shifts its center 2.5vw left. These adjustments taper to zero by the front checkpoint, leaving subsequent turn, Explore and stand compositions unchanged. The bottom remains deliberately cropped; the goal is to show the right chassis edge instead of an apparently borderless screen. No browser or automated tests were run for this correction.
+
 No browser testing, automated checks or builds were run after these edits, following the user's testing preference. The earlier live comparison was research, before implementation.
 
 Review initial CTA access, cropped-to-full phone reveal, full rear, returning Explore's right edge and footer, reverse scrolling, grouped type departure, second turn and stand contact. Check short/tall mobile sizes and the static fallback. This is a composition revision awaiting user visual review, not a claim of measured collision-free behavior.

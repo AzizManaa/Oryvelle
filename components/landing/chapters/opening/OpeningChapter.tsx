@@ -9,10 +9,12 @@ import { useGSAP } from "@gsap/react";
 import type { PhoneController, PhonePose } from "../../device/phone-model";
 import { OPENING_POSES, openingScreenAt, responsivePose } from "./opening-poses";
 import Stand from "./Stand";
-import HeroAvailability from "./HeroAvailability";
+import NightField from "./NightField";
+import HeroActions from "./HeroActions";
+import OpeningDock from "./OpeningDock";
+import DownloadPanel from "./DownloadPanel";
 import { createOpeningTimeline } from "./opening.timeline";
 import styles from "./opening.module.css";
-import { PLAY_STORE_URL } from "@/app/site-config";
 import GlobalEntry from "../../entry/GlobalEntry";
 import ExploreControls from "../../device/explore/ExploreControls";
 import type { ExploreDemo, ExploreSnapshot } from "../../device/explore/explore-demo";
@@ -98,18 +100,21 @@ export default function OpeningChapter({ preview, debug = false, posterOnly = fa
   };
   const phase = checkpoint.at < .28 ? "hero" : checkpoint.at < .69 ? "return" : "desk";
   const entryReady = preferencesReady && layoutReady && (fallback ? posterReady : ready && fontsReady);
-  return <>
+  return <DownloadPanel reduced={reduced}>
     {!entryReleased && <GlobalEntry ready={entryReady} reduced={reduced} onRelease={onRelease} onFallback={onLost} />}
     <noscript><style>{`[data-opening-entry]{display:none} [data-opening-content]{visibility:visible} [data-opening-poster]{visibility:visible} html:has([data-opening-entry]){overflow:auto} [data-opening-chapter]{height:100svh}`}</style></noscript>
     <main id="main-content" className={styles.page} data-opening-content="" aria-busy={!entryReleased} data-readiness={debug ? JSON.stringify({ ready, fallback, reduced, failed, preferencesReady, fontsReady, layoutReady, posterReady }) : undefined}>
     <section className={`${styles.journey} ${preview ? styles.previewJourney : fallback ? styles.staticJourney : ""}`} aria-label="A quieter evening with Oryvelle" data-phase={phase} data-opening-chapter="">
       <div ref={chapter} className={`${styles.chapter} ${fallback || preview ? styles.staticChapter : ""}`} aria-hidden="true" />
-      <div ref={stage} className={styles.stage} data-explore-active={interactiveExplore && !fallback && exploreState?.active && exploreState.available ? "true" : undefined}>
-        <div className={styles.atmosphere} aria-hidden="true"><div className={styles.beam} /><div className={styles.deskGlow} /></div>
+      <div ref={stage} className={styles.stage} data-explore-available={interactiveExplore && !fallback && exploreState?.available ? "true" : undefined} data-explore-active={interactiveExplore && !fallback && exploreState?.active && exploreState.available ? "true" : undefined}>
+        <div className={styles.atmosphere} aria-hidden="true"><NightField animate={entryReleased && !reduced && !fallback} /><div className={styles.beam} /><div className={styles.deskGlow} /></div>
         <Link className={styles.brand} href="/" aria-label="Oryvelle home">Oryvelle</Link>
         <div className={`${styles.copy} ${styles.hero}`}>
           <h1>Quiet your<br />restless mind.</h1>
-          <div className={styles.support}><p>Make space for rest with ambient sounds, guided meditations and a gentler evening routine.</p><a href={PLAY_STORE_URL} className={styles.download}>Download Oryvelle <span aria-hidden="true">↗</span></a><HeroAvailability /></div>
+          <div className={styles.support}><p>Make space for rest with ambient sounds, guided meditations and a gentler evening routine.</p><HeroActions onAdvance={fallback || preview ? undefined : () => {
+              if (!chapter.current || !stage.current) return;
+              window.scrollTo({ top: chapter.current.offsetTop + .57 * (chapter.current.offsetHeight - stage.current.offsetHeight), behavior: reduced ? "instant" : "smooth" });
+            }} /></div>
           <aside className={styles.capability} aria-label="Evening audio features"><h2>Your evening mix</h2><p>Combine ambient sounds.<br />Set a sleep timer.</p></aside>
         </div>
         <div className={`${styles.copy} ${styles.returnCopy}`}><h2>Leave the day.<br />Find your calm.</h2><div className={styles.support}><p>A moment to breathe.<br />A sound to settle into.<br />A little distance from the day.</p></div></div>
@@ -123,11 +128,11 @@ export default function OpeningChapter({ preview, debug = false, posterOnly = fa
           {!fallback && preferencesReady && <RendererBoundary onError={onLost}><div className={styles.renderer} data-presented={ready && !fallback}><PhoneCanvas onReady={onReady} onPresented={onPresented} onLost={onLost} onStats={debug ? onStats : undefined} ambientEnabled={entryReleased && !fallback} interactiveExplore={interactiveExplore} onExploreReady={onExploreReady} onExploreChange={onExploreChange} /></div></RendererBoundary>}
         </div>
         <div className={`${styles.environment} ${styles.foreground}`} aria-hidden="true"><Stand foreground /></div>
-        <a className={styles.floatingNav} href={PLAY_STORE_URL} aria-label="Get Oryvelle for Android">O<span aria-hidden="true">↗</span></a>
+        <OpeningDock reduced={reduced} canExplore={interactiveExplore && !fallback} onNavigate={seek} />
         {interactiveExplore && !fallback && <ExploreControls controller={exploreController} state={exploreState} />}
         {debug && <div className={styles.debug}><output ref={stats}>Loading renderer</output><input ref={meter} aria-label="Development chapter progress" type="range" min="0" max="1" step=".001" defaultValue={0} onChange={e => seek(Number(e.target.value))} /><nav aria-label="Development compositions">{OPENING_POSES.map(p => <a key={p.name} href={`?pose=${p.name}&debug=1`}>{p.name}</a>)}</nav><nav aria-label="Native scroll checkpoints">{OPENING_POSES.map(p => <button type="button" key={p.name} onClick={() => seek(p.at)}>{p.name}</button>)}</nav><a href="?poster=1&debug=1">Poster fallback</a><button type="button" onClick={() => { const canvas = product.current?.querySelector("canvas"); canvas?.getContext("webgl2")?.getExtension("WEBGL_lose_context")?.loseContext(); }}>Test context loss</button></div>}
       </div>
     </section>
     <div className={styles.attribution} aria-label="Phone model attribution"><small>Model by <a href="https://sketchfab.com/3d-models/samsung-s-26-ultra-3d-model-3356099ca99d488d95a6a253d05577f7">achrixx</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · materials and display adapted.</small></div>
-  </main></>;
+  </main></DownloadPanel>;
 }

@@ -24,7 +24,13 @@ export function openingScreenAt(progress: number): ScreenState {
   return progress < .32 ? "portraitA" : progress < .77 ? "portraitB" : "landscapeC";
 }
 export function responsivePose(pose: PhonePose, narrow: boolean): PhonePose {
-  if (!narrow) return pose;
+  const entrance = Math.max(0, Math.min(1, (-.17 - pose.y) / .12));
+  if (!narrow) {
+    // Give the initial desktop headline more room; retain the authored fit
+    // once the phone reaches the front checkpoint and begins its full turn.
+    const heroWeight = entrance * entrance * (3 - 2 * entrance);
+    return { ...pose, scale: pose.scale * (1 - .18 * heroWeight) };
+  }
   // Portrait is the dominant mobile object, not a miniature beneath the copy.
   // Blend into a wider, higher mobile stand composition as the phone rolls over.
   const portrait = Math.cos(pose.roll) ** 2;
@@ -32,7 +38,6 @@ export function responsivePose(pose: PhonePose, narrow: boolean): PhonePose {
   // Only the entrance sits below the copy: reveal the rest of the large phone
   // as the authored hero-to-front movement advances, rather than fitting it all
   // into the initial viewport. The later turn/return/stand anchors stay intact.
-  const entrance = Math.max(0, Math.min(1, (-.17 - pose.y) / .12));
   const entranceOffset = .28 * entrance * entrance * (3 - 2 * entrance);
   const portraitY = pose.y * .32 - .02 - entranceOffset;
   // Keep the returning interactive display centered and below the grouped copy.
@@ -42,8 +47,11 @@ export function responsivePose(pose: PhonePose, narrow: boolean): PhonePose {
   const returning = returnWeight * returnWeight * (3 - 2 * returnWeight);
   return {
     ...pose,
-    x: (pose.x ?? 0) * .18 * (1 - returning),
+    // A tall tilted device sweeps sideways even when its center is in bounds.
+    // Keep both chassis edges readable during the cropped mobile entrance.
+    roll: pose.roll * (1 - .55 * entrance),
+    x: (pose.x ?? 0) * .18 * (1 - returning) - .025 * entrance,
     y: supportedY + (portraitY - supportedY) * portrait - .11 * returning,
-    scale: pose.scale * (1.08 + .57 * portrait),
+    scale: pose.scale * (1.08 + .57 * portrait - .16 * entrance),
   };
 }

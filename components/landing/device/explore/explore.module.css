@@ -14,4 +14,5 @@
 .sounds button { width:100%; text-align:left; }
 .sounds label { display:flex; align-items:center; gap:9px; padding:7px 0; font-size:12px; }
 .sounds input { width:100%; accent-color:#65c6bc; }
-@media(max-width:760px) { .controls { left:5vw; right:auto; bottom:3svh; max-width:calc(90vw - 78px); justify-content:flex-start; padding:6px; font-size:11px; gap:5px; } .controls button,.details summary { padding:6px 8px; } .panel { left:0; right:auto; max-height:48svh; } }
+@media(max-width:1100px) { .controls { bottom:calc(3svh + 66px); } }
+@media(max-width:760px) { .controls { left:5vw; right:auto; bottom:calc(3svh + 66px); max-width:90vw; justify-content:flex-start; padding:6px; font-size:11px; gap:5px; } .controls button,.details summary { padding:6px 8px; } .panel { left:0; right:auto; max-height:48svh; } }
