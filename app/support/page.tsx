@@ -1,28 +1,12 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import InformationLayout from "../_components/information/InformationLayout";
-import { absoluteUrl, SITE_NAME } from "../site-config";
+import { informationMetadata } from "../information-metadata";
 
-export const metadata: Metadata = {
-  title: "Support",
-  description:
-    "Get help with Oryvelle. Answers to common questions about sounds, playback, journal, backup, and more.",
-  alternates: {
-    canonical: absoluteUrl("/support"),
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  openGraph: {
-    type: "website",
-    url: absoluteUrl("/support"),
-    title: "Support - Oryvelle",
-    description:
-      "Get help with Oryvelle. Answers to common questions about sounds, playback, journal, backup, and more.",
-    siteName: SITE_NAME,
-  },
-};
+export const metadata = informationMetadata(
+  "/support",
+  "Support",
+  "Get help with Oryvelle. Answers to common questions about sounds, playback, journal, backup, and more.",
+);
 
 const FAQ_SECTIONS = [
   {

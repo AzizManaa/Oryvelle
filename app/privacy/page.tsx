@@ -1,27 +1,11 @@
-import type { Metadata } from "next";
 import InformationLayout from "../_components/information/InformationLayout";
-import { absoluteUrl, SITE_NAME } from "../site-config";
+import { informationMetadata } from "../information-metadata";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description:
-    "Oryvelle stores your data on your device. No accounts, no behavioral analytics, no ads. Uses Firebase Crashlytics for crash reporting only.",
-  alternates: {
-    canonical: absoluteUrl("/privacy"),
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  openGraph: {
-    type: "website",
-    url: absoluteUrl("/privacy"),
-    title: "Privacy Policy - Oryvelle",
-    description:
-      "Oryvelle stores your data on your device. No accounts, no behavioral analytics, no ads. Uses Firebase Crashlytics for crash reporting only.",
-    siteName: SITE_NAME,
-  },
-};
+export const metadata = informationMetadata(
+  "/privacy",
+  "Privacy Policy",
+  "Oryvelle stores your data on your device. No accounts, no behavioral analytics, no ads. Uses Firebase Crashlytics for crash reporting only.",
+);
 
 const DATA_ROWS = [
   {

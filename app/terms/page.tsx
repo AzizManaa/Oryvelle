@@ -1,28 +1,12 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import InformationLayout from "../_components/information/InformationLayout";
-import { absoluteUrl, SITE_NAME } from "../site-config";
+import { informationMetadata } from "../information-metadata";
 
-export const metadata: Metadata = {
-  title: "Terms of Service",
-  description:
-    "Terms of Service for Oryvelle, a relaxation app by NekoDesk.",
-  alternates: {
-    canonical: absoluteUrl("/terms"),
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  openGraph: {
-    type: "website",
-    url: absoluteUrl("/terms"),
-    title: "Terms of Service - Oryvelle",
-    description:
-      "Terms of Service for Oryvelle, a relaxation app by NekoDesk.",
-    siteName: SITE_NAME,
-  },
-};
+export const metadata = informationMetadata(
+  "/terms",
+  "Terms of Service",
+  "Terms of Service for Oryvelle, a relaxation app by NekoDesk.",
+);
 
 export default function TermsPage() {
   return (

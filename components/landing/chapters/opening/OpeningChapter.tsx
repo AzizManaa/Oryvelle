@@ -118,6 +118,10 @@ export default function OpeningChapter() {
   const onPresented = useCallback(() => { setReady(true); }, []);
   const onLost = useCallback(() => { controller.current = null; setFailed(true); setReady(false); }, []);
   const onRelease = useCallback(() => { setEntryReleased(true); }, []);
+  const releaseStaticEntry = useCallback(() => {
+    onLost();
+    onRelease();
+  }, [onLost, onRelease]);
   useEffect(() => {
     if (!entryReleased || !window.location.hash) return;
     // Entry starts at the top; honor incoming section links after its lock is gone.
@@ -146,8 +150,15 @@ export default function OpeningChapter() {
     window.scrollTo({ top: chapter.current.offsetTop + value * (chapter.current.offsetHeight - stage.current.offsetHeight), behavior: smooth && !reduced ? "smooth" : "instant" });
   };
   const entryReady = preferencesReady && layoutReady && (fallback ? posterReady : ready && fontsReady);
+  useEffect(() => {
+    if (entryReleased || entryReady) return;
+    // Never make access to the page depend indefinitely on WebGL, fonts,
+    // or even the static poster loading. Normal readiness cancels this deadline.
+    const deadline = window.setTimeout(releaseStaticEntry, 8000);
+    return () => window.clearTimeout(deadline);
+  }, [entryReady, entryReleased, releaseStaticEntry]);
   return <DownloadPanel reduced={reduced}>
-    {!entryReleased && <GlobalEntry ready={entryReady} reduced={reduced} onRelease={onRelease} onFallback={onLost} />}
+    {!entryReleased && <GlobalEntry ready={entryReady} reduced={reduced} onRelease={onRelease} onFallback={releaseStaticEntry} />}
     <noscript><style>{`[data-opening-entry]{display:none} [data-opening-content]{visibility:visible} [data-opening-poster]{visibility:visible} html:has([data-opening-entry]){overflow:auto} [data-opening-chapter]{height:100svh}`}</style></noscript>
     <main id="main-content" className={styles.page} data-opening-content="" aria-busy={!entryReleased}>
     <section className={`${styles.journey} ${fallback ? styles.staticJourney : styles.guidedJourney}`} aria-label="A quieter evening with Oryvelle" data-opening-chapter="">
