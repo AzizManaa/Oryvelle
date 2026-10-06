@@ -78,6 +78,8 @@
  .copy h1,.copy h2 { font-size:clamp(56px,12.5vw,94px); line-height:.98; letter-spacing:-.045em; max-width:95%; }
  .support { position:relative; left:auto; bottom:auto; max-width:90vw; margin-top:22px; font-size:17px; }
  .support p { margin-bottom:22px; }
+ /* Keep conversion content legible in the static fallback as well. */
+ .hero { z-index:35; }
  .hero .support { top:auto; bottom:auto; }
  .download { font-size:14px; min-height:48px; padding:0 20px; border-radius:19px; }
  .actionIcon { width:48px; height:48px; border-radius:18px; }

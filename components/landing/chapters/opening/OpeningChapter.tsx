@@ -7,7 +7,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import type { PhoneController, PhonePose } from "../../device/phone-model";
-import { OPENING_POSES, openingScreenAt, responsivePose } from "./opening-poses";
+import { OPENING_POSES, openingScreenAt, openingEntranceWeight, responsivePose } from "./opening-poses";
 import Stand from "./Stand";
 import NightField from "./NightField";
 import HeroActions from "./HeroActions";
@@ -44,6 +44,7 @@ export default function OpeningChapter() {
   const mixerLights = useRef<SVGSVGElement>(null);
   const product = useRef<HTMLDivElement>(null);
   const controller = useRef<PhoneController | null>(null);
+  const entranceClearance = useRef(0);
   const current = useRef<PhonePose>({ ...initialPose });
   const progress = useRef(initialPose.at);
   const [ready, setReady] = useState(false);
@@ -75,11 +76,45 @@ export default function OpeningChapter() {
     if (posterImage.current?.complete) setPosterReady(true);
   }, []);
   const fallback = failed || reduced;
+  const applyPhone = useCallback((value: number) => {
+    progress.current = value;
+    const narrow = window.matchMedia("(max-width: 760px)").matches;
+    const pose = responsivePose(current.current, narrow);
+    // Reserve actual wrapped copy height, then release the offset at the front pose.
+    gsap.set(product.current, {
+      xPercent: (pose.x ?? 0) * 100,
+      y: narrow ? entranceClearance.current * openingEntranceWeight(current.current) : 0,
+    });
+    controller.current?.setAmbientProgress(value);
+    controller.current?.apply(pose, openingScreenAt(value));
+  }, []);
+  const refreshFraming = useCallback(() => {
+    const hero = stage.current?.querySelector<HTMLElement>(`.${styles.hero}`);
+    const availability = hero?.querySelector<HTMLElement>(`.${styles.availability}`);
+    entranceClearance.current = 0;
+    if (hero && availability && controller.current && window.matchMedia("(max-width: 760px)").matches) {
+      const copyBottom = availability.getBoundingClientRect().bottom - hero.getBoundingClientRect().top;
+      const phoneTop = controller.current.measureTop(responsivePose(initialPose, true));
+      // Include breathing room and the small ambient float above the chassis.
+      entranceClearance.current = Math.max(0, copyBottom + 28 - phoneTop);
+    }
+    applyPhone(progress.current);
+  }, [applyPhone, initialPose]);
   const onReady = useCallback((next: PhoneController) => {
     controller.current = next;
-    next.setAmbientProgress(progress.current);
-    next.apply(responsivePose(current.current, window.matchMedia("(max-width: 760px)").matches), openingScreenAt(progress.current));
-  }, []);
+    refreshFraming();
+  }, [refreshFraming]);
+  useEffect(() => {
+    const hero = stage.current?.querySelector<HTMLElement>(`.${styles.hero}`);
+    const support = hero?.querySelector<HTMLElement>(`.${styles.support}`);
+    if (!stage.current || !support) return;
+    const observer = new ResizeObserver(refreshFraming);
+    observer.observe(stage.current);
+    observer.observe(support);
+    let disposed = false;
+    void document.fonts.ready.then(() => { if (!disposed) refreshFraming(); });
+    return () => { disposed = true; observer.disconnect(); };
+  }, [refreshFraming]);
   const onPresented = useCallback(() => { setReady(true); }, []);
   const onLost = useCallback(() => { controller.current = null; setFailed(true); setReady(false); }, []);
   const onRelease = useCallback(() => { setEntryReleased(true); }, []);
@@ -93,14 +128,7 @@ export default function OpeningChapter() {
   }, [entryReleased]);
   useGSAP(() => {
     Object.assign(current.current, initialPose); progress.current = initialPose.at;
-    const apply = (value: number) => {
-      progress.current = value;
-      const pose = responsivePose(current.current, window.matchMedia("(max-width: 760px)").matches);
-      // CSS owns screen-space framing; R3F owns the physical orientation.
-      gsap.set(product.current, { xPercent: (pose.x ?? 0) * 100 });
-      controller.current?.setAmbientProgress(value);
-      controller.current?.apply(pose, openingScreenAt(value));
-    };
+    const apply = applyPhone;
     apply(progress.current);
     setLayoutReady(true);
     if (fallback || !chapter.current || !stage.current) return;

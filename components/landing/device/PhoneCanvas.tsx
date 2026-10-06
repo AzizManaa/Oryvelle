@@ -2,7 +2,7 @@
 
 import { addAfterEffect, Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { Group, LinearFilter, LinearMipmapLinearFilter, PMREMGenerator, SRGBColorSpace, TextureLoader, type Scene, type Texture } from "three";
+import { Box3, Vector3, Group, LinearFilter, LinearMipmapLinearFilter, PMREMGenerator, SRGBColorSpace, TextureLoader, type Scene, type Texture } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createPhoneEnvironment } from "./phone-lighting";
 import { PHONE_URL, preparePhone, type PhoneController, type PhonePose, type ScreenState } from "./phone-model";
@@ -46,7 +46,7 @@ function Phone({ onReady, onPresented, ambientEnabled = false, onExploreReady, o
   const ambientProgress = useRef(0);
   const pose = useRef<PhonePose>({ yaw: 0, pitch: 0, roll: 0, scale: 1, y: 0 });
   const screen = useRef<ScreenState>("portraitA");
-  const { gl, scene, viewport, invalidate } = useThree();
+  const { gl, scene, camera, viewport, invalidate } = useThree();
   const tonightPlayback = usePhoneScreenVideo({ state: "portraitA", enabled: ambientEnabled, screen, pose, sourcesRef, phone });
   const exploreInteraction = usePhoneExplore({ presented: ambientEnabled, screen, pose, sourcesRef, phone, onReady: onExploreReady, onChange: onExploreChange });
   const sleepTimer = usePhoneSleepTimer({ enabled: ambientEnabled, screen, pose, sourcesRef, phone });
@@ -60,14 +60,16 @@ function Phone({ onReady, onPresented, ambientEnabled = false, onExploreReady, o
     return () => { setEnvironment(scene, null); target.dispose(); };
   }, [gl, scene, invalidate]);
   useLayoutEffect(() => {
+    const transform = (next: PhonePose) => {
+      if (!pivot.current) return;
+      pivot.current.rotation.set(next.pitch, next.yaw, next.roll, "ZYX");
+      const base = Math.min(viewport.height * 0.78 / 4.9612, viewport.width * 0.82 / 4.9612);
+      pivot.current.scale.setScalar(base * next.scale);
+      pivot.current.position.set(0, viewport.height * next.y, 0);
+    };
     const apply = (next: PhonePose, nextScreen: ScreenState) => {
       pose.current = { ...next }; screen.current = nextScreen;
-      if (pivot.current) {
-        pivot.current.rotation.set(next.pitch, next.yaw, next.roll, "ZYX");
-        const base = Math.min(viewport.height * 0.78 / 4.9612, viewport.width * 0.82 / 4.9612);
-        pivot.current.scale.setScalar(base * next.scale);
-        pivot.current.position.set(0, viewport.height * next.y, 0);
-      }
+      transform(next);
       phone.setScreen(sourcesRef.current[nextScreen]);
       tonightPlayback.current();
       exploreInteraction.current();
@@ -76,13 +78,35 @@ function Phone({ onReady, onPresented, ambientEnabled = false, onExploreReady, o
     };
     onReady({
       apply,
+      // Layout-only measurement at entry/resize; never traverse the model per frame.
+      measureTop: next => {
+        const group = pivot.current;
+        if (!group) return 0;
+        transform(next);
+        group.updateWorldMatrix(true, true);
+        camera.updateWorldMatrix(true, false);
+        const bounds = new Box3().setFromObject(group);
+        const point = new Vector3();
+        let top = Infinity;
+        for (const x of [bounds.min.x, bounds.max.x]) {
+          for (const y of [bounds.min.y, bounds.max.y]) {
+            for (const z of [bounds.min.z, bounds.max.z]) {
+              point.set(x, y, z).project(camera);
+              top = Math.min(top, (.5 - point.y * .5) * gl.domElement.clientHeight);
+            }
+          }
+        }
+        transform(pose.current);
+        group.updateWorldMatrix(true, true);
+        return top;
+      },
       setAmbientProgress: progress => { ambientProgress.current = progress; if (!document.hidden) invalidate(); },
     });
     apply(pose.current, screen.current);
     const visible = () => { if (!document.hidden) apply(pose.current, screen.current); };
     document.addEventListener("visibilitychange", visible);
     return () => document.removeEventListener("visibilitychange", visible);
-  }, [viewport.height, viewport.width, phone, sourcesRef, invalidate, onReady, tonightPlayback, exploreInteraction, sleepTimer]);
+  }, [viewport.height, viewport.width, camera, gl, phone, sourcesRef, invalidate, onReady, tonightPlayback, exploreInteraction, sleepTimer]);
   useLayoutEffect(() => {
     const startingFrame = frameCount.current;
     let presented = false;

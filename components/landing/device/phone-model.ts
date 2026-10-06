@@ -4,7 +4,7 @@ export const PHONE_URL = "/models/oryvelle-phone.glb";
 import type { ScreenState } from "./screen-sources";
 export type { ScreenState } from "./screen-sources";
 export type PhonePose = { yaw: number; pitch: number; roll: number; scale: number; y: number; x?: number };
-export type PhoneController = { apply: (pose: PhonePose, screen: ScreenState) => void; setAmbientProgress: (progress: number) => void };
+export type PhoneController = { apply: (pose: PhonePose, screen: ScreenState) => void; setAmbientProgress: (progress: number) => void; measureTop: (pose: PhonePose) => number };
 
 // Asset-specific adaptation of existing surfaces, never an added screen plane.
 export function preparePhone(source: Group, initialScreen: Texture) {

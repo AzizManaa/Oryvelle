@@ -23,12 +23,16 @@ export const OPENING_POSES: OpeningPose[] = [
 export function openingScreenAt(progress: number): ScreenState {
   return progress < .32 ? "portraitA" : progress < .77 ? "portraitB" : "landscapeC";
 }
+export function openingEntranceWeight(pose: PhonePose) {
+  const entrance = Math.max(0, Math.min(1, (-.17 - pose.y) / .12));
+  return entrance * entrance * (3 - 2 * entrance);
+}
 export function responsivePose(pose: PhonePose, narrow: boolean): PhonePose {
   const entrance = Math.max(0, Math.min(1, (-.17 - pose.y) / .12));
   if (!narrow) {
     // Give the initial desktop headline more room; retain the authored fit
     // once the phone reaches the front checkpoint and begins its full turn.
-    const heroWeight = entrance * entrance * (3 - 2 * entrance);
+    const heroWeight = openingEntranceWeight(pose);
     return { ...pose, scale: pose.scale * (1 - .18 * heroWeight) };
   }
   // Portrait is the dominant mobile object, not a miniature beneath the copy.
@@ -38,7 +42,7 @@ export function responsivePose(pose: PhonePose, narrow: boolean): PhonePose {
   // Only the entrance sits below the copy: reveal the rest of the large phone
   // as the authored hero-to-front movement advances, rather than fitting it all
   // into the initial viewport. The later turn/return/stand anchors stay intact.
-  const entranceOffset = .28 * entrance * entrance * (3 - 2 * entrance);
+  const entranceOffset = .28 * openingEntranceWeight(pose);
   const portraitY = pose.y * .32 - .02 - entranceOffset;
   // Keep the returning interactive display centered and below the grouped copy.
   // Remove the old rightward emphasis: it cropped usable map controls.
