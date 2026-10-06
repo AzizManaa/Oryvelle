@@ -14,7 +14,7 @@ const SOUNDS = [
 function DemoSlider({ label, value, marker }: { label: string; value: number; marker?: string }) {
   return <div className={styles.sliderLabel} data-demo-slider={marker}>
     {label}<span data-demo-value="">{value}%</span>
-    <div className={styles.rail} style={{ "--level": `${value}%` } as CSSProperties}><i /><b /></div>
+    <div className={styles.rail} style={{ "--level": `${value}%` } as CSSProperties}><i /><span /></div>
   </div>;
 }
 
@@ -149,12 +149,12 @@ export default function SoundMixerShowcase() {
               <div className={styles.panelHeader}><span className={styles.eyebrow}>Fine-tune a layer</span><span className={styles.badge}>PREVIEW</span></div>
               <h3>Calming Rain</h3>
               <div className={styles.layerHeading}><span className={styles.art}><Image src={SOUNDS[0].cover} alt="" width={50} height={50} /></span><span className={styles.layerKind}>Rain & storms · Stereo audio</span></div>
-              <div className={styles.stereo}><span>L</span><div><i data-pan-orb="" style={{ left: "50%" }} /><b /></div><span>R</span></div>
+              <div className={styles.stereo}><span>L</span><div><i data-pan-orb="" style={{ left: "50%" }} /><span /></div><span>R</span></div>
               <DemoSlider label="Stereo position" value={50} marker="pan" />
               <div className={styles.autoRow}><div><h4>Automatic pan</h4><p>A gentle left-to-right stereo sweep.</p></div><span className={styles.switch} data-auto-pan="" data-on="false"><span /></span></div>
               <div className={styles.sweepSettings} data-sweep-settings="" data-on="false">
                 <p className={styles.settingLabel}>Sweep width</p><div className={styles.widths}>{["Subtle", "Balanced", "Wide"].map(width => <span key={width} data-selected={width === "Balanced"}>{width}</span>)}</div>
-                <div className={styles.sliderLabel}>Sweep duration<span>12 seconds</span><div className={styles.rail} style={{ "--level": "31%" } as CSSProperties}><i /><b /></div></div>
+                <div className={styles.sliderLabel}>Sweep duration<span>12 seconds</span><div className={styles.rail} style={{ "--level": "31%" } as CSSProperties}><i /><span /></div></div>
               </div>
               <div className={styles.panelFooter}><span className={styles.dot} /><span>Every layer has its own space.</span></div>
             </div>

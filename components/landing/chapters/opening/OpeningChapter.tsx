@@ -172,7 +172,7 @@ export default function OpeningChapter() {
         <Link className={styles.brand} href="/" aria-label="Oryvelle home"><OryvelleMark /><span>Oryvelle</span></Link>
         <div className={`${styles.copy} ${styles.hero}`}>
           <h1>Quiet your<br />restless mind.</h1>
-          <div className={styles.support}><p>Wind down with ambient sounds, guided meditations and breathing practices at your own pace.</p><HeroActions onAdvance={fallback ? undefined : () => seek(.57, true)} /></div>
+          <div className={styles.support}><p>Oryvelle is an Android sleep companion. Mix ambient sounds, follow guided meditations, practice breathing, and ease into a quieter night.</p><HeroActions onAdvance={fallback ? undefined : () => seek(.57, true)} /></div>
           <aside className={styles.capability} aria-label="Evening audio features"><h2>Your evening mix</h2><p>Combine ambient sounds.<br />Set a sleep timer.</p></aside>
         </div>
         <div className={`${styles.copy} ${styles.returnCopy}`}><h2>Find your<br />soundscape.</h2><div className={styles.support}><p>Explore a sky of sounds.<br />Tap a star to listen, then combine<br className={styles.desktopBreak} /> the sounds you love.</p><HeroActions utilitiesOnly advanceLabel="Scroll to the sleep timer" onAdvance={fallback ? undefined : () => seek(.94, true)} /></div></div>
