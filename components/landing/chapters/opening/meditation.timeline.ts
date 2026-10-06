@@ -3,7 +3,8 @@ import styles from "./opening.module.css";
 
 export function createMeditationTimeline({ marker, stage }: { marker: HTMLElement; stage: HTMLElement }) {
   const scene = stage.querySelector<HTMLElement>("[data-meditation-scene]")!;
-  const hardware = [styles.product, styles.rear, styles.foreground].map(key => stage.querySelector(`.${key}`));
+  const product = stage.querySelector(`.${styles.product}`);
+  const stands = [styles.rear, styles.foreground].map(key => stage.querySelector(`.${key}`));
   const desk = stage.querySelector(`.${styles.deskCopy}`);
   const routes = Array.from(scene.querySelectorAll("svg")).map(map => {
     const thread = map.querySelector<SVGPathElement>("[data-meditation-thread]")!;
@@ -28,13 +29,15 @@ export function createMeditationTimeline({ marker, stage }: { marker: HTMLElemen
       onRefresh: followThread,
     },
   });
-  // Opening keeps ownership of pose, product X and stand settlement yPercent.
-  // This continuation owns only their shared screen-space Y departure.
+  // Opening owns the product's pixel Y clearance and the stands' yPercent
+  // settlement. Depart using the other transform so framing refreshes cannot
+  // restore a phone that has already left the stage.
   timeline.set(scene, { visibility: "visible" }, 0)
     .to(routes.map(route => route.guide), { autoAlpha: 1, duration: .08 }, .02)
     .to(travel, { progress: 1, duration: .48, ease: "sine.inOut", onUpdate: followThread }, .08)
-    .to(hardware, { y: () => -stage.offsetHeight * 1.2, duration: .49, ease: "sine.inOut" }, .12)
-    .to(desk, { y: () => -stage.offsetHeight, duration: .36, ease: "sine.in" }, .10)
+    .fromTo(product, { yPercent: 0 }, { yPercent: -120, duration: .49, ease: "sine.inOut", immediateRender: false }, .12)
+    .fromTo(stands, { y: 0 }, { y: () => -stage.offsetHeight * 1.2, duration: .49, ease: "sine.inOut", immediateRender: false }, .12)
+    .fromTo(desk, { y: 0 }, { y: () => -stage.offsetHeight, duration: .36, ease: "sine.in", immediateRender: false }, .10)
     .to(scene.querySelectorAll('[data-meditation-path="0"]'), { strokeDashoffset: 0, duration: .23 }, .50)
     .to(scene.querySelectorAll('[data-meditation-path="1"]'), { strokeDashoffset: 0, duration: .27 }, .55)
     .to(scene.querySelectorAll('[data-meditation-path="2"]'), { strokeDashoffset: 0, duration: .23 }, .69)
