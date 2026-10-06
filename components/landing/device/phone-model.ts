@@ -1,10 +1,10 @@
 import { Box3, DataTexture, Float32BufferAttribute, FrontSide, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial, LinearMipmapLinearFilter, RepeatWrapping, RGBAFormat, Vector3, type Group, type Material, type Texture } from "three";
 
-export const PHONE_URL = "/assests/oryvelle-phone.glb";
+export const PHONE_URL = "/models/oryvelle-phone.glb";
 import type { ScreenState } from "./screen-sources";
 export type { ScreenState } from "./screen-sources";
 export type PhonePose = { yaw: number; pitch: number; roll: number; scale: number; y: number; x?: number };
-export type PhoneController = { apply: (pose: PhonePose, screen: ScreenState) => void; setAmbientProgress: (progress: number) => void; setScreen: (texture: Texture) => void; setScreenSource: (state: ScreenState, texture: Texture) => void; invalidate: () => void };
+export type PhoneController = { apply: (pose: PhonePose, screen: ScreenState) => void; setAmbientProgress: (progress: number) => void };
 
 // Asset-specific adaptation of existing surfaces, never an added screen plane.
 export function preparePhone(source: Group, initialScreen: Texture) {

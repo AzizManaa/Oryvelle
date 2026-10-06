@@ -4,32 +4,33 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, type RefObject } from 'react';
 import { Raycaster, Vector2, type Mesh, type Texture } from 'three';
 import type { PhonePose, ScreenState } from '../phone-model';
-import { createExploreDemo, type ExploreDemo, type ExploreSnapshot } from './explore-demo';
+import { createExploreEngine, type ExploreEngine, type ExploreSnapshot } from './explore-engine';
 
-export function usePhoneExplore({ enabled, presented, screen, pose, sources, phone, onReady, onChange }: {
-  enabled: boolean; presented: boolean; screen: RefObject<ScreenState>; pose: RefObject<PhonePose>;
-  sources: Record<ScreenState, Texture>;
+export function usePhoneExplore({ presented, screen, pose, sourcesRef, phone, onReady, onChange }: {
+  presented: boolean; screen: RefObject<ScreenState>; pose: RefObject<PhonePose>;
+  sourcesRef: RefObject<Record<ScreenState, Texture>>;
   phone: { display: Mesh; setScreen(texture: Texture): void };
-  onReady?: (demo: ExploreDemo | null) => void;
+  onReady?: (demo: ExploreEngine | null) => void;
   onChange?: (snapshot: ExploreSnapshot) => void;
 }) {
   const { gl, camera, invalidate } = useThree();
-  const engine = useRef<ExploreDemo | null>(null);
+  const engine = useRef<ExploreEngine | null>(null);
   const sync = useRef<() => void>(() => {});
   const presentedRef = useRef(presented);
   const eligibility = useRef({ visible: false, reduced: false });
   const accumulated = useRef(0);
   useEffect(() => {
-    if (!enabled) return;
-    const original = sources.portraitB;
+    const activeScreen = screen;
+    const sourceTextures = sourcesRef.current;
+    const original = sourceTextures.portraitB;
     let inView = false;
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let demo: ExploreDemo;
+    let demo: ExploreEngine;
     try {
-      demo = createExploreDemo(getComputedStyle(gl.domElement).fontFamily, snapshot => { onChange?.(snapshot); invalidate(); });
+      demo = createExploreEngine(getComputedStyle(gl.domElement).fontFamily, snapshot => { onChange?.(snapshot); invalidate(); });
     } catch { return; } // Retain the real screen poster when Canvas 2D is unavailable.
     engine.current = demo;
-    sources.portraitB = demo.texture;
+    sourceTextures.portraitB = demo.texture;
     if (screen.current === 'portraitB') phone.setScreen(demo.texture);
     const pointers = new Map<number, { x: number; y: number }>();
     let pinchDistance = 0, pinched = false;
@@ -99,11 +100,11 @@ export function usePhoneExplore({ enabled, presented, screen, pose, sources, pho
       window.removeEventListener('pointerup', up, true); window.removeEventListener('pointercancel', up, true);
       window.removeEventListener('wheel', wheel); window.removeEventListener('keydown', keyboard);
       document.removeEventListener('visibilitychange', update); motion.removeEventListener('change', update);
-      sources.portraitB = original;
-      if (screen.current === 'portraitB') phone.setScreen(original);
+      sourceTextures.portraitB = original;
+      if (activeScreen.current === 'portraitB') phone.setScreen(original);
       demo.dispose(); onReady?.(null);
     };
-  }, [enabled, gl, camera, invalidate, phone, pose, screen, sources, onReady, onChange]);
+  }, [gl, camera, invalidate, phone, pose, screen, sourcesRef, onReady, onChange]);
   useEffect(() => { presentedRef.current = presented; sync.current(); }, [presented]);
   useFrame((_, delta) => {
     if (!engine.current || !eligibility.current.visible) return;

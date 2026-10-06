@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "../_components/site-header";
+import InformationLayout from "../_components/information/InformationLayout";
 import { absoluteUrl, SITE_NAME } from "../site-config";
 
 export const metadata: Metadata = {
@@ -26,15 +26,14 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader activePage="terms" />
+    <InformationLayout page="terms">
 
       <main
         id="main-content"
-        className="mx-auto w-full max-w-2xl px-5 pt-28 pb-24 sm:px-8"
+        className="information-content"
       >
         {/* Page header */}
-        <div className="mb-10 border-b border-white/[0.08] pb-8">
+        <div className="information-hero">
           <p className="mb-3 text-xs font-medium tracking-[0.28em] text-teal uppercase">
             Legal
           </p>
@@ -81,7 +80,7 @@ export default function TermsPage() {
           {/* 1 */}
           <section aria-labelledby="s1">
             <h2 id="s1" className="mb-3 text-base font-semibold text-ink">
-              1. Acceptance of these terms
+              Acceptance of these terms
             </h2>
             <p className="mb-3">
               By downloading, installing, or using Oryvelle, you agree to these
@@ -96,7 +95,7 @@ export default function TermsPage() {
           {/* 2 */}
           <section aria-labelledby="s2">
             <h2 id="s2" className="mb-3 text-base font-semibold text-ink">
-              2. What Oryvelle is
+              What Oryvelle is
             </h2>
             <p className="mb-3">
               Oryvelle is a sleep and relaxation app that provides ambient
@@ -125,7 +124,7 @@ export default function TermsPage() {
           {/* 3 */}
           <section aria-labelledby="s3">
             <h2 id="s3" className="mb-3 text-base font-semibold text-ink">
-              3. Eligibility
+              Eligibility
             </h2>
             <p>
               You must be at least 18 years old to use Oryvelle. By using the
@@ -136,7 +135,7 @@ export default function TermsPage() {
           {/* 4 */}
           <section aria-labelledby="s4">
             <h2 id="s4" className="mb-3 text-base font-semibold text-ink">
-              4. Your data and Google Drive access
+              Your data and Google Drive access
             </h2>
             <p className="mb-3">
               Oryvelle works without an account. All core features — sounds,
@@ -168,7 +167,7 @@ export default function TermsPage() {
           {/* 5 */}
           <section aria-labelledby="s5">
             <h2 id="s5" className="mb-3 text-base font-semibold text-ink">
-              5. Sound catalog and content
+              Sound catalog and content
             </h2>
             <p className="mb-3">
               The sounds available in Oryvelle are provided or licensed by
@@ -189,7 +188,7 @@ export default function TermsPage() {
           {/* 6 */}
           <section aria-labelledby="s6">
             <h2 id="s6" className="mb-3 text-base font-semibold text-ink">
-              6. Acceptable use
+              Acceptable use
             </h2>
             <p className="mb-3">
               You agree to use Oryvelle only for its intended purpose and in
@@ -214,7 +213,7 @@ export default function TermsPage() {
           {/* 7 */}
           <section aria-labelledby="s7">
             <h2 id="s7" className="mb-3 text-base font-semibold text-ink">
-              7. Third-party services
+              Third-party services
             </h2>
             <p className="mb-3">
               Oryvelle integrates with Google Drive when you choose Backup or
@@ -261,7 +260,7 @@ export default function TermsPage() {
           {/* 8 */}
           <section aria-labelledby="s8">
             <h2 id="s8" className="mb-3 text-base font-semibold text-ink">
-              8. Intellectual property
+              Intellectual property
             </h2>
             <p className="mb-3">
               The Oryvelle app, mixer experience, original design, graphics,
@@ -283,7 +282,7 @@ export default function TermsPage() {
           {/* 9 */}
           <section aria-labelledby="s9">
             <h2 id="s9" className="mb-3 text-base font-semibold text-ink">
-              9. Disclaimer of warranties
+              Disclaimer of warranties
             </h2>
             <p className="mb-3">
               Oryvelle is provided{" "}
@@ -319,7 +318,7 @@ export default function TermsPage() {
               id="s10"
               className="mb-3 text-base font-semibold text-ink"
             >
-              10. Limitation of liability
+              Limitation of liability
             </h2>
             <p className="mb-3">
               To the fullest extent permitted by applicable law, NekoDesk and
@@ -341,7 +340,7 @@ export default function TermsPage() {
               id="s11"
               className="mb-3 text-base font-semibold text-ink"
             >
-              11. Governing law
+              Governing law
             </h2>
             <p className="mb-3">
               These terms are governed by the laws of Spain. Any dispute arising
@@ -363,7 +362,7 @@ export default function TermsPage() {
               id="s12"
               className="mb-3 text-base font-semibold text-ink"
             >
-              12. Changes to these terms
+              Changes to these terms
             </h2>
             <p className="mb-3">
               We may update these terms from time to time. If we make material
@@ -384,7 +383,7 @@ export default function TermsPage() {
               id="s13"
               className="mb-3 text-base font-semibold text-ink"
             >
-              13. Termination
+              Termination
             </h2>
             <p className="mb-3">
               You may stop using Oryvelle at any time by uninstalling it.
@@ -406,7 +405,7 @@ export default function TermsPage() {
               id="s14"
               className="mb-3 text-base font-semibold text-ink"
             >
-              14. Contact
+              Contact
             </h2>
             <p className="mb-4">Questions about these terms:</p>
             <div className="space-y-1 text-sm">
@@ -434,16 +433,7 @@ export default function TermsPage() {
           </section>
         </div>
 
-        {/* Footer nav */}
-        <div className="mt-12 border-t border-white/[0.08] pt-8 text-center">
-          <Link
-            href="/"
-            className="text-sm text-subtle transition-colors hover:text-muted"
-          >
-            ← Back to Oryvelle
-          </Link>
-        </div>
       </main>
-    </div>
+    </InformationLayout>
   );
 }

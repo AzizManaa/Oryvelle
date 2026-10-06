@@ -4,7 +4,7 @@ export type ScreenState = "portraitA" | "portraitB" | "landscapeC";
 type ScreenSource = { kind: "static"; url: string } | { kind: "video"; url: string; poster: string };
 export const SCREEN_SOURCES: Record<ScreenState, ScreenSource> = {
   portraitA: { kind: "video", url: "/opening/oryvelle-tonight-loop.mp4", poster: "/opening/oryvelle-tonight-screen-poster.jpg" },
-  portraitB: { kind: "video", url: "/opening/oryvelle-explore-loop.mp4", poster: "/opening/oryvelle-explore-screen-poster.jpg" },
-  landscapeC: { kind: "static", url: "/opening/landscape-c.svg" },
+  portraitB: { kind: "static", url: "/opening/oryvelle-explore-screen-poster.jpg" },
+  landscapeC: { kind: "static", url: "/opening/oryvelle-sleep-timer-poster.svg" },
 };
 export const SCREEN_KEYS: ScreenState[] = ["portraitA", "portraitB", "landscapeC"];

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "./_components/site-header";
+import OryvelleMark from "@/components/landing/chapters/opening/OryvelleMark";
 
 export const metadata: Metadata = {
   title: "Lost Signal",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <SiteHeader />
+      <header className="absolute left-6 top-6 z-10"><Link href="/" aria-label="Oryvelle home" className="flex items-center gap-3 text-2xl"><span className="block h-8 w-8"><OryvelleMark /></span>Oryvelle</Link></header>
 
       <div
         aria-hidden="true"

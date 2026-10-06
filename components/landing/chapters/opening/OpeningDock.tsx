@@ -6,10 +6,12 @@ import { useGSAP } from "@gsap/react";
 import { PLAY_STORE_URL } from "@/app/site-config";
 import styles from "./opening-dock.module.css";
 import { useDownloadPanel } from "./DownloadPanel";
+import OryvelleMark from "./OryvelleMark";
 
 gsap.registerPlugin(useGSAP);
 
-export default function OpeningDock({ reduced, canExplore, onNavigate }: {
+export default function OpeningDock({ reduced, canExplore, onNavigate, links }: {
+  links?: { label: string; href: string }[];
   reduced: boolean;
   canExplore: boolean;
   onNavigate(progress: number): void;
@@ -29,7 +31,7 @@ export default function OpeningDock({ reduced, canExplore, onNavigate }: {
 
   useGSAP((_, safe) => {
     const dock = dockRef.current;
-    if (!dock) return;
+    if (!dock || !safe) return;
     const download = dock.querySelector<HTMLAnchorElement>("a");
     let lastY = window.scrollY;
     let travel = 0;
@@ -71,7 +73,7 @@ export default function OpeningDock({ reduced, canExplore, onNavigate }: {
     return () => node?.removeEventListener("wheel", blockWheel);
   }, [open]);
 
-  const finishClose = contextSafe(() => {
+  const finishClose = () => contextSafe(() => {
     gsap.set(dockRef.current, { autoAlpha: 1, "--dock-open": 0, "--dock-content": 1 });
     dialog.current?.close();
     setOpen(false);
@@ -79,13 +81,13 @@ export default function OpeningDock({ reduced, canExplore, onNavigate }: {
     const action = afterClose.current;
     afterClose.current = null;
     action?.();
-  });
-  const close = contextSafe((action?: () => void) => {
+  })();
+  const close = (action?: () => void) => contextSafe(() => {
     afterClose.current = action ?? null;
     if (reduced || !motion.current || motion.current.time() === 0) finishClose();
     else motion.current.eventCallback("onReverseComplete", finishClose).reverse();
-  });
-  const show = contextSafe(() => {
+  })();
+  const show = () => contextSafe(() => {
     if (!dialog.current || !panel.current || dialog.current.open) return;
     dialog.current.showModal();
     setOpen(true);
@@ -110,24 +112,38 @@ export default function OpeningDock({ reduced, canExplore, onNavigate }: {
         clipPath: "inset(0px 0% 0px round 32px)", y: 0, duration: .62, ease: "power3.inOut",
       }, .22)
       .fromTo(contents, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .34, stagger: .055, ease: "power2.out" }, .51);
-  });
+  })();
 
   return <div ref={root} className={styles.root}>
     <div ref={dockRef} className={styles.dock}>
       <button ref={trigger} className={styles.menuButton} type="button" aria-label="Open Oryvelle menu" aria-haspopup="dialog" aria-controls={id} aria-expanded={open} onClick={show}>
         <span /><span />
       </button>
-      <button className={styles.mark} type="button" aria-label="Return to the opening" onClick={() => onNavigate(0)}>O</button>
+      <button className={styles.mark} type="button" aria-label="Return to the opening" onClick={() => onNavigate(0)}><OryvelleMark /></button>
       <a className={styles.download} href={PLAY_STORE_URL} onClick={onDownload} aria-label="Download Oryvelle on Google Play"><span className={styles.rolling}><span className={styles.word}>Download</span></span><span aria-hidden="true">↗</span></a>
     </div>
     <dialog ref={dialog} id={id} className={styles.dialog} aria-labelledby={`${id}-title`} onCancel={event => { event.preventDefault(); close(); }} onClick={event => { if (event.target === event.currentTarget) close(); }} onKeyDown={event => { if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(event.key)) event.preventDefault(); }}>
       <div ref={panel} className={styles.panel}>
-        <header data-dock-reveal><h2 id={`${id}-title`}>Oryvelle</h2><span aria-hidden="true">O</span></header>
-        <nav aria-label="Opening chapter" data-dock-reveal>
+        <header data-dock-reveal><h2 id={`${id}-title`}>Oryvelle</h2><OryvelleMark /></header>
+        <nav aria-label="Oryvelle pages" data-dock-reveal>
+          {links ? links.map(link => <a key={link.href} href={link.href} onClick={event => {
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault(); close(() => window.location.assign(link.href));
+          }}>{link.label}<span aria-hidden="true">↗</span></a>) : <>
           <button type="button" autoFocus onClick={() => close(() => onNavigate(0))}>The opening <span aria-hidden="true">↗</span></button>
           {canExplore && <button type="button" onClick={() => close(() => onNavigate(.57))}>Explore sounds <span aria-hidden="true">↗</span></button>}
+          </>}
         </nav>
-        <p className={styles.note} data-dock-reveal>Make space for rest.<br /><span>Available on Android · Google Play</span></p>
+        <nav className={styles.information} aria-label="Information" data-dock-reveal>
+          {[
+            { label: "Support", href: "/support" },
+            { label: "Terms of use", href: "/terms" },
+            { label: "Privacy policy", href: "/privacy" },
+          ].map(link => <a key={link.href} href={link.href} onClick={event => {
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault(); close(() => window.location.assign(link.href));
+          }}>{link.label}</a>)}
+        </nav>
         <a className={styles.panelDownload} href={PLAY_STORE_URL} onClick={event => onDownload(event, reveal => close(reveal))} data-dock-reveal>Download Oryvelle <span aria-hidden="true">↗</span></a>
       </div>
       <button ref={closeButton} className={styles.close} type="button" aria-label="Close Oryvelle menu" onClick={() => close()}>×</button>

@@ -24,11 +24,11 @@ export default function DownloadPanel({ children, reduced }: { children: ReactNo
     if (visible) target.focus({ preventScroll: true });
     else document.querySelector<HTMLButtonElement>('button[aria-label="Open Oryvelle menu"]')?.focus({ preventScroll: true });
   };
-  const close = contextSafe(() => {
+  const close = () => contextSafe(() => {
     if (reduced || !motion.current || motion.current.time() === 0) finish();
     else motion.current.eventCallback("onReverseComplete", finish).reverse();
-  });
-  const open = contextSafe((target: HTMLElement) => {
+  })();
+  const open = (target: HTMLElement) => contextSafe(() => {
     if (!dialog.current || !sheet.current || dialog.current.open) return;
     opener.current = target;
     dialog.current.showModal();
@@ -44,7 +44,7 @@ export default function DownloadPanel({ children, reduced }: { children: ReactNo
       .fromTo(dialog.current, { "--shade": 0 }, { "--shade": 1, duration: .4 }, 0)
       .fromTo(sheet.current, { xPercent: 100 }, { xPercent: 0, duration: .65, ease: "power3.inOut" }, 0)
       .fromTo(contents, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .35, stagger: .06, ease: "power2.out" }, .27);
-  });
+  })();
   const onDownload: DownloadAction = (event, beforeOpen) => {
     // Preserve modifier-click, ordinary mobile links and the no-JavaScript href.
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

@@ -11,15 +11,16 @@ import { SCREEN_KEYS, SCREEN_SOURCES } from "./screen-sources";
 import PhoneFloat from "./PhoneFloat";
 import { fitScreenTexture, usePhoneScreenVideo } from "./usePhoneScreenVideo";
 import { usePhoneExplore } from "./explore/usePhoneExplore";
-import type { ExploreDemo, ExploreSnapshot } from "./explore/explore-demo";
+import { usePhoneSleepTimer } from "./usePhoneSleepTimer";
+import type { ExploreEngine, ExploreSnapshot } from "./explore/explore-engine";
 
 function setEnvironment(scene: Scene, texture: Texture | null) {
   scene.environment = texture;
   scene.environmentIntensity = 0.6;
 }
 
-type Props = { onReady: (controller: PhoneController) => void; onLost: () => void; onStats?: (text: string) => void; onPresented?: () => void; ambientEnabled?: boolean; interactiveExplore?: boolean; onExploreReady?: (demo: ExploreDemo | null) => void; onExploreChange?: (snapshot: ExploreSnapshot) => void };
-function Phone({ onReady, onStats, onPresented, ambientEnabled = false, interactiveExplore = false, onExploreReady, onExploreChange }: Props) {
+type Props = { onReady: (controller: PhoneController) => void; onLost: () => void; onPresented?: () => void; ambientEnabled?: boolean; onExploreReady?: (demo: ExploreEngine | null) => void; onExploreChange?: (snapshot: ExploreSnapshot) => void };
+function Phone({ onReady, onPresented, ambientEnabled = false, onExploreReady, onExploreChange }: Props) {
   const model = useLoader(GLTFLoader, PHONE_URL);
   const loaded = useLoader(TextureLoader, SCREEN_KEYS.map(key => {
     const source = SCREEN_SOURCES[key];
@@ -30,7 +31,8 @@ function Phone({ onReady, onStats, onPresented, ambientEnabled = false, interact
     textures.forEach(t => { t.flipY = false; t.colorSpace = SRGBColorSpace; t.minFilter = LinearMipmapLinearFilter; t.magFilter = LinearFilter; t.anisotropy = 4; t.needsUpdate = true; });
     return { portraitA: textures[0], portraitB: textures[1], landscapeC: textures[2] };
   }, [loaded]);
-  const sources = useMemo<Record<ScreenState, Texture>>(() => ({ ...screens }), [screens]);
+  const sourcesRef = useRef<Record<ScreenState, Texture>>({ ...screens });
+  useLayoutEffect(() => { sourcesRef.current = { ...screens }; }, [screens]);
   const phone = useMemo(() => {
     const prepared = preparePhone(model.scene, screens.portraitA);
     SCREEN_KEYS.forEach(key => {
@@ -45,10 +47,9 @@ function Phone({ onReady, onStats, onPresented, ambientEnabled = false, interact
   const pose = useRef<PhonePose>({ yaw: 0, pitch: 0, roll: 0, scale: 1, y: 0 });
   const screen = useRef<ScreenState>("portraitA");
   const { gl, scene, viewport, invalidate } = useThree();
-  const tonightPlayback = usePhoneScreenVideo({ state: "portraitA", enabled: ambientEnabled, screen, pose, sources, phone });
-  const explorePlayback = usePhoneScreenVideo({ state: "portraitB", enabled: ambientEnabled, screen, pose, sources, phone, replaced: interactiveExplore });
-  const exploreInteraction = usePhoneExplore({ enabled: interactiveExplore, presented: ambientEnabled, screen, pose, sources, phone, onReady: onExploreReady, onChange: onExploreChange });
-  const reported = useRef(false);
+  const tonightPlayback = usePhoneScreenVideo({ state: "portraitA", enabled: ambientEnabled, screen, pose, sourcesRef, phone });
+  const exploreInteraction = usePhoneExplore({ presented: ambientEnabled, screen, pose, sourcesRef, phone, onReady: onExploreReady, onChange: onExploreChange });
+  const sleepTimer = usePhoneSleepTimer({ enabled: ambientEnabled, screen, pose, sourcesRef, phone });
   const frameCount = useRef(0);
   useLayoutEffect(() => {
     const room = createPhoneEnvironment();
@@ -67,26 +68,21 @@ function Phone({ onReady, onStats, onPresented, ambientEnabled = false, interact
         pivot.current.scale.setScalar(base * next.scale);
         pivot.current.position.set(0, viewport.height * next.y, 0);
       }
-      phone.setScreen(sources[nextScreen]);
+      phone.setScreen(sourcesRef.current[nextScreen]);
       tonightPlayback.current();
-      explorePlayback.current();
       exploreInteraction.current();
+      sleepTimer.current();
       if (!document.hidden) invalidate();
     };
     onReady({
-      apply, invalidate,
+      apply,
       setAmbientProgress: progress => { ambientProgress.current = progress; if (!document.hidden) invalidate(); },
-      setScreen: texture => { sources[screen.current] = texture; phone.setScreen(texture); invalidate(); },
-      setScreenSource: (state, texture) => {
-        sources[state] = texture;
-        if (screen.current === state) { phone.setScreen(texture); invalidate(); }
-      },
     });
     apply(pose.current, screen.current);
     const visible = () => { if (!document.hidden) apply(pose.current, screen.current); };
     document.addEventListener("visibilitychange", visible);
     return () => document.removeEventListener("visibilitychange", visible);
-  }, [viewport.height, viewport.width, phone, sources, invalidate, onReady, tonightPlayback, explorePlayback, exploreInteraction]);
+  }, [viewport.height, viewport.width, phone, sourcesRef, invalidate, onReady, tonightPlayback, exploreInteraction, sleepTimer]);
   useLayoutEffect(() => {
     const startingFrame = frameCount.current;
     let presented = false;
@@ -104,14 +100,7 @@ function Phone({ onReady, onStats, onPresented, ambientEnabled = false, interact
   useEffect(() => () => { phone.dispose(); Object.values(screens).forEach(texture => texture.dispose()); }, [phone, screens]);
   useFrame(() => {
     frameCount.current += 1;
-    if (!onStats) return;
-    if (!reported.current) {
-      reported.current = true;
-      // Current render stats are reported on the next demand frame.
-      invalidate();
-    } else {
-      onStats(`${gl.info.render.calls} draws · ${gl.info.render.triangles.toLocaleString()} triangles · DPR ${gl.getPixelRatio().toFixed(2)} · frames ${frameCount.current} · demand rendering`);
-    }
+
   });
   return <group ref={pivot}><PhoneFloat enabled={ambientEnabled} progress={ambientProgress}><group rotation={[0, Math.PI, 0]}><primitive object={phone.scene} dispose={null} /></group></PhoneFloat></group>;
 }

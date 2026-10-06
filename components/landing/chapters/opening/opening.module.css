@@ -3,10 +3,15 @@
 :global(html:has([data-opening-content])) { scrollbar-width:none; scrollbar-gutter:auto; }
 :global(html:has([data-opening-content])::-webkit-scrollbar) { display:none; width:0; height:0; }
 .page { background:#09090b; color:#d8d4e5; overflow:clip; font-family:var(--font-opening),sans-serif; }
+.mixerContinuation { position:relative; background:linear-gradient(#09090b,#090b13 38%); }
+.mixerContinuation > section { background:transparent; }
+.mixerLights { position:fixed; inset:0; width:100%; height:100%; z-index:12; pointer-events:none; visibility:hidden; }
 .journey { height:660svh; position:relative; --device-span:min(78svh,82vw); }
 .staticJourney { height:100svh; }
-.previewJourney { height:100svh; }
 .chapter { height:660svh; position:absolute; top:0; width:100%; pointer-events:none; }
+.guidedJourney { height:1000svh; }
+.meditationMarker { position:absolute; top:560svh; height:180svh; width:100%; pointer-events:none; }
+.breathingMarker { position:absolute; top:740svh; height:160svh; width:100%; pointer-events:none; }
 .staticChapter { height:100svh; }
 .stage { position:sticky; top:0; height:100svh; overflow:clip; isolation:isolate; }
 .stage[data-explore-active="true"] { touch-action:none; }
@@ -16,7 +21,8 @@
 .beam { position:absolute; width:150vw; height:55svh; left:5vw; top:43svh; transform:rotate(-38deg); background:linear-gradient(0deg,transparent,#14143255 18%,#302d6588 35%,#686077aa 50%,#26294f77 68%,transparent 90%); filter:blur(65px); }
 .atmosphere::after { content:""; position:absolute; inset:auto 0 0; height:18svh; background:linear-gradient(transparent,#09090b); }
 .deskGlow { position:absolute; inset:0; opacity:0; background:radial-gradient(ellipse at 52% 63%,#33263b44,transparent 55%); }
-.brand { position:absolute; right:3vw; top:2.6svh; z-index:60; font-size:clamp(22px,2.3vw,58px); letter-spacing:-.04em; font-weight:400; text-decoration:none; }
+.brand { position:absolute; right:3vw; top:2.6svh; z-index:60; display:inline-flex; align-items:center; gap:12px; color:#d8d4e5; font-size:clamp(22px,2.3vw,58px); letter-spacing:-.04em; font-weight:400; text-decoration:none; }
+.brand svg { display:block; width:34px; height:34px; flex:none; }
 .copy { position:absolute; inset:0; z-index:10; padding:3.4svh 2.6vw; pointer-events:none; }
 .copy h1,.copy h2 { font-weight:300; font-size:clamp(76px,8.7vw,230px); line-height:.94; letter-spacing:-.045em; margin:0; color:#d7d3e1; }
 .copy h1 { max-width:72vw; }
@@ -37,8 +43,10 @@
 .actionIcon:hover { color:#141218; }
 .actionIcon:focus-visible { outline:3px solid #bba3e2; outline-offset:5px; }
 .scrollArrow { background:#1b1b22; border-color:transparent; }
-.returnCopy { opacity:0; visibility:hidden; }
-.returnCopy h2 { padding-top:24svh; }
+.returnCopy { opacity:0; visibility:hidden; z-index:35; }
+.returnCopy h2 { padding-top:0; }
+.returnCopy .support { position:relative; left:auto; bottom:auto; margin-top:36px; max-width:30vw; }
+.returnCopy .support p { margin-bottom:28px; }
 .deskCopy { opacity:0; visibility:hidden; }
 .deskCopy h2 { padding-top:1svh; }
 .product { position:absolute; inset:0; z-index:30; pointer-events:none; }
@@ -57,20 +65,15 @@
 .rear { z-index:20; }
 .foreground { z-index:40; }
 .page a:focus-visible { outline:3px solid #bba3e2; outline-offset:6px; }
-.debug { position:absolute; bottom:2px; right:8px; max-width:440px; z-index:80; font:12px/1.4 monospace; background:#14121deb; padding:12px; }
-.debug nav { display:flex; flex-wrap:wrap; gap:10px; }
-.attribution { min-height:64px; position:relative; background:#09090b; display:flex; align-items:flex-end; justify-content:center; padding:25px; }
-.attribution small { color:#82798d; font-size:12px; }
-.journey[data-phase="return"] .hero,.journey[data-phase="desk"] .hero { opacity:0; visibility:hidden; }
-.journey[data-phase="return"] .returnCopy { opacity:1; visibility:visible; }
-.journey[data-phase="desk"] .deskCopy { opacity:1; visibility:visible; }
-.journey[data-phase="desk"] .environment { opacity:1; }
 @media (max-width:760px) {
  .journey { height:460svh; --device-span:min(84.24svh,88.56vw); }
  .chapter { height:460svh; }
+ .guidedJourney { height:760svh; }
+ .meditationMarker { top:360svh; height:160svh; }
+ .breathingMarker { top:520svh; height:140svh; }
  .staticJourney,.staticChapter { height:100svh; }
- .previewJourney { height:100svh; }
- .brand { font-size:25px; top:2svh; right:5vw; }
+ .brand { font-size:25px; top:24px; right:auto; left:5vw; gap:10px; }
+ .brand svg { width:30px; height:30px; }
  .copy { padding:9svh 5vw; }
  .copy h1,.copy h2 { font-size:clamp(56px,12.5vw,94px); line-height:.98; letter-spacing:-.045em; max-width:95%; }
  .support { position:relative; left:auto; bottom:auto; max-width:90vw; margin-top:22px; font-size:17px; }
@@ -80,6 +83,8 @@
  .actionIcon { width:48px; height:48px; border-radius:18px; }
  .returnCopy h2,.deskCopy h2 { font-size:clamp(42px,10.4vw,64px); }
  .returnCopy h2 { padding-top:0; }
+ .returnCopy .support { max-width:90vw; margin-top:22px; }
+ .returnCopy .support p { margin-bottom:22px; }
  .deskCopy h2 { padding-top:0; }
  .environment { top:calc(51% - var(--device-span) * .35); }
  .poster { height:calc(min(68.64svh,72.16vw) * 5.99815225425); aspect-ratio:390/1688; top:67.6svh; transform:translate(-50%,-33.8%); }
@@ -93,7 +98,7 @@
 /* Hero support is out of flow and shares the approved .hero departure. */
 .availability { position:absolute; top:calc(100% + 12px); left:0; color:#a29bad; font-size:12px; line-height:20px; letter-spacing:0; white-space:nowrap; }
 .scan { display:none; }
-.capability { display:none; position:absolute; right:2.6vw; bottom:7svh; width:240px; min-height:150px; padding:24px; box-sizing:border-box; border:1px solid #bfb4d61c; border-radius:18px; background:#131217; }
+.capability { display:none; position:absolute; right:2.6vw; bottom:7svh; width:240px; min-height:150px; padding:24px; box-sizing:border-box; border:1px solid #c5c2db30; border-radius:18px; background:linear-gradient(135deg,#25243b45,#11121bd1); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); box-shadow:inset 0 1px 0 #e6e0ff06; }
 .copy .capability h2 { padding:0; margin:0 0 18px; max-width:none; font-size:19px; font-weight:400; line-height:1.2; letter-spacing:-.025em; color:#d1cadc; }
 .capability p { margin:0; color:#a69daf; font-size:15px; line-height:1.55; letter-spacing:-.015em; }
 @media (min-width:761px) and (hover:hover) and (pointer:fine) { .scan { display:inline-flex; } }

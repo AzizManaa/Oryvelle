@@ -14,7 +14,7 @@ export function createOpeningTimeline({ chapter, stage, pose, onUpdate }: {
   const hero = find("hero"), returning = find("returnCopy"), desk = find("deskCopy");
   const rear = find("rear"), front = find("foreground");
   gsap.set(hero, { autoAlpha: 1, yPercent: 0 });
-  gsap.set(returning, { autoAlpha: 0, yPercent: 85 });
+  gsap.set(returning, { autoAlpha: 0, yPercent: 110 });
   gsap.set(desk, { autoAlpha: 0, yPercent: 110 });
   gsap.set(rear, { opacity: 0, yPercent: 80 });
   gsap.set(front, { opacity: 0, yPercent: 0 });
@@ -33,11 +33,13 @@ export function createOpeningTimeline({ chapter, stage, pose, onUpdate }: {
     onUpdate() { if (!refreshing) onUpdate(timeline.progress()); },
   });
   addPhonePoseTrack(timeline, pose);
-  timeline.to(hero, { yPercent: -110, duration: .28 }, .02)
-    .set(hero, { autoAlpha: 0 }, .30)
+  // Let the outgoing support and incoming headline share the rear-phone turn.
+  // Keep the incoming copy's final arrival and all physical pose anchors intact.
+  timeline.to(hero, { yPercent: -110, duration: .33 }, .02)
+    .set(hero, { autoAlpha: 0 }, .35)
     .to(find("brand"), { autoAlpha: 0, y: -20, duration: .15 }, .10)
-    .set(returning, { autoAlpha: 1 }, .23)
-    .to(returning, { yPercent: 0, duration: .26 }, .23)
+    .set(returning, { autoAlpha: 1 }, .155)
+    .to(returning, { yPercent: 0, duration: .335 }, .155)
     .to(returning, { yPercent: -110, duration: .15 }, .61)
     .set(returning, { autoAlpha: 0 }, .76)
     .set(desk, { autoAlpha: 1 }, .69)
