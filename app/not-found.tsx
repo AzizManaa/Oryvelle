@@ -1,103 +1,55 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Outfit } from "next/font/google";
 import OryvelleMark from "@/components/landing/chapters/opening/OryvelleMark";
+import NightField from "@/components/landing/chapters/opening/NightField";
+import styles from "./not-found.module.css";
+
+const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400"], variable: "--font-opening", display: "swap" });
+const CONSTELLATIONS = [
+  [[112, 80], [76, 146], [34, 232], [106, 232], [167, 232]],
+  [[140, 150], [140, 232], [140, 320]],
+  [[267, 80], [219, 117], [203, 207], [219, 289], [267, 320], [313, 284], [327, 193], [310, 112], [267, 80]],
+  [[475, 80], [438, 151], [398, 232], [465, 232], [531, 232]],
+  [[505, 150], [505, 232], [505, 320]],
+];
 
 export const metadata: Metadata = {
-  title: "Lost Signal",
-  description: "This Oryvelle page drifted out of range.",
+  title: "Page not found",
+  description: "A little off course. Find your way back to Oryvelle.",
 };
 
 export default function NotFound() {
-  return (
-    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <header className="absolute left-6 top-6 z-10"><Link href="/" aria-label="Oryvelle home" className="flex items-center gap-3 text-2xl"><span className="block h-8 w-8"><OryvelleMark /></span>Oryvelle</Link></header>
-
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_28%,rgba(0,224,199,0.16),transparent_28rem),radial-gradient(circle_at_78%_72%,rgba(184,154,255,0.12),transparent_24rem)]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:72px_72px] opacity-20"
-      />
-
-      <main
-        id="main-content"
-        className="relative mx-auto grid min-h-screen w-full max-w-6xl items-center gap-12 px-5 py-28 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(320px,1fr)]"
-      >
-        <div>
-          <p className="mb-4 text-xs font-medium tracking-[0.28em] text-teal uppercase">
-            404 Hz
-          </p>
-          <h1 className="text-balance text-4xl leading-tight font-semibold text-ink sm:text-6xl">
-            This sound wandered off.
-          </h1>
-          <p className="mt-5 max-w-xl text-base leading-8 text-muted">
-            We checked the rain, the cabin air, and the quiet corner behind the
-            timer. Nothing here. The page may have moved, or the link may be a
-            little too relaxed.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/"
-              className="rounded-full border border-teal/30 bg-teal/10 px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-teal/15"
-            >
-              Back to calm
-            </Link>
-            <Link
-              href="/support"
-              className="rounded-full border border-white/[0.12] px-5 py-3 text-sm font-medium text-muted transition-colors hover:border-white/[0.22] hover:text-ink"
-            >
-              Ask support
-            </Link>
-          </div>
+  return <div className={`${outfit.variable} ${styles.page}`}>
+    <div className={styles.atmosphere} aria-hidden="true"><NightField animate={false} /></div>
+    <header className={styles.header}>
+      <Link href="/" aria-label="Oryvelle home"><OryvelleMark />Oryvelle</Link>
+    </header>
+    <main id="main-content" className={styles.main}>
+      <div className={styles.copy}>
+        <p className={styles.eyebrow}>404 · Page not found</p>
+        <h1>A little<br />off course.</h1>
+        <p className={styles.description}>This page has drifted beyond our map.<br />{" "}Let’s bring you back to somewhere quiet.</p>
+        <div className={styles.actions}>
+          <Link href="/" className={styles.home}>Back to calm<span aria-hidden="true">↗</span></Link>
+          <Link href="/support" className={styles.support}>Ask support<span aria-hidden="true">↗</span></Link>
         </div>
-
-        <div
-          aria-hidden="true"
-          className="relative mx-auto aspect-square w-full max-w-[440px]"
-        >
-          <div className="absolute inset-0 rounded-full border border-white/[0.08] bg-[#100B1D]/70 shadow-[0_0_120px_rgba(0,224,199,0.14)] backdrop-blur" />
-          <div className="absolute inset-[13%] rounded-full border border-teal/20" />
-          <div className="absolute inset-[25%] rounded-full border border-lavender/20" />
-          <div className="absolute top-1/2 left-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full border border-teal/45 bg-[radial-gradient(circle,rgba(0,224,199,0.28),rgba(0,224,199,0.04)_58%,transparent_70%)] shadow-[0_0_70px_rgba(0,224,199,0.35)]" />
-
-          <div className="absolute top-[22%] left-1/2 flex -translate-x-1/2 items-end gap-2">
-            {[22, 38, 54, 32, 68, 26, 46, 18].map((height, index) => (
-              <span
-                key={`${height}-${index}`}
-                className="block w-2 rounded-full bg-teal/70 shadow-[0_0_18px_rgba(0,224,199,0.45)]"
-                style={{ height }}
-              />
-            ))}
-          </div>
-
-          <div className="absolute right-[12%] bottom-[22%] left-[12%] rounded-[8px] border border-white/[0.1] bg-background/85 p-4">
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <div>
-                <p className="text-[10px] font-medium tracking-[0.24em] text-amber uppercase">
-                  Missing mix
-                </p>
-                <p className="mt-1 text-sm font-medium text-ink">
-                  Page not found
-                </p>
-              </div>
-              <p className="text-xs text-muted">0:04</p>
-            </div>
-            <div className="flex h-12 items-center gap-1.5">
-              {[12, 18, 30, 16, 8, 0, 0, 0, 20, 14, 26, 10].map(
-                (height, index) => (
-                  <span
-                    key={`${height}-${index}`}
-                    className="block flex-1 rounded-full bg-white/[0.14]"
-                    style={{ height: height || 2 }}
-                  />
-                ),
-              )}
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
+      </div>
+      <figure className={styles.constellation} aria-hidden="true">
+        <svg viewBox="0 0 565 410" fill="none" focusable="false">
+          <ellipse className={styles.orbit} cx="267" cy="200" rx="257" ry="168" transform="rotate(-18 267 200)" />
+          <g className={styles.lines}>{CONSTELLATIONS.map((points, index) => <polyline key={index} points={points.map(point => point.join(",")).join(" ")} pathLength="1" />)}</g>
+          <g className={styles.stars}>{CONSTELLATIONS.map((points, group) => points.slice(0, group === 2 ? -1 : undefined).map(([x, y], index) => <circle key={`${group}-${index}`} cx={x} cy={y} r={index % 3 === 0 ? 2.8 : 1.6} opacity={index % 3 === 0 ? .95 : .55} />))}</g>
+          <circle className={styles.halo} cx="267" cy="200" r="16" />
+          <circle className={styles.lostStar} cx="267" cy="200" r="3" />
+          <path className={styles.guide} d="M267 223V352" />
+        </svg>
+        <figcaption>A quiet detour.</figcaption>
+      </figure>
+    </main>
+    <footer className={styles.footer}>
+      <p>Somewhere quiet is still here.</p>
+      <nav aria-label="Information"><Link href="/terms">Terms of use</Link><Link href="/privacy">Privacy policy</Link></nav>
+    </footer>
+  </div>;
 }
