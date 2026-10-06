@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useRef, type RefObject } from 'react';
-import { EXPLORE_SOUNDS, type ExploreDemo, type ExploreSnapshot } from './explore-demo';
+import { EXPLORE_SOUNDS, type ExploreEngine, type ExploreSnapshot } from './explore-engine';
 import styles from './explore.module.css';
 
-export default function ExploreControls({ controller, state }: { controller: RefObject<ExploreDemo | null>; state: ExploreSnapshot | null }) {
+export default function ExploreControls({ controller, state }: { controller: RefObject<ExploreEngine | null>; state: ExploreSnapshot | null }) {
   const entryButton = useRef<HTMLButtonElement>(null);
   const wasActive = useRef(false);
   useEffect(() => {

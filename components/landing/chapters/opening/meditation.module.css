@@ -1,0 +1,58 @@
+.scene { position:absolute; inset:0; z-index:7; visibility:hidden; pointer-events:none; color:#d8d4e5; }
+.desktopMap,.mobileMap { position:absolute; inset:0; width:100%; height:100%; color:#a19bd36b; overflow:visible; }
+.mobileMap { display:none; }
+.guide { opacity:0; visibility:hidden; }
+.copy { position:absolute; z-index:2; left:4.5%; top:29%; width:42%; opacity:0; visibility:hidden; }
+.eyebrow { margin:0 0 26px; text-transform:uppercase; font-size:11px; letter-spacing:.36em; color:#b2aacb; }
+.copy h2 { margin:0; font-size:clamp(60px,5.9vw,150px); font-weight:300; line-height:1.02; letter-spacing:-.04em; }
+.description { margin:26px 0 30px; font-size:clamp(16px,1.55vw,32px); line-height:1.4; color:#b8b0ca; }
+.explore { display:inline-flex; align-items:center; gap:18px; padding:8px 0; font-size:clamp(15px,1.2vw,24px); text-decoration:none; color:#75d3c8; border-bottom:1px solid #75d3c84d; pointer-events:auto; }
+.explore span { transition:transform .3s ease; }
+.explore:hover span { transform:translate(3px,-3px); }
+.journey { position:absolute; inset:0; pointer-events:none; }
+.art { position:absolute; opacity:0; visibility:hidden; -webkit-mask-image:radial-gradient(ellipse closest-side at 69% 53%,#000 36%,transparent 100%); mask-image:radial-gradient(ellipse closest-side at 69% 53%,#000 36%,transparent 100%); }
+.art img { object-fit:cover; object-position:76% 50%; }
+.label { position:absolute; z-index:1; opacity:0; visibility:hidden; max-width:19%; }
+.label a { color:#e0d9ec; text-decoration:none; pointer-events:auto; }
+.label a:hover { color:#95ded4; }
+.label h3 { margin:0; font-weight:400; font-size:clamp(15px,1.25vw,28px); line-height:1.3; letter-spacing:-.025em; }
+.label p { margin:8px 0 0; color:#aea5bf; font-size:clamp(11px,.95vw,20px); line-height:1.4; }
+.label .session { color:#8d859f; font-size:clamp(10px,.85vw,18px); }
+.wind .art { left:34%; top:27%; width:48%; height:45%; }
+.wind .label { left:82%; top:42%; max-width:17%; }
+.thought .art { left:34%; top:0; width:32%; height:30%; }
+.thought .label { left:67%; top:16%; }
+.ritual .art { left:25%; top:66%; width:32%; height:31%; }
+.ritual .label { left:58%; top:80%; }
+.stationary { position:relative; height:100svh; visibility:visible; background:radial-gradient(ellipse at 72% 50%,#25263e,#0c1020 70%); }
+.stationary .copy,.stationary .art,.stationary .label { opacity:1; visibility:visible; }
+.stationary [data-meditation-star] { opacity:1 !important; }
+.stationary [data-meditation-path] { stroke-dashoffset:0; }
+.stationary [data-meditation-thread] { display:none; }
+@media(max-width:760px) {
+ .desktopMap { display:none; }
+ .mobileMap { display:block; }
+ .copy { top:8%; left:7%; width:86%; }
+ .eyebrow { font-size:9px; margin-bottom:16px; letter-spacing:.28em; }
+ .copy h2 { font-size:clamp(40px,11vw,72px); }
+ .description { font-size:14px; margin:14px 0 6px; }
+ .explore { font-size:13px; padding:7px 0; }
+ .wind .art { left:0; top:29%; width:96%; height:35%; }
+ .wind .label { left:8%; top:56%; max-width:80%; }
+ .thought .art { left:38%; top:64%; width:64%; height:23%; }
+ .thought .label { left:54%; top:84%; max-width:42%; }
+ .ritual .art { left:-13%; top:67%; width:64%; height:23%; }
+ .ritual .label { left:6%; top:86%; max-width:43%; }
+ .label h3 { font-size:14px; }
+ .label p { font-size:10px; margin-top:5px; }
+ .wind .label h3 { font-size:18px; }
+ .wind .label .session { font-size:11px; }
+ .stationary { min-height:800px; }
+}
+@media(max-height:700px) and (min-width:761px) {
+ .copy { top:25%; }
+ .eyebrow { margin-bottom:16px; }
+ .description { margin:16px 0; }
+ .copy h2 { font-size:min(5.9vw,16svh); }
+}
+@media(prefers-reduced-motion:reduce) { .explore span { transition:none; } }

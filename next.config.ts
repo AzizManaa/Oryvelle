@@ -32,6 +32,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "cdn.oryvelle.app", port: "", pathname: "/media/sounds/**", search: "" }],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

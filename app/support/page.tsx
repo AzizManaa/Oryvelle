@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "../_components/site-header";
+import InformationLayout from "../_components/information/InformationLayout";
 import { absoluteUrl, SITE_NAME } from "../site-config";
 
 export const metadata: Metadata = {
@@ -160,15 +160,14 @@ const FAQ_SECTIONS = [
 
 export default function SupportPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader activePage="support" />
+    <InformationLayout page="support">
 
       <main
         id="main-content"
-        className="mx-auto w-full max-w-2xl px-5 pt-28 pb-24 sm:px-8"
+        className="information-content"
       >
         {/* Page header */}
-        <div className="mb-10 border-b border-white/[0.08] pb-8">
+        <div className="information-hero">
           <p className="mb-3 text-xs font-medium tracking-[0.28em] text-teal uppercase">
             Help
           </p>
@@ -217,10 +216,10 @@ export default function SupportPage() {
               </h2>
               <div className="space-y-6">
                 {section.items.map((item) => (
-                  <div key={item.q}>
-                    <p className="mb-1.5 font-medium text-foreground">
+                  <details key={item.q}>
+                    <summary>
                       {item.q}
-                    </p>
+                    </summary>
                     {"steps" in item && item.steps ? (
                       <ol className="list-decimal space-y-1 pl-5 text-subtle">
                         {item.steps.map((step) => (
@@ -241,7 +240,7 @@ export default function SupportPage() {
                     ) : (
                       <p className="text-subtle">{item.a}</p>
                     )}
-                  </div>
+                  </details>
                 ))}
               </div>
             </section>
@@ -276,16 +275,7 @@ export default function SupportPage() {
           </p>
         </div>
 
-        {/* Footer nav */}
-        <div className="mt-12 border-t border-white/[0.08] pt-8 text-center">
-          <Link
-            href="/"
-            className="text-sm text-subtle transition-colors hover:text-muted"
-          >
-            ← Back to Oryvelle
-          </Link>
-        </div>
       </main>
-    </div>
+    </InformationLayout>
   );
 }

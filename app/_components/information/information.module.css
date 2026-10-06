@@ -1,0 +1,54 @@
+.page { position:relative; isolation:isolate; background:#09090d; color:#d4cfdf; font-family:var(--font-opening),sans-serif; font-weight:300; }
+.atmosphere { position:absolute; z-index:-1; inset:0 0 auto; height:1400px; pointer-events:none; opacity:.6; background:radial-gradient(ellipse at 85% 24%,#61547777,transparent 48%),radial-gradient(ellipse at 70% 45%,#28284f66,transparent 65%); mask-image:linear-gradient(#000 65%,transparent); }
+.header { position:absolute; z-index:2; top:30px; right:3vw; }
+.header a { display:flex; align-items:center; gap:12px; font-size:clamp(25px,2.4vw,42px); letter-spacing:-.045em; text-decoration:none; color:inherit; }
+.header svg { width:34px; height:34px; }
+.dock { position:fixed; inset:0; z-index:60; pointer-events:none; }
+.page :global(.information-content) { width:100%; padding:42px 3vw 100px; }
+.page :global(.information-hero) { padding-bottom:76px; margin-bottom:0; border-bottom:1px solid #c1b6db25; }
+.page :global(.information-hero) > p:first-child { font-size:11px; letter-spacing:.25em; color:#a39cb6; margin:0 0 24px; }
+.page :global(.information-hero) h1 { font-weight:300; font-size:clamp(70px,9vw,176px); line-height:.98; letter-spacing:-.06em; max-width:65%; margin:0 0 72px; text-wrap:balance; animation:arrive .8s ease both; }
+.page :global(.information-hero) dl { display:grid; grid-template-columns:1fr 1fr; max-width:640px; gap:10px 28px; margin:0; font-size:15px; line-height:1.6; }
+.page :global(.information-hero) > p:last-child:not(:first-child) { font-size:18px; line-height:1.6; }
+.page :global(.information-content) > div:has(> section) { margin:0; counter-reset:clause; }
+.page :global(.information-content) section:has(h2) { position:relative; counter-increment:clause; padding:80px 0 80px 35%; margin:0; border-bottom:1px solid #c1b6db25; scroll-margin-top:30px; }
+.page :global(.information-content) section:has(h2)::before { content:counter(clause,decimal-leading-zero); position:absolute; top:80px; left:0; width:82px; height:82px; display:grid; place-items:center; border:1px solid #c1b6db30; border-radius:27px; font-size:27px; color:#c5bed3; }
+.page :global(.information-content) section:not(:has(h2)) { padding:68px 0 68px 35%; margin:0; border-bottom:1px solid #c1b6db25; }
+.page :global(.information-content) h2 { font-size:clamp(32px,3.9vw,70px); font-weight:300; letter-spacing:-.045em; line-height:1.12; margin:0 0 38px; max-width:850px; text-wrap:balance; }
+.page :global(.information-content) h3 { font-size:25px; line-height:1.3; font-weight:400; margin:32px 0 18px; }
+.page :global(.information-content) :is(p,li,td,th) { font-size:clamp(17px,1.3vw,23px); line-height:1.65; }
+.page :global(.information-content) :is(p,ul,ol,table) { max-width:850px; }
+.page :global(.information-content) p { margin-bottom:20px; color:#bcb6cb; }
+.page :global(.information-content) :is(ul,ol) { margin-top:20px; margin-bottom:20px; }
+.page :global(.information-content) :is(li,td) { color:#a9a2b9; }
+.page :global(.information-content) a { color:#d3c9e5; text-underline-offset:5px; }
+.page :global(.information-content) a:hover { color:#ece5f7; }
+.page :global(.information-content) strong { font-weight:400; color:#e1daee; }
+.page :global(.information-content) table { min-width:0; width:100%; }
+.page :global(.information-content) td { vertical-align:top; padding:18px; font-size:16px; }
+.page :global(.information-content) th { font-size:16px; padding:18px; }
+.page :global(.information-content) > div:not(:has(> section)):not(:global(.information-hero)) { margin:64px 0 64px 35%; padding:32px; max-width:850px; background:#16152255; border:1px solid #c1b6db30; border-radius:28px; }
+.page :global(.information-content) details { border-top:1px solid #c1b6db25; padding:23px 0; margin:0; }
+.page :global(.information-content) summary { display:flex; justify-content:space-between; gap:22px; list-style:none; cursor:pointer; font-size:clamp(19px,1.5vw,26px); line-height:1.4; color:#d4cfdf; }
+.page :global(.information-content) summary::-webkit-details-marker { display:none; }
+.page :global(.information-content) summary::after { content:'+'; flex:none; color:#9d92b4; font-size:28px; }
+.page :global(.information-content) details[open] summary::after { content:'−'; }
+.page :global(.information-content) details summary ~ * { margin-top:22px; }
+.page :is(a,button,summary):focus-visible { outline:2px solid #c9b9e1; outline-offset:6px; }
+@keyframes arrive { from { transform:translateY(22px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+@media(max-width:760px) {
+  .header { top:24px; right:24px; } .header svg { width:26px; height:26px; }
+  .page :global(.information-content) { padding:116px 24px 40px; }
+  .page :global(.information-hero) { padding-bottom:40px; }
+  .page :global(.information-hero) h1 { font-size:clamp(56px,13vw,94px); max-width:100%; margin-bottom:38px; }
+  .page :global(.information-hero) dl { grid-template-columns:1fr; gap:8px; font-size:14px; }
+  .page :global(.information-content) section:has(h2) { padding:116px 0 44px; }
+  .page :global(.information-content) section:has(h2)::before { top:38px; width:54px; height:54px; border-radius:18px; font-size:19px; }
+  .page :global(.information-content) section:not(:has(h2)) { padding:38px 0; }
+  .page :global(.information-content) h2 { font-size:36px; margin-bottom:26px; }
+  .page :global(.information-content) > div:not(:has(> section)):not(:global(.information-hero)) { margin:38px 0; padding:24px; }
+  .page :global(.information-content) td,.page :global(.information-content) th { font-size:14px; padding:12px; }
+}
+@media(prefers-reduced-motion:reduce) { .page * { animation:none!important; } }
+.page :global(.information-content) code { overflow-wrap:anywhere; word-break:break-word; }
+.page :global(.information-hero) h1 { color:#d4cfdf; }

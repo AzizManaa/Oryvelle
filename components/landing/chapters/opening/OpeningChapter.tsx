@@ -9,13 +9,23 @@ import { useGSAP } from "@gsap/react";
 import type { PhoneController, PhonePose } from "../../device/phone-model";
 import { OPENING_POSES, openingScreenAt, responsivePose } from "./opening-poses";
 import Stand from "./Stand";
-import HeroAvailability from "./HeroAvailability";
+import NightField from "./NightField";
+import HeroActions from "./HeroActions";
+import OpeningDock from "./OpeningDock";
+import OryvelleMark from "./OryvelleMark";
+import DownloadPanel from "./DownloadPanel";
+import JourneyFooter from "./JourneyFooter";
 import { createOpeningTimeline } from "./opening.timeline";
+import MeditationScene from "./MeditationScene";
+import { createMeditationTimeline } from "./meditation.timeline";
+import BreathingScene from "./BreathingScene";
+import SoundMixerShowcase from "../../features/SoundMixerShowcase";
+import { createMixerHandoff } from "./mixer-handoff";
+import { createBreathingTimeline } from "./breathing.timeline";
 import styles from "./opening.module.css";
-import { PLAY_STORE_URL } from "@/app/site-config";
 import GlobalEntry from "../../entry/GlobalEntry";
 import ExploreControls from "../../device/explore/ExploreControls";
-import type { ExploreDemo, ExploreSnapshot } from "../../device/explore/explore-demo";
+import type { ExploreEngine, ExploreSnapshot } from "../../device/explore/explore-engine";
 const PhoneCanvas = dynamic(() => import("../../device/PhoneCanvas"), { ssr: false });
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 class RendererBoundary extends Component<{ children: ReactNode; onError(): void }, { failed: boolean }> {
@@ -24,16 +34,18 @@ class RendererBoundary extends Component<{ children: ReactNode; onError(): void 
   componentDidCatch() { this.props.onError(); }
   render() { return this.state.failed ? null : this.props.children; }
 }
-export default function OpeningChapter({ preview, debug = false, posterOnly = false, interactiveExplore = false }: { preview?: string; debug?: boolean; posterOnly?: boolean; interactiveExplore?: boolean; }) {
-  const checkpoint = OPENING_POSES.find(p => p.name === preview) ?? OPENING_POSES[0];
+export default function OpeningChapter() {
+  const initialPose = OPENING_POSES[0];
   const chapter = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
+  const meditationMarker = useRef<HTMLDivElement>(null);
+  const breathingMarker = useRef<HTMLDivElement>(null);
+  const mixer = useRef<HTMLDivElement>(null);
+  const mixerLights = useRef<SVGSVGElement>(null);
   const product = useRef<HTMLDivElement>(null);
   const controller = useRef<PhoneController | null>(null);
-  const current = useRef<PhonePose>({ ...checkpoint });
-  const progress = useRef(checkpoint.at);
-  const meter = useRef<HTMLInputElement>(null);
-  const stats = useRef<HTMLOutputElement>(null);
+  const current = useRef<PhonePose>({ ...initialPose });
+  const progress = useRef(initialPose.at);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const [reduced, setReduced] = useState(false);
@@ -42,10 +54,10 @@ export default function OpeningChapter({ preview, debug = false, posterOnly = fa
   const [layoutReady, setLayoutReady] = useState(false);
   const posterImage = useRef<HTMLImageElement>(null);
   const [posterReady, setPosterReady] = useState(false);
-  const [entryReleased, setEntryReleased] = useState(Boolean(preview));
-  const exploreController = useRef<ExploreDemo | null>(null);
+  const [entryReleased, setEntryReleased] = useState(false);
+  const exploreController = useRef<ExploreEngine | null>(null);
   const [exploreState, setExploreState] = useState<ExploreSnapshot | null>(null);
-  const onExploreReady = useCallback((demo: ExploreDemo | null) => { exploreController.current = demo; }, []);
+  const onExploreReady = useCallback((demo: ExploreEngine | null) => { exploreController.current = demo; }, []);
   const onExploreChange = useCallback((snapshot: ExploreSnapshot) => { setExploreState(snapshot); }, []);
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -62,7 +74,7 @@ export default function OpeningChapter({ preview, debug = false, posterOnly = fa
     // Cached SSR images can finish before React attaches the load handler.
     if (posterImage.current?.complete) setPosterReady(true);
   }, []);
-  const fallback = failed || reduced || posterOnly;
+  const fallback = failed || reduced;
   const onReady = useCallback((next: PhoneController) => {
     controller.current = next;
     next.setAmbientProgress(progress.current);
@@ -71,12 +83,18 @@ export default function OpeningChapter({ preview, debug = false, posterOnly = fa
   const onPresented = useCallback(() => { setReady(true); }, []);
   const onLost = useCallback(() => { controller.current = null; setFailed(true); setReady(false); }, []);
   const onRelease = useCallback(() => { setEntryReleased(true); }, []);
-  const onStats = useCallback((value: string) => { if (stats.current) stats.current.textContent = value; }, []);
+  useEffect(() => {
+    if (!entryReleased || !window.location.hash) return;
+    // Entry starts at the top; honor incoming section links after its lock is gone.
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: "instant" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [entryReleased]);
   useGSAP(() => {
-    Object.assign(current.current, checkpoint); progress.current = checkpoint.at;
+    Object.assign(current.current, initialPose); progress.current = initialPose.at;
     const apply = (value: number) => {
       progress.current = value;
-      if (meter.current) meter.current.value = String(value);
       const pose = responsivePose(current.current, window.matchMedia("(max-width: 760px)").matches);
       // CSS owns screen-space framing; R3F owns the physical orientation.
       gsap.set(product.current, { xPercent: (pose.x ?? 0) * 100 });
@@ -85,49 +103,69 @@ export default function OpeningChapter({ preview, debug = false, posterOnly = fa
     };
     apply(progress.current);
     setLayoutReady(true);
-    if (fallback || preview || !chapter.current || !stage.current) return;
+    if (fallback || !chapter.current || !stage.current) return;
     const timeline = createOpeningTimeline({ chapter: chapter.current, stage: stage.current, pose: current.current, onUpdate: apply });
+    const meditation = meditationMarker.current ? createMeditationTimeline({ marker: meditationMarker.current, stage: stage.current }) : null;
+    const breathing = breathingMarker.current ? createBreathingTimeline({ marker: breathingMarker.current, stage: stage.current }) : null;
+    const cleanMixer = mixer.current && mixerLights.current ? createMixerHandoff(stage.current, mixer.current, mixerLights.current) : undefined;
     // Typography loading may change composition metrics. Never refresh per frame.
     let disposed = false;
     void document.fonts.ready.then(() => { if (!disposed) ScrollTrigger.refresh(); });
-    return () => { disposed = true; timeline.scrollTrigger?.kill(); timeline.kill(); };
-  }, { scope: chapter, dependencies: [preview, fallback, debug], revertOnUpdate: true });
-  const seek = (value: number) => {
+    return () => { disposed = true; cleanMixer?.(); breathing?.scrollTrigger?.kill(); breathing?.kill(); meditation?.scrollTrigger?.kill(); meditation?.kill(); timeline.scrollTrigger?.kill(); timeline.kill(); };
+  }, { scope: chapter, dependencies: [fallback], revertOnUpdate: true });
+  const seek = (value: number, smooth = false) => {
     if (!chapter.current || !stage.current) return;
-    window.scrollTo({ top: chapter.current.offsetTop + value * (chapter.current.offsetHeight - stage.current.offsetHeight), behavior: "instant" });
+    window.scrollTo({ top: chapter.current.offsetTop + value * (chapter.current.offsetHeight - stage.current.offsetHeight), behavior: smooth && !reduced ? "smooth" : "instant" });
   };
-  const phase = checkpoint.at < .28 ? "hero" : checkpoint.at < .69 ? "return" : "desk";
   const entryReady = preferencesReady && layoutReady && (fallback ? posterReady : ready && fontsReady);
-  return <>
+  return <DownloadPanel reduced={reduced}>
     {!entryReleased && <GlobalEntry ready={entryReady} reduced={reduced} onRelease={onRelease} onFallback={onLost} />}
     <noscript><style>{`[data-opening-entry]{display:none} [data-opening-content]{visibility:visible} [data-opening-poster]{visibility:visible} html:has([data-opening-entry]){overflow:auto} [data-opening-chapter]{height:100svh}`}</style></noscript>
-    <main id="main-content" className={styles.page} data-opening-content="" aria-busy={!entryReleased} data-readiness={debug ? JSON.stringify({ ready, fallback, reduced, failed, preferencesReady, fontsReady, layoutReady, posterReady }) : undefined}>
-    <section className={`${styles.journey} ${preview ? styles.previewJourney : fallback ? styles.staticJourney : ""}`} aria-label="A quieter evening with Oryvelle" data-phase={phase} data-opening-chapter="">
-      <div ref={chapter} className={`${styles.chapter} ${fallback || preview ? styles.staticChapter : ""}`} aria-hidden="true" />
-      <div ref={stage} className={styles.stage} data-explore-active={interactiveExplore && !fallback && exploreState?.active && exploreState.available ? "true" : undefined}>
-        <div className={styles.atmosphere} aria-hidden="true"><div className={styles.beam} /><div className={styles.deskGlow} /></div>
-        <Link className={styles.brand} href="/" aria-label="Oryvelle home">Oryvelle</Link>
+    <main id="main-content" className={styles.page} data-opening-content="" aria-busy={!entryReleased}>
+    <section className={`${styles.journey} ${fallback ? styles.staticJourney : styles.guidedJourney}`} aria-label="A quieter evening with Oryvelle" data-opening-chapter="">
+      <div ref={chapter} className={`${styles.chapter} ${fallback ? styles.staticChapter : ""}`} aria-hidden="true" />
+      {!fallback && <div ref={meditationMarker} className={styles.meditationMarker} aria-hidden="true" />}
+      {!fallback && <div ref={breathingMarker} className={styles.breathingMarker} aria-hidden="true" />}
+      <div ref={stage} className={styles.stage} data-explore-available={!fallback && exploreState?.available ? "true" : undefined} data-explore-active={!fallback && exploreState?.active && exploreState.available ? "true" : undefined}>
+        <div className={styles.atmosphere} aria-hidden="true"><NightField animate={entryReleased && !reduced && !fallback} /><div className={styles.beam} /><div className={styles.deskGlow} /></div>
+        {!fallback && <MeditationScene />}
+        {!fallback && <BreathingScene />}
+        <Link className={styles.brand} href="/" aria-label="Oryvelle home"><OryvelleMark /><span>Oryvelle</span></Link>
         <div className={`${styles.copy} ${styles.hero}`}>
           <h1>Quiet your<br />restless mind.</h1>
-          <div className={styles.support}><p>Make space for rest with ambient sounds, guided meditations and a gentler evening routine.</p><a href={PLAY_STORE_URL} className={styles.download}>Download Oryvelle <span aria-hidden="true">↗</span></a><HeroAvailability /></div>
+          <div className={styles.support}><p>Wind down with ambient sounds, guided meditations and breathing practices at your own pace.</p><HeroActions onAdvance={fallback ? undefined : () => seek(.57, true)} /></div>
           <aside className={styles.capability} aria-label="Evening audio features"><h2>Your evening mix</h2><p>Combine ambient sounds.<br />Set a sleep timer.</p></aside>
         </div>
-        <div className={`${styles.copy} ${styles.returnCopy}`}><h2>Leave the day.<br />Find your calm.</h2><div className={styles.support}><p>A moment to breathe.<br />A sound to settle into.<br />A little distance from the day.</p></div></div>
-        <div className={`${styles.copy} ${styles.deskCopy}`}><h2>Rest comes<br />into focus.</h2><div className={styles.support}><p>Settle into your space.<br />Let a softer atmosphere accompany<br className={styles.desktopBreak} /> your evening.</p></div></div>
+        <div className={`${styles.copy} ${styles.returnCopy}`}><h2>Find your<br />soundscape.</h2><div className={styles.support}><p>Explore a sky of sounds.<br />Tap a star to listen, then combine<br className={styles.desktopBreak} /> the sounds you love.</p><HeroActions utilitiesOnly advanceLabel="Scroll to the sleep timer" onAdvance={fallback ? undefined : () => seek(.94, true)} /></div></div>
+        <div className={`${styles.copy} ${styles.deskCopy}`}><h2>Drift into<br />the night.</h2><div className={styles.support}><p>Set a sleep timer.<br />Let your sound mix gently fade<br className={styles.desktopBreak} /> as the countdown ends.</p></div></div>
         <div className={`${styles.environment} ${styles.rear}`} aria-hidden="true"><Stand /></div>
         <div ref={product} className={styles.product} aria-hidden="true">
           <picture data-opening-poster="" className={`${styles.poster} ${fallback ? "" : styles.posterHidden}`}>
             <source media="(max-width: 760px)" srcSet="/opening/poster-narrow.png" />
             <img ref={posterImage} src="/opening/poster-desktop.png" width={2545} height={2658} alt="" loading="eager" onLoad={() => setPosterReady(true)} onError={() => setPosterReady(true)} />
           </picture>
-          {!fallback && preferencesReady && <RendererBoundary onError={onLost}><div className={styles.renderer} data-presented={ready && !fallback}><PhoneCanvas onReady={onReady} onPresented={onPresented} onLost={onLost} onStats={debug ? onStats : undefined} ambientEnabled={entryReleased && !fallback} interactiveExplore={interactiveExplore} onExploreReady={onExploreReady} onExploreChange={onExploreChange} /></div></RendererBoundary>}
+          {!fallback && preferencesReady && <RendererBoundary onError={onLost}><div className={styles.renderer} data-presented={ready && !fallback}><PhoneCanvas onReady={onReady} onPresented={onPresented} onLost={onLost} ambientEnabled={entryReleased && !fallback} onExploreReady={onExploreReady} onExploreChange={onExploreChange} /></div></RendererBoundary>}
         </div>
         <div className={`${styles.environment} ${styles.foreground}`} aria-hidden="true"><Stand foreground /></div>
-        <a className={styles.floatingNav} href={PLAY_STORE_URL} aria-label="Get Oryvelle for Android">O<span aria-hidden="true">↗</span></a>
-        {interactiveExplore && !fallback && <ExploreControls controller={exploreController} state={exploreState} />}
-        {debug && <div className={styles.debug}><output ref={stats}>Loading renderer</output><input ref={meter} aria-label="Development chapter progress" type="range" min="0" max="1" step=".001" defaultValue={0} onChange={e => seek(Number(e.target.value))} /><nav aria-label="Development compositions">{OPENING_POSES.map(p => <a key={p.name} href={`?pose=${p.name}&debug=1`}>{p.name}</a>)}</nav><nav aria-label="Native scroll checkpoints">{OPENING_POSES.map(p => <button type="button" key={p.name} onClick={() => seek(p.at)}>{p.name}</button>)}</nav><a href="?poster=1&debug=1">Poster fallback</a><button type="button" onClick={() => { const canvas = product.current?.querySelector("canvas"); canvas?.getContext("webgl2")?.getExtension("WEBGL_lose_context")?.loseContext(); }}>Test context loss</button></div>}
+        <OpeningDock reduced={reduced} canExplore={!fallback} onNavigate={value => seek(value, true)} />
+        {!fallback && <ExploreControls controller={exploreController} state={exploreState} />}
       </div>
     </section>
-    <div className={styles.attribution} aria-label="Phone model attribution"><small>Model by <a href="https://sketchfab.com/3d-models/samsung-s-26-ultra-3d-model-3356099ca99d488d95a6a253d05577f7">achrixx</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · materials and display adapted.</small></div>
-  </main></>;
+    {fallback && <MeditationScene stationary />}
+    {fallback && <BreathingScene stationary />}
+    <div ref={mixer} className={styles.mixerContinuation}><SoundMixerShowcase /></div>
+    {!fallback && <svg ref={mixerLights} className={styles.mixerLights} aria-hidden="true">
+      {["#8ecbdc", "#91c9ae", "#bdaddb"].map(color => <g key={color}>
+        <path data-mixer-thread="" fill="none" stroke={color} strokeWidth="1" />
+        <g data-mixer-light="">
+          <circle r="18" fill={color} opacity=".035" />
+          <circle r="9" fill={color} opacity=".09" />
+          <circle r="4" fill={color} opacity=".25" />
+          <circle r="1.8" fill={color} />
+          <circle r=".7" fill="#f5efff" />
+        </g>
+      </g>)}
+    </svg>}
+    <JourneyFooter reduced={reduced} />
+  </main></DownloadPanel>;
 }

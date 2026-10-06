@@ -12,13 +12,12 @@ export function fitScreenTexture(texture: Texture, displayAspect: number, source
   texture.offset.set((1 - texture.repeat.x) / 2, (1 - texture.repeat.y) / 2);
 }
 
-export function usePhoneScreenVideo({ state, enabled, screen, pose, sources, phone, replaced = false }: {
-  replaced?: boolean;
+export function usePhoneScreenVideo({ state, enabled, screen, pose, sourcesRef, phone }: {
   state: ScreenState;
   enabled: boolean;
   screen: RefObject<ScreenState>;
   pose: RefObject<PhonePose>;
-  sources: Record<ScreenState, Texture>;
+  sourcesRef: RefObject<Record<ScreenState, Texture>>;
   phone: { displayAspect: number; setScreen(texture: Texture): void };
 }) {
   const { gl, invalidate } = useThree();
@@ -27,10 +26,11 @@ export function usePhoneScreenVideo({ state, enabled, screen, pose, sources, pho
   const fallbackFrame = useRef<() => void>(() => {});
 
   useEffect(() => {
-    if (replaced) return;
+    const activeScreen = screen;
+    const sourceTextures = sourcesRef.current;
     const source = SCREEN_SOURCES[state];
     if (source.kind !== "video") return;
-    const poster = sources[state];
+    const poster = sourceTextures[state];
     const video = document.createElement("video");
     video.muted = true;
     video.defaultMuted = true;
@@ -81,14 +81,14 @@ export function usePhoneScreenVideo({ state, enabled, screen, pose, sources, pho
       if (disposed || ready) return;
       ready = true;
       fitScreenTexture(texture, phone.displayAspect, video.videoWidth / video.videoHeight);
-      sources[state] = texture;
+      sourceTextures[state] = texture;
       if (screen.current === state) phone.setScreen(texture);
       invalidate(); sync();
     };
     const failed = () => {
       ready = false;
       video.pause(); cancelFrame();
-      sources[state] = poster;
+      sourceTextures[state] = poster;
       if (screen.current === state) phone.setScreen(poster);
       invalidate();
     };
@@ -113,13 +113,13 @@ export function usePhoneScreenVideo({ state, enabled, screen, pose, sources, pho
       video.removeEventListener("error", failed);
       video.pause(); cancelFrame();
       video.removeAttribute("src"); video.load();
-      if (sources[state] === texture) {
-        sources[state] = poster;
-        if (screen.current === state) phone.setScreen(poster);
+      if (sourceTextures[state] === texture) {
+        sourceTextures[state] = poster;
+        if (activeScreen.current === state) phone.setScreen(poster);
       }
       texture.dispose();
     };
-  }, [gl, invalidate, phone, pose, screen, sources, state, replaced]);
+  }, [gl, invalidate, phone, pose, screen, sourcesRef, state]);
   useEffect(() => { enabledRef.current = enabled; synchronize.current(); }, [enabled]);
   useFrame(() => fallbackFrame.current());
   return synchronize;
