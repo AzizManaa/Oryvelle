@@ -10,7 +10,7 @@ export const metadata = informationMetadata(
 
 export default function TermsPage() {
   return (
-    <InformationLayout page="terms">
+    <InformationLayout>
 
       <main
         id="main-content"

@@ -14,10 +14,7 @@
   --color-subtle: #9a9caf;
   --color-faint: #7c8094;
   --color-teal: #00e0c7;
-  --color-lavender: #b89aff;
-  --color-sky: #67d7ff;
   --color-amber: #ffb87a;
-  --color-rose: #ff6b9d;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

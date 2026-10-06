@@ -57,7 +57,7 @@ const DATA_ROWS = [
 
 export default function PrivacyPage() {
   return (
-    <InformationLayout page="privacy">
+    <InformationLayout>
 
       <main
         id="main-content"

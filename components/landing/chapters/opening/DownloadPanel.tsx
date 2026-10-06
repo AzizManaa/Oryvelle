@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useId, useRef, type MouseEvent, type ReactNode } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import Image from "next/image";
 import { PLAY_STORE_URL } from "@/app/site-config";
 import styles from "./download-panel.module.css";
 
@@ -75,8 +76,7 @@ export default function DownloadPanel({ children, reduced }: { children: ReactNo
         <h2 id={`${id}-title`} data-download-reveal>Scan the<br />QR code.</h2>
         <p id={`${id}-description`} className={styles.description} data-download-reveal>Make space for rest with Oryvelle.<br />Get the app on your Android phone.</p>
         <div className={styles.qr} data-download-reveal>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/opening/oryvelle-google-play-qr.png" width="1254" height="1254" alt="Scan to get Oryvelle on Google Play" />
+          <Image src="/opening/oryvelle-google-play-qr.png" width={1254} height={1254} sizes="230px" alt="Scan to get Oryvelle on Google Play" />
           <p>Open your phone’s camera and scan to visit Oryvelle on Google Play.</p>
         </div>
         <a className={styles.direct} href={PLAY_STORE_URL} data-download-reveal>Open Google Play directly <span aria-hidden="true">↗</span></a>

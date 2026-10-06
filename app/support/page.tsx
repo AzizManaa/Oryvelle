@@ -144,7 +144,7 @@ const FAQ_SECTIONS = [
 
 export default function SupportPage() {
   return (
-    <InformationLayout page="support">
+    <InformationLayout>
 
       <main
         id="main-content"

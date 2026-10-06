@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Outfit } from "next/font/google";
 import OryvelleMark from "@/components/landing/chapters/opening/OryvelleMark";
 import NightField from "@/components/landing/chapters/opening/NightField";
 import styles from "./not-found.module.css";
 
-const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400"], variable: "--font-opening", display: "swap" });
 const CONSTELLATIONS = [
   [[112, 80], [76, 146], [34, 232], [106, 232], [167, 232]],
   [[140, 150], [140, 232], [140, 320]],
@@ -20,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default function NotFound() {
-  return <div className={`${outfit.variable} ${styles.page}`}>
+  return <div className={styles.page}>
     <div className={styles.atmosphere} aria-hidden="true"><NightField animate={false} /></div>
     <header className={styles.header}>
       <Link href="/" aria-label="Oryvelle home"><OryvelleMark />Oryvelle</Link>
