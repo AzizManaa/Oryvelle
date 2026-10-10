@@ -63,7 +63,7 @@ const FAQ_SECTIONS = [
       },
       {
         q: "I accidentally deleted an entry. Can I recover it?",
-        a: "If you have a Drive backup or a local JSON export that includes the deleted entry, you can restore it from Bedtime settings → BACKUP & TRANSFER → Restore sleep notes from Drive. The restore adds missing dates and updates existing ones, so it will not overwrite entries that are already there.",
+        a: "If an encrypted Drive backup or .orybackup file contains the deleted entry, open Settings → BACKUP & TRANSFER and choose Restore sleep notes from Drive or Import sleep notes backup. Enter the code used for that backup. Restore adds missing dates, replaces entries on matching dates, and leaves other dates unchanged. Export your current notes first if you want an extra copy.",
       },
       {
         q: "Can I add my own mood tags?",
@@ -81,15 +81,31 @@ const FAQ_SECTIONS = [
   },
   {
     id: "backup",
-    heading: "Google Drive backup",
+    heading: "Journal backup and recovery",
     items: [
+      {
+        q: "Which versions support encrypted backups?",
+        a: "The encrypted-backup update starts with Android build 34; availability depends on your Google Play release track. It uses a recovery code and .orybackup files. Earlier builds exported unencrypted JSON. Update Oryvelle and create a new backup from your existing local notes. Updating does not encrypt old copies, and the new importer does not accept legacy JSON files.",
+      },
+      {
+        q: "What is included in a backup?",
+        a: "Only your journal: entry dates, ratings, durations, tags, notes and timestamps. Playback history, saved mixes, routines, settings and purchases are not included. Backups are manual snapshots, not automatic sync.",
+      },
+      {
+        q: "How do I save and confirm the recovery code?",
+        a: "Tap Copy code below the code, save it in a password manager or another safe location outside Oryvelle, then paste it into the confirmation field. You do not need to type the full code. Viewing the saved code later from Settings → Journal recovery code requires device authentication when your phone has a secure lock.",
+      },
+      {
+        q: "What if I lose the recovery code or change phones?",
+        a: "A new installation needs the backup and the code used to create it. Google account access cannot replace the code. If your current installation still has a usable saved key, view the code in Settings and save it externally. Without either a usable local copy or an external code, the encrypted backup cannot be recovered. Generating a new code does not unlock old backups; it does not erase local notes.",
+      },
       {
         q: "Why does Google ask me to choose an account or grant permission?",
         a: "Oryvelle requests access only when Backup or Restore needs the private Google Drive app-data folder. Continue only if you want to use that feature. Oryvelle does not create or keep a Google profile in the app.",
       },
       {
         q: "Where is my backup stored in Google Drive?",
-        a: "Your backup is stored in a private app folder that only Oryvelle can access. It does not appear in your main Drive file list. You can find and delete it through Google Drive → Storage → Manage storage → Oryvelle.",
+        a: "Drive backups are stored in Oryvelle’s hidden app-data folder, separate from your main file list. To delete them, open Google Drive settings → Manage apps → Oryvelle and delete its hidden app data. Disconnecting Oryvelle alone does not delete the backup.",
       },
       {
         q: "What happens if I disconnect Google Drive?",
@@ -113,11 +129,11 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "How do I export my journal?",
-        a: "Go to Bedtime settings → BACKUP & TRANSFER → Export sleep notes backup. This saves a JSON file to a location you choose on your device.",
+        a: "Open Settings → BACKUP & TRANSFER → Export sleep notes backup and choose a save location. The encrypted-backup update saves a .orybackup file. At initial setup, save and confirm your recovery code; keep it separate from the file. Export is available once you have a journal entry.",
       },
       {
         q: "How do I delete all my data?",
-        a: "You can clear your sleep notes and saved mixes individually from Bedtime settings. To remove everything, uninstall the app — this removes all locally stored data. If you also want to remove your Drive backup, delete it from Google Drive → Storage → Manage storage → Oryvelle.",
+        a: "You can clear your sleep notes and saved mixes individually from Bedtime settings. To remove everything, uninstall the app — this removes all locally stored data. If you also want to remove your Drive backup, delete its hidden app data from Google Drive settings → Manage apps → Oryvelle. Also delete exported files and recovery-code copies from any locations where you saved them.",
       },
       {
         q: "Does Oryvelle collect analytics or share my data?",

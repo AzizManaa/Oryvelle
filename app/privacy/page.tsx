@@ -9,6 +9,11 @@ export const metadata = informationMetadata(
 
 const DATA_ROWS = [
   {
+    data: "Protected backup recovery key (encrypted-backup update)",
+    purpose: "Create subsequent journal backups and allow deliberate code viewing",
+    where: "Keystore-encrypted app-private storage excluded from Android backup and device transfer",
+  },
+  {
     data: "Journal entries (rating, duration, mood tags, notes)",
     purpose: "Show your relaxation history and trends",
     where: "Local device storage",
@@ -102,7 +107,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <dt className="inline text-faint">Effective date </dt>
-              <dd className="inline text-muted">August 29, 2026</dd>
+              <dd className="inline text-muted">October 10, 2026</dd>
             </div>
           </dl>
         </div>
@@ -215,40 +220,81 @@ export default function PrivacyPage() {
               is:
             </p>
             <ul className="mb-3 list-disc space-y-1 pl-5">
-              <li>Visible only to you and to Oryvelle</li>
               <li>Not accessible to other apps</li>
               <li>Not visible in your main Drive file list</li>
               <li>
                 Controlled entirely by you — you can delete it at any time
-                through your Google account settings
+                through Google Drive settings under Manage apps
               </li>
             </ul>
+            <h3 className="mb-3 mt-5 font-semibold text-ink">
+              Encrypted journal backups and recovery
+            </h3>
             <p className="mb-3">
-              <strong className="font-medium text-foreground">
-                Backup encryption.
-              </strong>{" "}
-              Oryvelle does not apply its own client-side encryption to the
-              backup before uploading it. Your journal content is transmitted
-              to Google Drive over HTTPS and is stored in your own Google
-              Drive account. Because Oryvelle does not encrypt the backup
-              with a separate key before upload, anyone who can access your
-              Google account or Drive backup data could read your backed-up
-              journal entries.
+              The encrypted-backup update is available from Android build 34
+              onward; availability depends on your Google Play release track.
+              Earlier builds created unencrypted backups. Updating the app does
+              not encrypt existing files: create a new encrypted backup from
+              your local journal after updating. The protection described below
+              applies to backups created with the updated implementation.
+            </p>
+            <p className="mb-3">
+              Drive backup and manual file export use the same AES-256-GCM
+              encrypted format. Oryvelle encrypts journal content on your device
+              before uploading or saving it. Snapshots include entry dates,
+              ratings, durations, tags, notes and entry timestamps. The complete
+              snapshot is authenticated and validated before any journal entry
+              is restored. Backup filenames, sizes and upload metadata are not
+              hidden by content encryption.
+            </p>
+            <p className="mb-3">
+              Initial backup setup generates a random 256-bit recovery key,
+              shown as a recovery code. You must save the code outside Oryvelle
+              and confirm it before creating a backup. Subsequent manual backups
+              reuse a protected local copy, encrypted with an Android Keystore
+              key in app-private storage excluded from Android backup and
+              device-transfer paths. The recovery code is never included in
+              backup files or sent to Google Drive or NekoDesk servers.
+            </p>
+            <p className="mb-3">
+              Viewing a saved code requires device authentication when a secure
+              screen lock exists. Without a secure lock, a warning precedes
+              deliberate disclosure. If you copy the code, your device clipboard
+              and any password manager or other destination you choose handle
+              that copy under their own settings and policies.
             </p>
             <p className="mb-3">
               <strong className="font-medium text-foreground">
-                What is not backed up.
+                Keep your recovery code separate from your backup.
               </strong>{" "}
-              Drive backup covers only your sleep journal content. Your
-              playback sessions, onboarding preferences, saved mixes, and app
-              settings are <strong className="font-medium text-foreground">not</strong>{" "}
-              uploaded to Drive backup — they remain on your device.
+              Anyone with both can decrypt the snapshot. Restoring after a
+              reinstall or on another device requires the backup and its code;
+              Google account access does not replace the code. If no usable
+              local copy remains and you lose the external code, NekoDesk cannot
+              recover the encrypted backup. Local notes still available in your
+              current installation are not erased. A new code for future
+              backups does not unlock old snapshots.
+            </p>
+            <p className="mb-3">
+              Both backup methods cover only your journal. Playback history,
+              onboarding preferences, saved mixes, settings, premium
+              entitlements and purchase information are not included. Backups
+              are manual snapshots, not automatic synchronization. Restore
+              replaces notes on matching dates, adds missing dates and preserves
+              notes on other dates.
+            </p>
+            <p className="mb-3">
+              Manual export saves an encrypted .orybackup file to the location
+              you select through Android&apos;s file picker. If you choose a
+              cloud document provider, that provider receives the encrypted
+              file. You control where exported files and external code copies
+              are stored and shared.
             </p>
             <p>
-              You can disconnect Google Drive at any time without losing local
-              data. Disconnecting revokes Oryvelle&apos;s Drive permission and
-              clears pending authorization state, but does not delete an existing
-              backup. The next Backup or Restore will request permission again.
+              You can disconnect Google Drive without losing local data.
+              Disconnecting revokes Oryvelle&apos;s Drive permission and clears
+              pending authorization state but does not delete an existing
+              backup. A later Backup or Restore requests authorization again.
             </p>
           </section>
 
@@ -467,7 +513,7 @@ export default function PrivacyPage() {
             <p>
               Android&apos;s automatic backup is intentionally disabled in
               Oryvelle. Your data is protected through the explicit options in
-              the app — Drive backup or manual JSON export — not through
+              the app — Drive backup or manual file export — not through
               OS-level backup. This gives you full control over when and where
               copies of your data exist.
             </p>
@@ -497,7 +543,7 @@ export default function PrivacyPage() {
               Google Drive until you delete them. You can remove them through
               Google Drive settings under{" "}
               <strong className="font-medium text-foreground">
-                Storage → Manage storage → Oryvelle
+                Manage apps → Oryvelle → Delete hidden app data
               </strong>
               .
             </p>
@@ -607,10 +653,10 @@ export default function PrivacyPage() {
               Google authorization tokens stay in memory for the requested Drive
               operation and are not persisted by Oryvelle. Data sent to Google
               Drive, Google services, Firebase, or the NekoDesk service is
-              transmitted over HTTPS. Oryvelle does not apply client-side
-              encryption to Drive backups, so once uploaded the backup content
-              is protected by your Google account and Google Drive&apos;s controls,
-              not by a separate Oryvelle encryption key.
+              transmitted over HTTPS. Journal backups created with the
+              encrypted-backup update are additionally protected with the
+              separate recovery key described above. Earlier builds did not
+              apply this client-side backup encryption.
             </p>
           </section>
 

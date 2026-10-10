@@ -55,7 +55,7 @@ export default function TermsPage() {
             </div>
             <div>
               <dt className="inline text-faint">Effective date </dt>
-              <dd className="inline text-muted">August 29, 2026</dd>
+              <dd className="inline text-muted">October 10, 2026</dd>
             </div>
           </dl>
         </div>
@@ -131,6 +131,18 @@ export default function TermsPage() {
               app does not create or retain a Google profile. You are responsible
               for keeping your Google account secure. Disconnecting Drive access
               does not delete an existing backup from Google Drive.
+            </p>
+            <p className="mb-3">
+              With the encrypted-backup update (Android build 34 onward),
+              journal backups require a recovery code. Keep it safe and separate
+              from backup files: anyone with both can decrypt the journal.
+              Restoring after reinstalling or on another device requires that
+              code. NekoDesk cannot recover a backup if you lose the code and
+              have no usable local copy. Earlier builds created unencrypted
+              backups; updating does not encrypt existing copies. Backups cover
+              only the journal, not settings, playback history or purchases.
+              Restore replaces journal entries on matching dates and preserves
+              other dates.
             </p>
             <p>
               Your journal entries, session data, and preferences are stored
