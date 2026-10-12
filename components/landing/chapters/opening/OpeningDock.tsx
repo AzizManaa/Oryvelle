@@ -10,11 +10,12 @@ import OryvelleMark from "./OryvelleMark";
 
 gsap.registerPlugin(useGSAP);
 
-export default function OpeningDock({ reduced, canExplore, onNavigate, links }: {
+export default function OpeningDock({ reduced, canExplore, onNavigate, onNavigateSection, links }: {
   links?: { label: string; href: string }[];
   reduced: boolean;
   canExplore: boolean;
   onNavigate(progress: number): void;
+  onNavigateSection?(section: "meditation" | "breathing" | "sound-mixer"): void;
 }) {
   const onDownload = useDownloadPanel();
   const root = useRef<HTMLDivElement>(null);
@@ -67,7 +68,10 @@ export default function OpeningDock({ reduced, canExplore, onNavigate, links }: 
   useEffect(() => {
     if (!open) return;
     // Keep chapter progress and scrollbar geometry intact while the modal is open.
-    const blockWheel = (event: WheelEvent) => event.preventDefault();
+    const blockWheel = (event: WheelEvent) => {
+      if (event.target instanceof Node && panel.current?.contains(event.target)) return;
+      event.preventDefault();
+    };
     const node = dialog.current;
     node?.addEventListener("wheel", blockWheel, { passive: false });
     return () => node?.removeEventListener("wheel", blockWheel);
@@ -122,7 +126,7 @@ export default function OpeningDock({ reduced, canExplore, onNavigate, links }: 
       <button className={styles.mark} type="button" aria-label="Return to the opening" onClick={() => onNavigate(0)}><OryvelleMark /></button>
       <a className={styles.download} href={PLAY_STORE_URL} onClick={onDownload} aria-label="Download Oryvelle on Google Play"><span className={styles.rolling}><span className={styles.word}>Download</span></span><span aria-hidden="true">↗</span></a>
     </div>
-    <dialog ref={dialog} id={id} className={styles.dialog} aria-labelledby={`${id}-title`} onCancel={event => { event.preventDefault(); close(); }} onClick={event => { if (event.target === event.currentTarget) close(); }} onKeyDown={event => { if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(event.key)) event.preventDefault(); }}>
+    <dialog ref={dialog} id={id} className={styles.dialog} aria-labelledby={`${id}-title`} onCancel={event => { event.preventDefault(); close(); }} onClick={event => { if (event.target === event.currentTarget) close(); }}>
       <div ref={panel} className={styles.panel}>
         <header data-dock-reveal><h2 id={`${id}-title`}>Oryvelle</h2><OryvelleMark /></header>
         <nav aria-label="Oryvelle pages" data-dock-reveal>
@@ -132,6 +136,12 @@ export default function OpeningDock({ reduced, canExplore, onNavigate, links }: 
           }}>{link.label}<span aria-hidden="true">↗</span></a>) : <>
           <button type="button" autoFocus onClick={() => close(() => onNavigate(0))}>The opening <span aria-hidden="true">↗</span></button>
           {canExplore && <button type="button" onClick={() => close(() => onNavigate(.57))}>Explore sounds <span aria-hidden="true">↗</span></button>}
+          {canExplore && <button type="button" onClick={() => close(() => onNavigate(.94))}>Sleep timer <span aria-hidden="true">↗</span></button>}
+          {onNavigateSection && <>
+            <button type="button" onClick={() => close(() => onNavigateSection("meditation"))}>Guided meditations <span aria-hidden="true">↗</span></button>
+            <button type="button" onClick={() => close(() => onNavigateSection("breathing"))}>Guided breathing <span aria-hidden="true">↗</span></button>
+            <button type="button" onClick={() => close(() => onNavigateSection("sound-mixer"))}>Sound mixing <span aria-hidden="true">↗</span></button>
+          </>}
           </>}
         </nav>
         <nav className={styles.information} aria-label="Information" data-dock-reveal>

@@ -149,6 +149,16 @@ export default function OpeningChapter() {
     if (!chapter.current || !stage.current) return;
     window.scrollTo({ top: chapter.current.offsetTop + value * (chapter.current.offsetHeight - stage.current.offsetHeight), behavior: smooth && !reduced ? "smooth" : "instant" });
   };
+  const navigateSection = (section: "meditation" | "breathing" | "sound-mixer") => {
+    const marker = section === "meditation" ? meditationMarker.current : section === "breathing" ? breathingMarker.current : null;
+    if (!fallback && marker) {
+      // These scenes live in the sticky stage; their markers own scroll position.
+      const progress = section === "breathing" ? .74 : .9;
+      window.scrollTo({ top: window.scrollY + marker.getBoundingClientRect().top + marker.offsetHeight * progress, behavior: reduced ? "instant" : "smooth" });
+    } else {
+      document.getElementById(section)?.scrollIntoView({ behavior: reduced ? "instant" : "smooth" });
+    }
+  };
   const entryReady = preferencesReady && layoutReady && (fallback ? posterReady : ready && fontsReady);
   useEffect(() => {
     if (entryReleased || entryReady) return;
@@ -186,7 +196,7 @@ export default function OpeningChapter() {
           {!fallback && preferencesReady && <RendererBoundary onError={onLost}><div className={styles.renderer} data-presented={ready && !fallback}><PhoneCanvas onReady={onReady} onPresented={onPresented} onLost={onLost} ambientEnabled={entryReleased && !fallback} onExploreReady={onExploreReady} onExploreChange={onExploreChange} /></div></RendererBoundary>}
         </div>
         <div className={`${styles.environment} ${styles.foreground}`} aria-hidden="true"><Stand foreground /></div>
-        <OpeningDock reduced={reduced} canExplore={!fallback} onNavigate={value => seek(value, true)} />
+        <OpeningDock reduced={reduced} canExplore={!fallback} onNavigate={value => seek(value, true)} onNavigateSection={navigateSection} />
         {!fallback && <ExploreControls controller={exploreController} state={exploreState} />}
       </div>
     </section>

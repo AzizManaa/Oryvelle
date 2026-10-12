@@ -17,7 +17,7 @@
 .dialog { position:fixed; inset:0; margin:0; width:100%; max-width:none; height:100%; max-height:none; padding:0; border:0; background:transparent; color:#17141e; font-family:var(--font-opening),sans-serif; overflow:hidden; touch-action:none; pointer-events:auto; }
 .dialog::backdrop { background:#09090bc4; animation:shade .35s ease both; }
 @keyframes shade { from { background:#09090b00; } to { background:#09090bc4; } }
-.panel { position:absolute; left:50%; bottom:calc(4.2svh + 74px); transform:translateX(-50%); width:min(440px,90vw); max-height:calc(100svh - 150px); overflow:auto; box-sizing:border-box; padding:40px; border-radius:32px; background:#d1ccdd; }
+.panel { position:absolute; left:50%; bottom:calc(4.2svh + 74px); transform:translateX(-50%); width:min(440px,90vw); max-height:calc(100svh - 150px); overflow:auto; overscroll-behavior:contain; touch-action:pan-y; box-sizing:border-box; padding:40px; border-radius:32px; background:#d1ccdd; }
 .panel header { display:flex; align-items:center; justify-content:space-between; margin-bottom:36px; }
 .panel h2 { margin:0; font-size:20px; font-weight:400; letter-spacing:-.035em; }
 .panel header > svg { display:block; width:32px; height:32px; flex:none; }
