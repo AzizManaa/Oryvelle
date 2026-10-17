@@ -1,5 +1,6 @@
 "use client";
 
+import LinkLabel from "@/components/landing/LinkLabel";
 import { useEffect, useId, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { PLAY_STORE_URL } from "@/app/site-config";
@@ -134,7 +135,7 @@ export default function BreathingScene({ stationary = false }: { stationary?: bo
           pausedRef.current = !pausedRef.current; setPaused(pausedRef.current); syncRef.current();
         }}>{paused ? "Resume preview" : "Pause preview"}</button>}
       </div>
-      <a className={styles.download} href={PLAY_STORE_URL} onClick={onDownload}>Discover breathing in the app <span aria-hidden="true">↗</span></a>
+      <a className={styles.download} href={PLAY_STORE_URL} onClick={onDownload}><LinkLabel>Discover breathing in the app</LinkLabel></a>
     </div>
     <div className={styles.form} data-breath-form="">
       <div className={styles.orbSurface} data-breath-orb-surface="">

@@ -1,5 +1,6 @@
 "use client";
 
+import LinkLabel from "@/components/landing/LinkLabel";
 import { useEffect, useId, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -124,7 +125,7 @@ export default function OpeningDock({ reduced, canExplore, onNavigate, onNavigat
         <span /><span />
       </button>
       <button className={styles.mark} type="button" aria-label="Return to the opening" onClick={() => onNavigate(0)}><OryvelleMark /></button>
-      <a className={styles.download} href={PLAY_STORE_URL} onClick={onDownload} aria-label="Download Oryvelle on Google Play"><span className={styles.rolling}><span className={styles.word}>Download</span></span><span aria-hidden="true">↗</span></a>
+      <a className={styles.download} href={PLAY_STORE_URL} onClick={onDownload} aria-label="Download Oryvelle on Google Play"><span className={styles.rolling}><span className={styles.word}>Download</span></span></a>
     </div>
     <dialog ref={dialog} id={id} className={styles.dialog} aria-labelledby={`${id}-title`} onCancel={event => { event.preventDefault(); close(); }} onClick={event => { if (event.target === event.currentTarget) close(); }}>
       <div ref={panel} className={styles.panel}>
@@ -133,14 +134,14 @@ export default function OpeningDock({ reduced, canExplore, onNavigate, onNavigat
           {links ? links.map(link => <a key={link.href} href={link.href} onClick={event => {
             if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             event.preventDefault(); close(() => window.location.assign(link.href));
-          }}>{link.label}<span aria-hidden="true">↗</span></a>) : <>
-          <button type="button" autoFocus onClick={() => close(() => onNavigate(0))}>The opening <span aria-hidden="true">↗</span></button>
-          {canExplore && <button type="button" onClick={() => close(() => onNavigate(.57))}>Explore sounds <span aria-hidden="true">↗</span></button>}
-          {canExplore && <button type="button" onClick={() => close(() => onNavigate(.94))}>Sleep timer <span aria-hidden="true">↗</span></button>}
+          }}><LinkLabel>{link.label}</LinkLabel></a>) : <>
+          <button type="button" autoFocus onClick={() => close(() => onNavigate(0))}><LinkLabel>The opening</LinkLabel></button>
+          {canExplore && <button type="button" onClick={() => close(() => onNavigate(.57))}><LinkLabel>Explore sounds</LinkLabel></button>}
+          {canExplore && <button type="button" onClick={() => close(() => onNavigate(.94))}><LinkLabel>Sleep timer</LinkLabel></button>}
           {onNavigateSection && <>
-            <button type="button" onClick={() => close(() => onNavigateSection("meditation"))}>Guided meditations <span aria-hidden="true">↗</span></button>
-            <button type="button" onClick={() => close(() => onNavigateSection("breathing"))}>Guided breathing <span aria-hidden="true">↗</span></button>
-            <button type="button" onClick={() => close(() => onNavigateSection("sound-mixer"))}>Sound mixing <span aria-hidden="true">↗</span></button>
+            <button type="button" onClick={() => close(() => onNavigateSection("meditation"))}><LinkLabel>Guided meditations</LinkLabel></button>
+            <button type="button" onClick={() => close(() => onNavigateSection("breathing"))}><LinkLabel>Guided breathing</LinkLabel></button>
+            <button type="button" onClick={() => close(() => onNavigateSection("sound-mixer"))}><LinkLabel>Sound mixing</LinkLabel></button>
           </>}
           </>}
         </nav>
@@ -152,9 +153,9 @@ export default function OpeningDock({ reduced, canExplore, onNavigate, onNavigat
           ].map(link => <a key={link.href} href={link.href} onClick={event => {
             if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             event.preventDefault(); close(() => window.location.assign(link.href));
-          }}>{link.label}</a>)}
+          }}><LinkLabel>{link.label}</LinkLabel></a>)}
         </nav>
-        <a className={styles.panelDownload} href={PLAY_STORE_URL} onClick={event => onDownload(event, reveal => close(reveal))} data-dock-reveal>Download Oryvelle <span aria-hidden="true">↗</span></a>
+        <a className={styles.panelDownload} href={PLAY_STORE_URL} onClick={event => onDownload(event, reveal => close(reveal))} data-dock-reveal>Download Oryvelle</a>
       </div>
       <button ref={closeButton} className={styles.close} type="button" aria-label="Close Oryvelle menu" onClick={() => close()}>×</button>
     </dialog>

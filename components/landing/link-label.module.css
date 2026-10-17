@@ -1,0 +1,47 @@
+.label {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.label::before,
+.label::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  background: currentColor;
+}
+
+.label::before {
+  left: 0;
+  right: 0;
+  bottom: .1em;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s cubic-bezier(.22, 1, .36, 1);
+}
+
+.label::after {
+  right: -.16em;
+  bottom: calc(.1em - 3.5px);
+  width: 8px;
+  height: 8px;
+  clip-path: polygon(50% 0, 63% 37%, 100% 50%, 63% 63%, 50% 100%, 37% 63%, 0 50%, 37% 37%);
+  opacity: 0;
+  transform: scale(.6);
+  transition: opacity .18s ease, transform .25s ease;
+}
+
+:is(a, button):is(:focus-visible, :active) .label::before { transform: scaleX(1); }
+:is(a, button):is(:focus-visible, :active) .label::after { opacity: 1; transform: scale(1); }
+
+@media (hover: hover) {
+  :is(a, button):hover .label::before { transform: scaleX(1); }
+  :is(a, button):hover .label::after { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .label::before, .label::after { transition: none; }
+}

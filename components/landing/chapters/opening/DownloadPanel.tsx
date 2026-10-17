@@ -1,5 +1,6 @@
 "use client";
 
+import LinkLabel from "@/components/landing/LinkLabel";
 import { createContext, useContext, useEffect, useId, useRef, type MouseEvent, type ReactNode } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -79,7 +80,7 @@ export default function DownloadPanel({ children, reduced }: { children: ReactNo
           <Image src="/opening/oryvelle-google-play-qr.png" width={1254} height={1254} sizes="230px" alt="Scan to get Oryvelle on Google Play" />
           <p>Open your phone’s camera and scan to visit Oryvelle on Google Play.</p>
         </div>
-        <a className={styles.direct} href={PLAY_STORE_URL} data-download-reveal>Open Google Play directly <span aria-hidden="true">↗</span></a>
+        <a className={styles.direct} href={PLAY_STORE_URL} data-download-reveal><LinkLabel>Open Google Play directly</LinkLabel></a>
         <span className={styles.platform} data-download-reveal>Android · Google Play</span>
       </div>
     </dialog>

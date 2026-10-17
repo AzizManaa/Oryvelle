@@ -1,5 +1,6 @@
 "use client";
 
+import LinkLabel from "@/components/landing/LinkLabel";
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,22 +32,22 @@ export default function JourneyFooter({ reduced = false, mainHref, showAttributi
     <div className={styles.invitation} data-footer-reveal="">
       <h2 id="journey-footer-title">A quieter night<br className={styles.mobileBreak} /> starts here.</h2>
       <p>Sounds, meditation and breathing.<br />An evening routine at your own pace.</p>
-      <a className={styles.download} href={PLAY_STORE_URL} onClick={onDownload}><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3.5v17l15-8.5Z" /></svg>Get it on Google Play<span aria-hidden="true">↗</span></a>
+      <a className={styles.download} href={PLAY_STORE_URL} onClick={onDownload}><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3.5v17l15-8.5Z" /></svg>Get it on Google Play</a>
       <span className={styles.platform}>Available on Android</span>
     </div>
     <div className={styles.navigation} data-footer-reveal="">
       <div className={styles.qrGroup}>
         <a className={styles.qr} href={PLAY_STORE_URL} onClick={onDownload} aria-label="Open Oryvelle download QR code"><Image src="/opening/oryvelle-google-play-qr.png" alt="Scan to download Oryvelle on Google Play" width={1254} height={1254} sizes="120px" /></a>
-        <div><p>Bring a little calm<br />to your phone.</p><a href={PLAY_STORE_URL} onClick={onDownload}>Scan to download <span aria-hidden="true">↗</span></a></div>
+        <div><p>Bring a little calm<br />to your phone.</p><a href={PLAY_STORE_URL} onClick={onDownload}><LinkLabel>Scan to download</LinkLabel></a></div>
       </div>
-      <nav aria-label="Explore Oryvelle">{mainHref ? <Link href={mainHref}>The opening</Link> : <button type="button" onClick={toTop}>The opening</button>}<a href={`${mainHref ?? ""}#sound-mixer`}>Sound mixing</a><a href={PLAY_STORE_URL} onClick={onDownload}>Download</a></nav>
-      <nav aria-label="Information"><Link href="/support">Support</Link><Link href="/terms">Terms of use</Link><Link href="/privacy">Privacy policy</Link></nav>
+      <nav aria-label="Explore Oryvelle">{mainHref ? <Link href={mainHref}><LinkLabel>The opening</LinkLabel></Link> : <button type="button" onClick={toTop}><LinkLabel>The opening</LinkLabel></button>}<a href={`${mainHref ?? ""}#sound-mixer`}><LinkLabel>Sound mixing</LinkLabel></a><a href={PLAY_STORE_URL} onClick={onDownload}><LinkLabel>Download</LinkLabel></a></nav>
+      <nav aria-label="Information"><Link href="/support"><LinkLabel>Support</LinkLabel></Link><Link href="/terms"><LinkLabel>Terms of use</LinkLabel></Link><Link href="/privacy"><LinkLabel>Privacy policy</LinkLabel></Link></nav>
       <button type="button" className={styles.top} onClick={toTop} aria-label="Back to top">↑</button>
     </div>
     <div className={styles.bottom} data-footer-reveal="">
       <span className={styles.brand}><OryvelleMark />Oryvelle</span>
-      <p>Made by <a href="https://aziz-manaa.com" target="_blank" rel="noopener noreferrer">NekoDesk</a></p>
-      {showAttribution && <small>Phone model by <a href="https://sketchfab.com/3d-models/samsung-s-26-ultra-3d-model-3356099ca99d488d95a6a253d05577f7">achrixx</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · materials and display adapted.</small>}
+      <p>Made by <a href="https://aziz-manaa.com" target="_blank" rel="noopener noreferrer"><LinkLabel>NekoDesk</LinkLabel></a></p>
+      {showAttribution && <small>Phone model by <a href="https://sketchfab.com/3d-models/samsung-s-26-ultra-3d-model-3356099ca99d488d95a6a253d05577f7"><LinkLabel>achrixx</LinkLabel></a> · <a href="https://creativecommons.org/licenses/by/4.0/"><LinkLabel>CC BY 4.0</LinkLabel></a> · materials and display adapted.</small>}
     </div>
   </footer>;
 }

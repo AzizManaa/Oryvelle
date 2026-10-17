@@ -1,5 +1,6 @@
 'use client';
 
+import LinkLabel from "@/components/landing/LinkLabel";
 import { useEffect, useRef, type RefObject } from 'react';
 import { EXPLORE_SOUNDS, type ExploreEngine, type ExploreSnapshot } from './explore-engine';
 import styles from './explore.module.css';
@@ -14,7 +15,7 @@ export default function ExploreControls({ controller, state }: { controller: Ref
   if (!state?.available) return null;
   return <aside className={styles.controls} aria-label="Interactive Explore preview">
     <div className={styles.toolbar}>
-      {!state.active ? <button ref={entryButton} type="button" onClick={() => controller.current?.activate()}>Explore sounds <span aria-hidden="true">↗</span></button>
+      {!state.active ? <button ref={entryButton} type="button" onClick={() => controller.current?.activate()}><LinkLabel>Explore sounds</LinkLabel></button>
         : <><button type="button" onClick={() => controller.current?.close()}>Done</button><button type="button" onClick={() => controller.current?.stop()}>Stop audio</button></>}
     </div>
     {state.active && <>

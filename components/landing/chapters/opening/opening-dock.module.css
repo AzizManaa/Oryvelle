@@ -23,12 +23,9 @@
 .panel header > svg { display:block; width:32px; height:32px; flex:none; }
 .panel nav { display:flex; flex-direction:column; gap:13px; }
 .panel nav :is(button,a) { display:flex; justify-content:space-between; gap:20px; padding:0; border:0; background:transparent; color:inherit; font-size:clamp(25px,3vw,34px); text-align:left; font-weight:300; letter-spacing:-.04em; }
-.panel nav :is(button,a) span { font-size:23px; opacity:.45; transition:transform .4s,opacity .4s; }
-.panel nav :is(button,a):hover span { transform:translate(3px,-3px); opacity:1; }
 .panel nav.information { border-top:1px solid #17141e22; padding-top:24px; margin:30px 0; gap:6px; }
 .panel nav.information a { font-size:16px; font-weight:400; letter-spacing:-.025em; line-height:1.6; min-height:30px; }
-.panel nav.information a:hover { text-decoration:underline; text-underline-offset:4px; }
-.panelDownload { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-radius:18px; background:#17141e; color:#e3ddeb; font-size:15px; text-decoration:none; transition:background .4s; }
+.panelDownload { display:flex; align-items:center; justify-content:center; padding:16px 20px; border-radius:18px; background:#17141e; color:#e3ddeb; font-size:15px; text-decoration:none; transition:background .4s; }
 .panelDownload:hover { background:#30283d; }
 .close { position:absolute; bottom:4.2svh; left:50%; transform:translateX(-50%); width:52px; height:52px; border:1px solid #d1ccdd33; border-radius:18px; background:#17141e; color:#d1ccdd; font-size:30px; }
 .close:hover { background:#30283d; }

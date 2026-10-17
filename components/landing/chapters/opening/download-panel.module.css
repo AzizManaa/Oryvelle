@@ -8,7 +8,7 @@
 .qr { display:flex; align-items:center; gap:24px; padding:24px; border:1px solid #17141e24; border-radius:24px; }
 .qr img { display:block; width:48%; max-width:230px; height:auto; border-radius:8px; }
 .qr p { margin:0; font-size:15px; line-height:1.45; color:#332c3d; }
-.direct { color:#332c3d; margin-top:24px; font-size:14px; text-underline-offset:5px; }
+.direct { text-decoration:none; color:#332c3d; margin-top:24px; font-size:14px; text-underline-offset:5px; }
 .platform { margin-top:auto; padding-top:36px; font-size:12px; color:#72677e; }
 .dialog :is(button,a):focus-visible { outline:2px solid #6a498c; outline-offset:4px; }
 @media(max-height:700px) { .sheet { padding:30px 38px; } .sheet h2 { font-size:58px; margin-bottom:20px; } .description { margin-bottom:20px; } .qr { padding:18px; } .qr img { max-width:160px; } .platform { padding-top:18px; } }

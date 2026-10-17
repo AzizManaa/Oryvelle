@@ -1,5 +1,6 @@
 "use client";
 
+import LinkLabel from "@/components/landing/LinkLabel";
 import Image from "next/image";
 import { useId } from "react";
 import { PLAY_STORE_URL } from "@/app/site-config";
@@ -54,7 +55,7 @@ export default function MeditationScene({ stationary = false }: { stationary?: b
       <p className={styles.eyebrow}>Guided meditation</p>
       <h2>A little space<br />within.</h2>
       <p className={styles.description}>Wind down with short guided sessions and evening meditation journeys.</p>
-      <a className={styles.explore} href={PLAY_STORE_URL} onClick={onDownload}>Explore meditations <span aria-hidden="true">↗</span></a>
+      <a className={styles.explore} href={PLAY_STORE_URL} onClick={onDownload}><LinkLabel>Explore meditations</LinkLabel></a>
     </div>
     {JOURNEYS.map(journey => <article key={journey.key} className={`${styles.journey} ${styles[journey.key]}`} data-meditation-journey={journey.key}>
       <div className={styles.art} data-meditation-art="">

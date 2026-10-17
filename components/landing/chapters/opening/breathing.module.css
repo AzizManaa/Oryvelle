@@ -5,7 +5,7 @@
 .description { margin:24px 0 40px; font-size:clamp(16px,1.35vw,28px); line-height:1.4; color:#aaa2bd; }
 .controls { pointer-events:auto; }
 .pause { border:0; background:none; color:#a79fb7; font:inherit; font-size:12px; padding:12px 0; cursor:pointer; }
-.download { display:inline-block; margin-top:20px; padding:6px 0; border-bottom:1px solid #a79fb744; color:#aca4bd; font-size:14px; text-decoration:none; pointer-events:auto; }
+.download { display:inline-block; margin-top:20px; padding:6px 0; color:#aca4bd; font-size:14px; text-decoration:none; pointer-events:auto; }
 .form { position:absolute; z-index:2; left:44%; top:8%; width:54%; height:84%; opacity:0; visibility:hidden; }
 .orbSurface { position:absolute; inset:0 0 16%; }
 .orbCanvas { position:absolute; inset:0; z-index:0; display:block; width:100%; height:100%; pointer-events:none; }
